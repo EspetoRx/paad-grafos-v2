@@ -38,6 +38,7 @@ import SwitchWithInfo from '../Common/SwitchWithInfo.vue';
 
 export default {
     name: "Fixed Node Accordion Component",
+    props: ['checkboxValue'],
     data() {
         return {
             enableObjectChekcboxValue: false

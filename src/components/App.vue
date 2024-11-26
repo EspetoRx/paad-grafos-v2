@@ -171,7 +171,6 @@ export default {
         },
 
         optionsHasChanged: function(options) {
-            console.log("Options has changed App.vue.");
             this.options = options;
             Vue.toRaw(this.encapsulateNetwork).setOptions(this.options);
         }

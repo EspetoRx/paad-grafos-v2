@@ -115,6 +115,9 @@ export default {
             fontObjectOrString: true,
             heightConstraintSwitchEnabled: true,
             heightConstraintSwitchValue: false,
+            heightConstraintObjectEnabled: false,
+            heightConstraintIntegerValue: 0,
+            heightConstraintObjectValue: {}
         }
     },
     watch: {
@@ -259,11 +262,9 @@ export default {
             }
         },
         isFontObject: function(){
-            console.log(this.encapsulateOptions.nodes.font);
             return typeof this.encapsulateOptions.nodes.font == "object";
         },
         message: function (message, value) {
-            console.log("Message Nodes: " + message + " " + value)
             switch (message) {
                 case 'update-chosen-node': {
                     this.encapsulateOptions.nodes.chosen = { node: value, label: value };
@@ -272,14 +273,9 @@ export default {
                 }
                 // Not working
                 case 'update-chosen-node-background-color': {
-                    console.log("Entrei no update-chosen-node-background-color");
                     this.encapsulateOptions.nodes.chosen = { node: null, label: true };
                     this.encapsulateOptions.nodes.chosen.node = (values, id, selected, hovering) => {
-                        console.log("Values: ");
-                        console.log(values);
-                        console.log("Id: ");
-                        console.log(id);
-                        console.log("selected");
+
                     }
                     this.$emit('options-has-changed', this.encapsulateOptions);
                     break;
@@ -440,6 +436,54 @@ export default {
                     } else {
                         this.encapsulateOptions.nodes.font = "";
                     }
+                    break;
+                }
+                case 'height-constraint-object-enabled': {
+                    console.log("Height Constraint Switch Value = " + this.heightConstraintSwitchValue);
+                    console.log("Recieved value: " + value);
+                    if (this.heightConstraintSwitchValue) {
+                        this.heightConstraintObjectEnabled = value;
+                    } else {
+                        this.encapsulateOptions.nodes.heightConstraint = false;
+                    }
+                    break;
+                }
+                case 'height-constraint-value': {
+                    if (this.heightConstraintSwitchValue) {
+                        if (!this.heightConstraintObjectEnabled) {
+                            this.heightConstraintIntegerValue = value;
+                            this.encapsulateOptions.nodes.heightConstraint = parseInt(value);
+                            this.$emit('options-has-changed', this.encapsulateOptions);
+                        }
+                    } else {
+                        this.encapsulateOptions.nodes.heightConstraint = false;
+                    }
+                    break;
+                }
+                case 'height-constraint-object-minimum': {
+                    console.log("entrei no minimum");
+                    if (this.heightConstraintSwitchValue) {
+                        if (this.heightConstraintObjectEnabled) {
+                            this.heightConstraintObjectValue.minimum = parseInt(value);
+                            this.encapsulateOptions.nodes.heightConstraint = this.heightConstraintObjectValue;
+                            this.$emit('options-has-changed', this.encapsulateOptions);
+                        }
+                    } else {
+                        this.encapsulateOptions.nodes.heightConstraint = false;
+                    }
+                    break;
+                }
+                case 'height-constraint-object-valign': {
+                    if (this.heightConstraintSwitchValue) {
+                        if (this.heightConstraintObjectEnabled) {
+                            this.heightConstraintObjectValue.valign = value;
+                            this.encapsulateOptions.nodes.heightConstraint = this.heightConstraintObjectValue;
+                            this.$emit('options-has-changed', this.encapsulateOptions);
+                        }
+                    } else {
+                        this.encapsulateOptions.nodes.heightConstraint = false;
+                    }
+                    break;
                 }
             }
         },

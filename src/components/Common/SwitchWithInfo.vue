@@ -31,7 +31,6 @@ export default {
     },
     methods: {
         checkBoxStatusChanged: function (value) {
-            console.log('Emiti do SwitchWithInfo');
             this.$emit('checkbox-status-changed', value);
         }
     },
