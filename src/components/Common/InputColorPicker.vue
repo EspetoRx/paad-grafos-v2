@@ -17,7 +17,6 @@ export default {
     },
     watch: {
         color: function(newValue, oldValue) {
-            console.log("Updating color, new color: " + newValue + " old color: " + oldValue)
             this.$emit("update-color", newValue);
         }
     },

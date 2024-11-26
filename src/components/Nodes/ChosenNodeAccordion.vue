@@ -48,6 +48,7 @@ import InputColorPicker from '../Common/InputColorPicker.vue';
 
 export default {
     name: "Chosen Node Options",
+    props: ['checkboxValue'],
     data() {
         return{
             enableObject: false,
@@ -62,7 +63,6 @@ export default {
     },
     methods: {
         configureBooleanSending: function(value) {
-            console.log("Confiugre boolean sending " + value);
             this.booleanValue = value;
             this.emitMessage("update-chosen-node", value);
         },

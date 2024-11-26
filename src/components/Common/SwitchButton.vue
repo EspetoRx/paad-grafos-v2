@@ -41,7 +41,6 @@ export default {
     },
     watch: {
         checkboxValue: function(newCheckBoxValue, oldCheckBoxValue) {
-            console.log("Emiti do SwitchButton");
             this.$emit('checkbox-status-changed', newCheckBoxValue);
         }
     },

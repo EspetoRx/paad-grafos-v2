@@ -9,7 +9,7 @@
                 <button class="accordion-button collapsed p-0 pt-1 pb-1 flex-fill" type="button"
                     data-bs-toggle="collapse" :data-bs-target="'#flush-collapse-' + this.id" aria-expanded="false"
                     :aria-controls="'flush-collapse-' + this.id">
-                    <div class="d-flex w-100 justify-content-between pe-2" v-if="this.hasTooltip">
+                    <div class="d-flex w-100 justify-content-between" v-if="this.hasTooltip">
                         <div class="ms-2">
                             {{ this.title }}
                         </div>
@@ -98,7 +98,6 @@ export default {
     },
     methods: {
         message: function(message, variables) {
-            console.log("Message Accordion Item: " + message);
             if (message == 'enable-fixed-node-object-sending') {
                 if (variables == true) {
                     this.checkboxValue = false;

@@ -69,8 +69,6 @@ export default {
                     this.encapsulateLocalNetwork = this.localNetwork;
                     this.encapsulateOptions = this.options;
                     var container = document.getElementById("offcanvasBody");
-                    console.log("Container: -------");
-                    console.log(container);
                     this.encapsulateOptions.configure = {
                         enabled: true,
                         filter: true,
@@ -93,7 +91,6 @@ export default {
     },
     methods: {
         optionsHasChanged(recievedOptions) {
-            console.log("Entrei no optionsHasChanged do OffCanvas");
             this.encapsulateOptions = recievedOptions;
             this.$emit('options-has-changed', this.encapsulateOptions);
         },

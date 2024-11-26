@@ -115,11 +115,7 @@ import InputColorPicker from '../Common/InputColorPicker.vue';
 
 export default {
     name: "Nodes Color Component",
-    data() {
-        return {
-
-        }
-    },
+    props: ['checkboxValue'],
     methods: {
         updateBorderColor: function(value) {
             this.$emit("message", "update-node-color-border", value);

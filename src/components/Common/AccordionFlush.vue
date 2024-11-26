@@ -30,7 +30,6 @@ export default {
             this.$emit('toggle-switch-event', switchId, value);
         },
         message: function(message, value) {
-            console.log("Message Accordion Flush: " + message)
             this.$emit('message', message, value);
         }
     },

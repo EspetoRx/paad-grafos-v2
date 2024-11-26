@@ -1,7 +1,7 @@
 import 'bootstrap';
 import * as Vue from 'vue';
 import { createApp } from 'vue'
-import './sass/app.scss';
+import './scss/app.scss';
 
 const app = Vue.createApp({});
 

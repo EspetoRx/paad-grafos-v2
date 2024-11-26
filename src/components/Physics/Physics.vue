@@ -201,27 +201,22 @@ export default {
         },
 
         clickEnable(field) {
-            console.log("Field: " + field);
             if (field == 'barnesHut') {
-                console.log("Entrei no barnesHut");
                 this.barnesHutEnabled = (this.barnesHutEnabled) ? false : true;
                 this.forceAtlas2BasedEnabled = false;
                 this.repulsionEnabled = false;
                 this.hierarchicalRepulsionEnabled = false;
             } else if (field == 'forceAtlas2Based') {
-                console.log("Entrei no forceAtlas2Based");
                 this.barnesHutEnabled = false;
                 this.forceAtlas2BasedEnabled = (this.forceAtlas2BasedEnabled) ? false : true;
                 this.repulsionEnabled = false;
                 this.hierarchicalRepulsionEnabled = false;
             } else if (field == 'repulsion') {
-                console.log("Entrei no repulsion");
                 this.barnesHutEnabled = false;
                 this.forceAtlas2BasedEnabled = false;
                 this.repulsionEnabled = (this.repulsionEnabled) ? false : true;
                 this.hierarchicalRepulsionEnabled = false;
             } else if (field == 'hierarchicalRepulsion') {
-                console.log("Entrei no hierarchicalRepulsion");
                 this.barnesHutEnabled = false;
                 this.forceAtlas2BasedEnabled = false;
                 this.repulsionEnabled = false;
