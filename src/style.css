@@ -1,0 +1,29 @@
+@import "@fortawesome/fontawesome-free/css/all.css";
+
+body {
+    background-color: lightgrey !important;
+}
+
+#graph {
+    width: 100vw;
+    height: 100vh;
+}
+
+.top-navbar-style {
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 25px;
+}
+
+.bottom-navbar-style {
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    border-radius: 25px;
+}
+
+.network-area {
+    padding-right: 0;
+    padding-left: 0;
+}
