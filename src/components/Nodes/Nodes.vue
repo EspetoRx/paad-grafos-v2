@@ -1,8 +1,12 @@
 <template>
     <div>
         <div class="form-group">
+            <SwitchWithInfo :switchId="'nodes-hidden'" :switchDisabled="false" :switchInitialValue="this.hidden"
+                :switchTooltipEnabled="true"
+                :switchTooltip="'Quando verdadeiro, os vértices não serão mostrados. Ainda farão parte da simulação de física, no entanto!'"
+                :switchLabelEnabled="true" :switchLabelValue="'Esconder vértices'" @checkbox-status-changed="toggleHidden"></SwitchWithInfo>
             <div class="d-flex justify-content-between flex-fill">
-                <div class="d-flex w-100 justify-content-between pe-2 align-middle">
+                <div class="d-flex w-100 justify-content-between align-middle">
                     <div data-bs-toggle="tooltip" title="Options.Nodes.BorderWidth -
             A grossura da borda do vértice. 
             Padrão 1">
@@ -30,7 +34,7 @@
                         :checked="this.borderWidthSelectedDefault" v-model="this.borderWidthSelectedDefault">
                 </div>
                 <div class="d-flex justify-content-between flex-fill">
-                    <div class="d-flex w-100 justify-content-between pe-2 align-middle">
+                    <div class="d-flex w-100 justify-content-between align-middle">
                         <div data-bs-toggle="tooltip" title="Options.Nodes.BorderWidthSelected - 
                     A grossura da borda do vértice selecionado. 
                     Quando não definido, o borderWidth*2 é usado.">
@@ -54,7 +58,7 @@
         </div>
         <div class="form-group">
             <div class="d-flex justify-content-between">
-                <div class="d-flex w-100 justify-content-between pe-2">
+                <div class="d-flex w-100 justify-content-between">
                     <div data-bs-toggle="tooltip" title="Options.Nodes.BrokenImage - Quando a forma está configurada para 'imagem' ou 'imagem circular', 
                     essa opção pode ser uma URL para uma imagem backup no caso da URL fornecida na opção de 
                     imagem não possa ser resolvida.">
@@ -69,17 +73,10 @@
             <input type="text" class="form-control" placeholder="http://www.google.com" aria-label="brokenImageInput"
                 aria-describedby="brokenImageInputPrepend" id="brokenImageInput" v-model="this.brokenImage">
         </div>
-        <InputRange
-            :inputId="'opacity-range'"
-            :isLabelEnabled="true"
-            :min="0"
-            :max="1"
-            :step="0.01"
-            :initialValue="1"
+        <InputRange :inputId="'opacity-range'" :isLabelEnabled="true" :min="0" :max="1" :step="0.01" :initialValue="1"
             :labelValue="'Opacidade'"
             :tooltip="'Opacity - Opacidade geral de um nó (substitui qualquer opacidade na borda, plano de fundo, imagem e sombra).'"
-            @update-value-from-range-input="emitOpacity"
-        ></InputRange>
+            @update-value-from-range-input="emitOpacity"></InputRange>
         <AccordionFlush :id="'first-accordion'" :accordionItems="firstAccordionItems"
             :accordionItemsComponents="firstAccordionItemsComponents" class="mt-2"
             @toggle-switch-event="toggleSwitchEvent" @message="message">
@@ -91,6 +88,7 @@
 import isUrl from 'is-url';
 import AccordionFlush from '../Common/AccordionFlush.vue';
 import InputRange from '../Common/InputRange.vue';
+import SwitchWithInfo from '../Common/SwitchWithInfo.vue';
 
 export default {
     name: "Nodes",
@@ -117,7 +115,8 @@ export default {
             heightConstraintSwitchValue: false,
             heightConstraintObjectEnabled: false,
             heightConstraintIntegerValue: 0,
-            heightConstraintObjectValue: {}
+            heightConstraintObjectValue: {},
+            hidden: false
         }
     },
     watch: {
@@ -228,7 +227,8 @@ export default {
     },
     components: {
         AccordionFlush,
-        InputRange
+        InputRange,
+        SwitchWithInfo
     },
     methods: {
         toggleSwitchEvent: function (switchId, value) {
@@ -261,7 +261,7 @@ export default {
                 }
             }
         },
-        isFontObject: function(){
+        isFontObject: function () {
             return typeof this.encapsulateOptions.nodes.font == "object";
         },
         message: function (message, value) {
@@ -364,7 +364,7 @@ export default {
                     break;
                 }
                 case 'node-font-string': {
-                    if (!this.fontObjectOrString) { 
+                    if (!this.fontObjectOrString) {
                         this.encapsulateOptions.nodes.font = value;
                         this.$emit('options-has-changed', this.encapsulateOptions);
                     }
@@ -403,9 +403,9 @@ export default {
                             this.$emit('options-has-changed', this.encapsulateOptions);
                         } else {
                             this.encapsulateOptions.nodes.font.background = undefined;
-                        this.$emit('options-has-changed', this.encapsulateOptions);
+                            this.$emit('options-has-changed', this.encapsulateOptions);
                         }
-                        
+
                     } else {
                         this.encapsulateOptions.nodes.font = "";
                     }
@@ -487,8 +487,13 @@ export default {
                 }
             }
         },
-        emitOpacity: function(value) {
+        emitOpacity: function (value) {
             this.encapsulateOptions.nodes.opacity = parseFloat(value);
+            this.$emit('options-has-changed', this.encapsulateOptions);
+        },
+        toggleHidden: function (value) {
+            this.hidden = value;
+            this.encapsulateOptions.nodes.hidden = value;
             this.$emit('options-has-changed', this.encapsulateOptions);
         }
     },
