@@ -37,6 +37,7 @@ import ColorNodeAccordion from '../Nodes/ColorNodeAccordion.vue';
 import FixedNodeAccordion from '../Nodes/FixedNodeAccordion.vue';
 import FontNodeAccordion from '../Nodes/FontNodeAccordion.vue';
 import HeightConstraintNodeAccordion from '../Nodes/HeightConstraintNodeAccordion.vue';
+import ShapeNodeAccordion from '../Nodes/ShapeNodeAccordion.vue';
 
 export default {
     name: "Accordion Item",
@@ -82,6 +83,10 @@ export default {
                 this.currentContent = 'HeightConstraintNodeAccordion';
                 break;
             }
+            case 'nodes.shape': {
+                this.currentContent = 'ShapeNodeAccordion';
+                break;
+            }
         }
     },
     watch: {
@@ -94,7 +99,8 @@ export default {
         ColorNodeAccordion,
         FixedNodeAccordion,
         FontNodeAccordion,
-        HeightConstraintNodeAccordion
+        HeightConstraintNodeAccordion,
+        ShapeNodeAccordion
     },
     methods: {
         message: function(message, variables) {
