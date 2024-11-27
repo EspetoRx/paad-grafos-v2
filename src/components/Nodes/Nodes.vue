@@ -9,37 +9,18 @@
             :initialValue="this.borderWidth" :labelValue="'Grossura da Borda'"
             :tooltip="'Options.Nodes.BorderWidth - A grossura da borda do vértice. Padrão 1'"
             @update-value-from-range-input="emitBorderWidth"></InputRange>
-        <InputRange
-        :inputId="'nodes-borderWidthSelected-range'"
-        :isLabelEnabled="true"
-        :min="0"
-        :max="50"
-        :step="1"
-        :initialValue="this.borderWidthSelected"
-        :labelValue="'Grossura da borda do selecionado'"
-        :tooltip="'Options.Nodes.BorderWidthSelected Toggle to disable default. - A largura da borda do nó quando ele é selecionado. Quando indefinido, o borderWidth * 2 é usado. Alterne para desabilitar o padrão.'"
-        :disabled="this.borderWidthSelectedDisabled"
-        :labelHasSwitch="true" :labelSwitchId="'nodes-borderWidthSelectedRange-default'" :labelSwitchInitialValue="this.borderWidthSelectedDisabled"
-        @checkbox-status-changed="onBorderWidthSelectedChange"
-        @update-value-from-range-input="updateValueBorderWidhtSelected"
-        ></InputRange>
-        <div class="form-group">
-            <div class="d-flex justify-content-between">
-                <div class="d-flex w-100 justify-content-between">
-                    <div data-bs-toggle="tooltip" title="Options.Nodes.BrokenImage - Quando a forma está configurada para 'imagem' ou 'imagem circular', 
-                    essa opção pode ser uma URL para uma imagem backup no caso da URL fornecida na opção de 
-                    imagem não possa ser resolvida.">
-                        <label id="brokenImageInputPrepend" for="brokenImageInput">Url de Imagem Quebrada:</label>
-                    </div>
-                    <div class="flex-shrink-1 badge bg-info m-1" data-bs-toggle="tooltip" title="Options.Nodes.BrokenImage - Quando a forma está configurada para 'imagem' ou 'imagem circular',                     essa opção pode ser uma URL para uma imagem backup no caso da URL fornecida na opção de 
-                    imagem não possa ser resolvida.">
-                        <i class="fa-solid fa-info text-right"></i>
-                    </div>
-                </div>
-            </div>
-            <input type="text" class="form-control" placeholder="http://www.google.com" aria-label="brokenImageInput"
-                aria-describedby="brokenImageInputPrepend" id="brokenImageInput" v-model="this.brokenImage">
-        </div>
+        <InputRange :inputId="'nodes-borderWidthSelected-range'" :isLabelEnabled="true" :min="0" :max="50" :step="1"
+            :initialValue="this.borderWidthSelected" :labelValue="'Grossura da borda do selecionado'"
+            :tooltip="'Options.Nodes.BorderWidthSelected Toggle to disable default. - A largura da borda do nó quando ele é selecionado. Quando indefinido, o borderWidth * 2 é usado. Alterne para desabilitar o padrão.'"
+            :disabled="this.borderWidthSelectedDisabled" :labelHasSwitch="true"
+            :labelSwitchId="'nodes-borderWidthSelectedRange-default'"
+            :labelSwitchInitialValue="this.borderWidthSelectedDisabled"
+            @checkbox-status-changed="onBorderWidthSelectedChange"
+            @update-value-from-range-input="updateValueBorderWidhtSelected"></InputRange>
+        <InputUrl :idInput="'nodes-brokenImage-url-input'" labelValue="Url de Imagem Quebrada"
+            :placeholder="'https://www.google.com'"
+            :tooltip="'Options.Nodes.BrokenImage - Quando a forma está configurada para \'imagem\' ou \'imagem circular\', essa opção pode ser uma URL para uma imagem backup no caso da URL fornecida na opção de imagem não possa ser resolvida.'"
+            :urlInitalValue="brokenImage" @url-value-update="updateBrokenImageValue"></InputUrl>
         <InputRange :inputId="'opacity-range'" :isLabelEnabled="true" :min="0" :max="1" :step="0.01" :initialValue="1"
             :labelValue="'Opacidade'"
             :tooltip="'Opacity - Opacidade geral de um nó (substitui qualquer opacidade na borda, plano de fundo, imagem e sombra).'"
@@ -52,10 +33,10 @@
 </template>
 <script>
 
-import isUrl from 'is-url';
 import AccordionFlush from '../Common/AccordionFlush.vue';
 import InputRange from '../Common/InputRange.vue';
 import SwitchWithInfo from '../Common/SwitchWithInfo.vue';
+import InputUrl from '../Common/InputUrl.vue';
 
 export default {
     name: "Nodes",
@@ -71,7 +52,7 @@ export default {
             borderWidth: 1,
             borderWidthSelected: 2,
             borderWidthSelectedDisabled: true,
-            brokenImage: "",
+            brokenImage: "https://www.google.com",
             firstAccordionItems: [],
             firstAccordionItemsComponents: [],
             fixedSwitchEnabled: true,
@@ -89,10 +70,8 @@ export default {
     },
     watch: {
         brokenImage: function (newBrokenImage, oldBrokenImage) {
-            if (isUrl(newBrokenImage)) {
-                this.encapsulateOptions.nodes.brokenImage = newBrokenImage;
-                this.$emit('options-has-changed', this.encapsulateOptions);
-            }
+            this.encapsulateOptions.nodes.brokenImage = newBrokenImage;
+            this.$emit('options-has-changed', this.encapsulateOptions);
         }
     },
     mounted() {
@@ -193,7 +172,8 @@ export default {
     components: {
         AccordionFlush,
         InputRange,
-        SwitchWithInfo
+        SwitchWithInfo,
+        InputUrl
     },
     methods: {
         toggleSwitchEvent: function (switchId, value) {
@@ -455,7 +435,7 @@ export default {
                 }
 
                 case 'init-icons': {
-                    this.encapsulateOptions.nodes.icon = {size: 50, weight: 300};
+                    this.encapsulateOptions.nodes.icon = { size: 50, weight: 300 };
                     this.$emit('options-has-changed', this.encapsulateOptions);
                     break;
                 }
@@ -505,7 +485,7 @@ export default {
                 this.$emit('options-has-changed', this.encapsulateOptions);
             }
         },
-        onBorderWidthSelectedChange: function(value) {
+        onBorderWidthSelectedChange: function (value) {
             if (value) {
                 this.borderWidthSelected = 2 * this.encapsulateOptions.nodes.borderWidth;
                 this.encapsulateOptions.nodes.borderWidthSelected = this.borderWidthSelected;
@@ -519,6 +499,11 @@ export default {
                 this.encapsulateOptions.nodes.borderWidthSelected = this.borderWidthSelected;
                 this.$emit('options-has-changed', this.encapsulateOptions);
             }
+        },
+        updateBrokenImageValue: function (value) {
+            this.brokenImage = value;
+            this.encapsulateOptions.nodes.brokenImage = value;
+            this.$emit('options-has-changed', this.encapsulateOptions);
         },
         toggleHidden: function (value) {
             this.hidden = value;
