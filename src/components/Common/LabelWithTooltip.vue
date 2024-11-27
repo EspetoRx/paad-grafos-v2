@@ -1,16 +1,9 @@
 <template>
     <div class="d-flex justify-content-between mt-1 mb-1">
-        <switch-button
-            v-if="this.hasSwitch"
-            :switchId="this.switchId"
-            :switchDisabled="this.switchDisabled"
-            :switchInitialValue="this.switchInitialValue"
-            :switchTooltipEnabled="true"
-            :switchTooltip="this.switchTooltip"
-            :switchLabelEnabled="this.switchLabelEnabled"
-            :switchLabelValue="this.switchLabelValue"
-            @checkbox-status-changed="checkboxStatusChanged"
-        ></switch-button>
+        <switch-button v-if="this.hasSwitch" :switchId="this.switchId" :switchDisabled="this.switchDisabled"
+            :switchInitialValue="this.switchInitialValue" :switchTooltipEnabled="this.switchTooltipEnabled || false"
+            :switchTooltip="this.switchTooltip" :switchLabelEnabled="this.switchLabelEnabled"
+            :switchLabelValue="this.switchLabelValue" @checkbox-status-changed="checkboxStatusChanged"></switch-button>
         <div class="d-flex justify-content-between flex-fill">
             <div class="d-flex w-100 justify-content-between">
                 <div data-bs-toggle="tooltip" :title="this.tooltip">
@@ -39,7 +32,8 @@ export default {
         'switchDisabled',
         'switchInitialValue',
         'switchLabelEnabled',
-        'switchLabelValue'
+        'switchLabelValue',
+        'switchTooltipEnabled'
     ],
     components: {
         'switch-button': SwitchButton

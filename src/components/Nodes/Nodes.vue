@@ -1,61 +1,28 @@
 <template>
     <div>
-        <div class="form-group">
-            <SwitchWithInfo :switchId="'nodes-hidden'" :switchDisabled="false" :switchInitialValue="this.hidden"
-                :switchTooltipEnabled="true"
-                :switchTooltip="'Quando verdadeiro, os vértices não serão mostrados. Ainda farão parte da simulação de física, no entanto!'"
-                :switchLabelEnabled="true" :switchLabelValue="'Esconder vértices'" @checkbox-status-changed="toggleHidden"></SwitchWithInfo>
-            <div class="d-flex justify-content-between flex-fill">
-                <div class="d-flex w-100 justify-content-between align-middle">
-                    <div data-bs-toggle="tooltip" title="Options.Nodes.BorderWidth -
-            A grossura da borda do vértice. 
-            Padrão 1">
-                        <label for="borderWidthNumber" class="form-label">Grossura da borda:</label>
-                    </div>
-                    <div class="flex-shrink-1 badge bg-info m-1" data-bs-toggle="tooltip" title="BorderWidth. 
-            A grossura da borda do vértice. 
-            Padrão 1">
-                        <i class="fa-solid fa-info text-right"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="d-flex mb-3">
-                <input type="text" class="form-control form-control-sm w-25 text-center" id="borderWidthNumber" min="1"
-                    max="25" step="1" :value="this.borderWidth" disabled>
-                <input type="range" class="form-range ms-2 me-2 flex-grow-1" id="borderWidthRange" min="1" max="25"
-                    v-model="this.borderWidth">
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="d-flex justify-content-between">
-                <div class="form-check form-switch" data-bs-toggle="tooltip"
-                    title="Default BorderWidthSelected - Definir o padrão da grossura da borda selecionada.">
-                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault"
-                        :checked="this.borderWidthSelectedDefault" v-model="this.borderWidthSelectedDefault">
-                </div>
-                <div class="d-flex justify-content-between flex-fill">
-                    <div class="d-flex w-100 justify-content-between align-middle">
-                        <div data-bs-toggle="tooltip" title="Options.Nodes.BorderWidthSelected - 
-                    A grossura da borda do vértice selecionado. 
-                    Quando não definido, o borderWidth*2 é usado.">
-                            <label for="borderWidthSelectedNumber" class="form-label">Grossura da borda do
-                                selecionado:</label>
-                        </div>
-                        <div class="flex-shrink-1 badge bg-info m-1" data-bs-toggle="tooltip" title="Options.Nodes.BorderWidthSelected - 
-                    A grossura da borda do vértice selecionado. 
-                    Quando não definido, o borderWidth*2 é usado.">
-                            <i class="fa-solid fa-info text-right"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="d-flex mb-3">
-                <input type="text" class="form-control form-control-sm w-25 text-center" id="borderWidthSelectedNumber"
-                    min="2" max="50" step="1" :value="this.borderWidthSelected" disabled>
-                <input type="range" class="form-range ms-2 me-2 flex-grow-1" id="borderWidthSelectedRange" min="2"
-                    max="50" v-model="this.borderWidthSelected" :disabled="this.borderWidthSelectedDefault">
-            </div>
-        </div>
+        <SwitchWithInfo :switchId="'nodes-hidden'" :switchDisabled="false" :switchInitialValue="this.hidden"
+            :switchTooltipEnabled="true"
+            :switchTooltip="'Quando verdadeiro, os vértices não serão mostrados. Ainda farão parte da simulação de física, no entanto!'"
+            :switchLabelEnabled="true" :switchLabelValue="'Esconder vértices'" @checkbox-status-changed="toggleHidden">
+        </SwitchWithInfo>
+        <InputRange :inputId="'nodes-borderWidth-range'" :isLabelEnabled="true" :min="0" :max="25" :step="1"
+            :initialValue="this.borderWidth" :labelValue="'Grossura da Borda'"
+            :tooltip="'Options.Nodes.BorderWidth - A grossura da borda do vértice. Padrão 1'"
+            @update-value-from-range-input="emitBorderWidth"></InputRange>
+        <InputRange
+        :inputId="'nodes-borderWidthSelected-range'"
+        :isLabelEnabled="true"
+        :min="0"
+        :max="50"
+        :step="1"
+        :initialValue="this.borderWidthSelected"
+        :labelValue="'Grossura da borda do selecionado'"
+        :tooltip="'Options.Nodes.BorderWidthSelected Toggle to disable default. - A largura da borda do nó quando ele é selecionado. Quando indefinido, o borderWidth * 2 é usado. Alterne para desabilitar o padrão.'"
+        :disabled="this.borderWidthSelectedDisabled"
+        :labelHasSwitch="true" :labelSwitchId="'nodes-borderWidthSelectedRange-default'" :labelSwitchInitialValue="this.borderWidthSelectedDisabled"
+        @checkbox-status-changed="onBorderWidthSelectedChange"
+        @update-value-from-range-input="updateValueBorderWidhtSelected"
+        ></InputRange>
         <div class="form-group">
             <div class="d-flex justify-content-between">
                 <div class="d-flex w-100 justify-content-between">
@@ -103,7 +70,7 @@ export default {
             encapsulateNetwork: null,
             borderWidth: 1,
             borderWidthSelected: 2,
-            borderWidthSelectedDefault: true,
+            borderWidthSelectedDisabled: true,
             brokenImage: "",
             firstAccordionItems: [],
             firstAccordionItemsComponents: [],
@@ -116,23 +83,11 @@ export default {
             heightConstraintObjectEnabled: false,
             heightConstraintIntegerValue: 0,
             heightConstraintObjectValue: {},
-            hidden: false
+            hidden: false,
+            shape: 'ellipse'
         }
     },
     watch: {
-        borderWidth: function (newBW, oldBW) {
-            let value = parseInt(newBW);
-            this.encapsulateOptions.nodes.borderWidth = parseInt(newBW);
-            this.$emit('options-has-changed', this.encapsulateOptions);
-            if (this.borderWidthSelectedDefault) {
-                this.borderWidthSelected = 2 * value;
-            }
-
-        },
-        borderWidthSelected: function (newBWS, oldBWS) {
-            this.encapsulateOptions.nodes.borderWidthSelected = parseInt(newBWS);
-            this.$emit('options-has-changed', this.encapsulateOptions);
-        },
         brokenImage: function (newBrokenImage, oldBrokenImage) {
             if (isUrl(newBrokenImage)) {
                 this.encapsulateOptions.nodes.brokenImage = newBrokenImage;
@@ -224,6 +179,16 @@ export default {
             }
         );
         this.firstAccordionItemsComponents.push({ item: 'heightConstraint', component: 'nodes.heightConstraint' });
+        this.firstAccordionItems.push(
+            {
+                item: 'shape',
+                title: 'Forma',
+                switch: false,
+                hasTooltip: true,
+                tooltip: 'Options.Nodes.Shape - A forma define a aparência do vértice. Existem três tipos de vértices. Um tipo tem o rótulo dentro dele e o outro tipo tem o rótulo abaixo dele. O terceiro tipo é uma forma personalizada onde você pode desenhar o que quiser para representar o vértice.'
+            }
+        );
+        this.firstAccordionItemsComponents.push({ item: 'shape', component: 'nodes.shape' });
     },
     components: {
         AccordionFlush,
@@ -439,8 +404,6 @@ export default {
                     break;
                 }
                 case 'height-constraint-object-enabled': {
-                    console.log("Height Constraint Switch Value = " + this.heightConstraintSwitchValue);
-                    console.log("Recieved value: " + value);
                     if (this.heightConstraintSwitchValue) {
                         this.heightConstraintObjectEnabled = value;
                     } else {
@@ -461,7 +424,6 @@ export default {
                     break;
                 }
                 case 'height-constraint-object-minimum': {
-                    console.log("entrei no minimum");
                     if (this.heightConstraintSwitchValue) {
                         if (this.heightConstraintObjectEnabled) {
                             this.heightConstraintObjectValue.minimum = parseInt(value);
@@ -485,11 +447,78 @@ export default {
                     }
                     break;
                 }
+                case 'update-node-shape': {
+                    this.shape = value;
+                    this.encapsulateOptions.nodes.shape = value;
+                    this.$emit('options-has-changed', this.encapsulateOptions);
+                    break;
+                }
+
+                case 'init-icons': {
+                    this.encapsulateOptions.nodes.icon = {size: 50, weight: 300};
+                    this.$emit('options-has-changed', this.encapsulateOptions);
+                    break;
+                }
+
+                case 'update-icon-font-face': {
+                    this.encapsulateOptions.nodes.icon.face = value;
+                    this.$emit('options-has-changed', this.encapsulateOptions);
+                    break;
+                }
+
+                case 'update-icon-code': {
+                    this.encapsulateOptions.nodes.icon.code = value;
+                    this.$emit('options-has-changed', this.encapsulateOptions);
+                    break;
+                }
+
+                case 'update-icon-weight': {
+                    this.encapsulateOptions.nodes.icon.weight = parseInt(value);
+                    this.$emit('options-has-changed', this.encapsulateOptions);
+                    break;
+                }
+
+                case 'update-icon-color': {
+                    this.encapsulateOptions.nodes.icon.color = value;
+                    this.$emit('options-has-changed', this.encapsulateOptions);
+                    break;
+                }
+
+                case 'update-icon-size': {
+                    this.encapsulateOptions.nodes.icon.size = parseInt(value);
+                    this.$emit('options-has-changed', this.encapsulateOptions);
+                    break;
+                }
             }
         },
         emitOpacity: function (value) {
             this.encapsulateOptions.nodes.opacity = parseFloat(value);
             this.$emit('options-has-changed', this.encapsulateOptions);
+        },
+        emitBorderWidth: function (value) {
+            this.borderWidth = value;
+            this.encapsulateOptions.nodes.borderWidth = parseInt(value);
+            this.$emit('options-has-changed', this.encapsulateOptions);
+            if (this.borderWidthSelectedDisabled) {
+                this.borderWidthSelected = 2 * this.encapsulateOptions.nodes.borderWidth;
+                this.encapsulateOptions.nodes.borderWidthSelected = this.borderWidthSelected;
+                this.$emit('options-has-changed', this.encapsulateOptions);
+            }
+        },
+        onBorderWidthSelectedChange: function(value) {
+            if (value) {
+                this.borderWidthSelected = 2 * this.encapsulateOptions.nodes.borderWidth;
+                this.encapsulateOptions.nodes.borderWidthSelected = this.borderWidthSelected;
+                this.$emit('options-has-changed', this.encapsulateOptions);
+            }
+            this.borderWidthSelectedDisabled = value;
+        },
+        updateValueBorderWidhtSelected: function (value) {
+            if (!this.borderWidthSelectedDisabled) {
+                this.borderWidthSelected = parseInt(value);
+                this.encapsulateOptions.nodes.borderWidthSelected = this.borderWidthSelected;
+                this.$emit('options-has-changed', this.encapsulateOptions);
+            }
         },
         toggleHidden: function (value) {
             this.hidden = value;

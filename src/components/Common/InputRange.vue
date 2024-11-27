@@ -1,14 +1,15 @@
 <template>
     <tooltip-label v-if="this.isLabelEnabled" :labelValue="this.labelValue" :tooltip="this.tooltip"
-        :forId="this.inputId" :hasSwitch="false" :switchId="''" :switchTooltip="''" :switchDisabled="false"
-        :switchInitialValue="false" :switchLabelEnabled="false" :switchLabelValue="''">
+        :forId="this.inputId" :hasSwitch="this.labelHasSwitch || false" :switchId="this.labelSwitchId||''" :switchTooltip="this.tooltip || ''" :switchDisabled="this.labelSwitchDisabled || false"
+        :switchInitialValue="this.labelSwitchInitialValue || false" :switchLabelEnabled="false" :switchLabelValue="''" :switchTooltipEnabled="this.labelSwitchTooltipEnabled || false"
+        @checkbox-status-changed="onCheckboxStatusChanged">
 
     </tooltip-label>
     <div class="d-flex">
-        <input type="text" class="form-control w-25 h-75 text-center form-control-sm p-0" :value="this.value"
+        <input type="text" class="form-control w-25 h-75 text-center form-control-sm p-0" :value="this.objectValue"
             :id="inputId + '-textfield'" disabled>
-        <input type="range" v-model="this.value" class="form-range d-flex-fill m-2 h-75" :min="min" :max="max"
-            :step="step" :id="inputId" :disabled="disabled || false">
+        <input type="range" v-model="this.objectValue" class="form-range d-flex-fill m-2 h-75" :min="min" :max="max"
+            :step="step" :id="inputId" :disabled="disabled || false" >
     </div>
 </template>
 <script>
@@ -26,25 +27,38 @@ export default {
         'initialValue',
         'labelValue',
         'tooltip',
-        'disabled'
+        'disabled',
+        'labelHasSwitch',
+        'labelSwitchId',
+        'labelSwitchDisabled',
+        'labelSwitchInitialValue',
+        'labelSwitchTooltipEnabled'
     ]
     ,
     data() {
         return {
-            value: 0
+            objectValue: 0
         }
     },
     watch: {
-        value: function (newValue, oldValue) {
+        objectValue: function (newValue, oldValue) {
             this.$emit("update-value-from-range-input", newValue);
+        },
+        initialValue: function(newValue, oldValue) {
+            this.objectValue = ""+newValue;
         }
     },
     components: {
         'tooltip-label': LabelWithTooltip
     },
     mounted() {
-        this.value = this.initialValue
+        this.objectValue = this.initialValue
     },
-    emits: ['update-value-from-range-input']
+    methods: {
+        onCheckboxStatusChanged: function(value) {
+            this.$emit("checkbox-status-changed", value);
+        }
+    },
+    emits: ['update-value-from-range-input', 'checkbox-status-changed']
 }
 </script>
