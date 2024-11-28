@@ -3,16 +3,16 @@
         <top-navbar @toggle-off-canvas="toggleOffCanvas" @offcanvas-for-vis-configure="offCanvasForVisConfigure"
             @offcanvas-for-vis-physics="offCanvasForVisPhysics" @offcanvas-for-vis-nodes="offCanvasForVisNodes">
         </top-navbar>
-        <graph :nodes="nodes" :edges="edges" :options="options" @update-network="updateNetwork">
+        <graph :nodes="nodes" :edges="edges" :options="options" @canvas-start="canvasStart" v-if="canvasEnabled" :key="canvasEnabled">
         </graph>
         <bottom-navbar></bottom-navbar>
         <off-canvas :offCanvasEnabled="this.offCanvasEnabled" :title="this.offCanvas.title" :type="this.offCanvas.type"
             :localNetwork="this.encapsulateNetwork" :options="this.options" @toggle-off-canvas="this.toggleOffCanvas"
-            @options-has-changed="this.optionsHasChanged"></off-canvas>
+            @options-has-changed="this.optionsHasChanged" :realNodes="this.nodes" @nodes-has-changed="this.nodesHasChanged" @canvas-redraw="onCanvasRedraw"></off-canvas>
     </div>
 </template>
 <script>
-import { Network } from 'vis-network'
+import { Network } from 'vis-network';
 import * as Vue from 'vue';
 import { Tooltip } from 'bootstrap';
 
@@ -26,6 +26,7 @@ import BaseOptions from './assets/BaseOptions.json';
 export default {
     data() {
         return {
+            canvasEnabled: true,
             offCanvasEnabled: false,
             offCanvas: {
                 title: '',
@@ -92,7 +93,7 @@ export default {
         
         },
 
-        updateNetwork(container, graph_data, options) {
+        canvasStart(container, graph_data, options) {
 
             let localNetwork = new Network(
                 container,
@@ -107,6 +108,18 @@ export default {
         optionsHasChanged(options) {
             this.options = options;
             Vue.toRaw(this.encapsulateNetwork).setOptions(this.options);
+        },
+
+        nodesHasChanged(nodes) {
+            this.nodes = nodes;
+        },
+
+        onCanvasRedraw: function() {
+            console.log("---REDESENHANDO---");
+            this.toggleOffCanvas();
+            this.canvasEnabled = !this.canvasEnabled;
+            //Vue.toRaw(this.encapsulateNetwork).destroy();
+            this.canvasEnabled = !this.canvasEnabled;
         }
     },
     mounted() {

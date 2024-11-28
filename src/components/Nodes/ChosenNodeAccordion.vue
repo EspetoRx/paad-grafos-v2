@@ -44,7 +44,7 @@
 
 import SwitchWithInfo from '../Common/SwitchWithInfo.vue';
 import LabelWithTooltip from '../Common/LabelWithTooltip.vue';
-import InputColorPicker from '../Common/InputColorPicker.vue';
+import InputColorPicker from '../Common/Inputs/InputColorPicker.vue';
 
 export default {
     name: "Chosen Node Options",

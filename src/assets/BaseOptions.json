@@ -1,12 +1,13 @@
 {
     "manipulation": {
-        "enabled": true,
+        "enabled": false,
         "initiallyActive": true
     },
     "nodes": {
         "borderWidth": 1,
         "borderWidthSelected": 2,
-        "brokenImage": "",
+        "image" : "/paad-grafos-v2/src/assets/images/paad_logo.png",
+        "brokenImage": "/paad-grafos-v2/src/assets/images/paad_logo.png",
         "chosen": {
             "node": true,
             "label": true

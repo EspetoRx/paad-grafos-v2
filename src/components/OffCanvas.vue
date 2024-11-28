@@ -23,7 +23,8 @@
             <physics v-if="this.type == 'visjs-physics'" :localNetwork="this.encapsulateLocalNetwork"
                 :options="this.encapsulateOptions" @options-has-changed="optionsHasChanged"></physics>
             <nodes v-if="this.type == 'visjs-nodes'" :network="this.encapsulateLocalNetwork"
-                :options="this.encapsulateOptions" @options-has-changed="optionsHasChanged"></nodes>
+                :options="this.encapsulateOptions" @options-has-changed="optionsHasChanged"
+                @nodes-has-changed="nodeshasChanged" :nodes="encapsulateNodes" @component-redraw="onComponentRedraw"></nodes>
             <div id="offcanvasBody"></div>
         </div>
     </div>
@@ -44,13 +45,15 @@ export default {
         'title',
         'type',
         'localNetwork',
-        'options'
+        'options',
+        'realNodes'
     ],
     data() {
         return {
             encapsulateLocalNetwork: null,
             encapsulateOptions: null,
             container: document.getElementById("offcanvasBody"),
+            encapsulateNodes: null
         }
     },
     watch: {
@@ -88,16 +91,28 @@ export default {
     },
     mounted() {
         console.log("OffCanvas Component Mounted");
+        this.encapsulateNodes = this.realNodes;
     },
     methods: {
         optionsHasChanged(recievedOptions) {
             this.encapsulateOptions = recievedOptions;
             this.$emit('options-has-changed', this.encapsulateOptions);
         },
+        nodeshasChanged(recievedNodes) {
+            this.encapsulateNodes = recievedNodes;
+            this.$emit('nodes-has-changed', this.encapsulateNodes);
+        },
+        onComponentRedraw: function(recievedFlag) {
+            if (recievedFlag) {
+                this.$emit('canvas-redraw')
+            }
+        }
     },
     emits: [
         'toggle-off-canvas',
-        'options-has-changed'
+        'options-has-changed',
+        'nodes-has-changed',
+        'canvas-redraw'
     ]
 }
 </script>

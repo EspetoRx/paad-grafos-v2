@@ -45,15 +45,25 @@
         :labelValue="'Tamanho do ícone'"
         :tooltip="'Options.Nodes.Icon.Size - Altere o tamanho do ícone sendo utilizado.'"
         @update-value-from-range-input="updateIconSize"></InputRange>
+    <InputUrl
+        v-if="imageSelected"
+        :idInput="'nodes-shapes-image'"
+        :labelValue="'URL da Imagem:'"
+        placeholder="'http://www.google.com'"
+        :tooltip="'Entre com a URL da imagem a ser utilizada como vértice.'"
+        :urlInitalValue="imageUrl"
+        @url-value-update="updateImageUrl"
+    ></InputUrl>
 </template>
 <script>
-import InputSelect from '../Common/InputSelect.vue';
+import InputSelect from '../Common/Inputs/InputSelect.vue';
 import LabelWithTooltip from '../Common/LabelWithTooltip.vue';
-import InputSelectSearch from '../Common/InputSelectSearch.vue';
+import InputSelectSearch from '../Common/Inputs/InputSelectSearch.vue';
 import FontAwesomeJsonIcons from '../../assets/FontAwesomeIcons.json';
 import IonIcons from '../../assets/IonIcons.json';
-import InputRange from '../Common/InputRange.vue';
-import InputColorPicker from '../Common/InputColorPicker.vue';
+import InputRange from '../Common/Inputs/InputRange.vue';
+import InputColorPicker from '../Common/Inputs/InputColorPicker.vue';
+import InputUrl from '../Common/Inputs/InputUrl.vue';
 export default {
     name: "Shape Node Accordion",
     props: ['checkboxValue'],
@@ -78,6 +88,7 @@ export default {
                 { value: 'custom', label: 'Customizado CTX Render', selected: false, group: 'Customizado' },
             ],
             imageSelected: false,
+            alreadyTransmitedImage: false,
             circularImageSelected: false,
             iconSelected: false,
             customSelected: false,
@@ -87,7 +98,10 @@ export default {
             iconWeight: 200,
             minWeight: 200,
             iconColor: '#2B7CE9',
-            iconSize: 50
+            iconSize: 50,
+
+            ///////////////////// Imagens
+            imageUrl: "/paad-grafos-v2/src/assets/images/paad_logo.png"
         }
     },
     components: {
@@ -95,12 +109,34 @@ export default {
         LabelWithTooltip,
         InputSelectSearch,
         InputRange,
-        InputColorPicker
+        InputColorPicker,
+        InputUrl
     },
     mounted() {
         
     },
     methods: {
+        updateNodeShape: function (value) {
+            console.log("Updated selection: " + value);
+            this.shape = value;
+            if (value == 'image') {
+                this.imageSelected = true;
+                this.$emit("message", "update-node-shape", value);
+            } else if (value == 'circularImage') {
+                this.circularImageSelected = true;
+            } else if (value == 'icon') {
+                this.$emit("message", "init-icons", null);
+                this.$emit("message", "update-icon-font-face", '\'Font Awesome 6 Free\'');
+                this.$emit("message", "update-icon-code", String.fromCharCode(parseInt(this.iconSelectedOption.id, 16)));
+                this.iconSelected = true;
+                this.iconsNodeFontFace = 'fontAwesome';
+                this.$emit("message", "update-node-shape", value);
+            } else if (value == 'custom') {
+                this.customSelected = true;
+            } else {
+                this.$emit("message", "update-node-shape", value);
+            }
+        },
         iconsOptionSelected: function (newValue) {
             this.iconSelectedOption = newValue;
             if (Object.hasOwn(newValue, 'style')) {
@@ -129,28 +165,6 @@ export default {
             }
             this.$emit("message", "update-icon-code", String.fromCharCode(parseInt(this.iconSelectedOption.id, 16)));
             this.$emit("message", 'update-icon-color', this.iconColor);
-        },
-        updateNodeShape: function (value) {
-            console.log("Updated selection: " + value);
-            this.shape = value;
-            if (value == 'image') {
-                this.imageSelected = true;
-            } else if (value == 'circularImage') {
-                this.circularImageSelected = true;
-            } else if (value == 'icon') {
-                this.$emit("message", "init-icons", null);
-                this.$emit("message", "update-icon-font-face", '\'Font Awesome 6 Free\'');
-                this.$emit("message", "update-icon-code", String.fromCharCode(parseInt(this.iconSelectedOption.id, 16)));
-                //this.$emit("message", "update-icon-font-face", '"Ionicons"');
-                //this.$emit("message", "update-icon-code", '\uf2d2');
-                this.iconSelected = true;
-                this.iconsNodeFontFace = 'fontAwesome';
-                this.$emit("message", "update-node-shape", value);
-            } else if (value == 'custom') {
-                this.customSelected = true;
-            } else {
-                this.$emit("message", "update-node-shape", value);
-            }
         },
         updateIconWeight: function (value) {
             this.$emit("message", "update-icon-weight", value);
@@ -202,6 +216,15 @@ export default {
         updateIconSize: function(value) {
             this.iconSize = parseInt(value);
             this.$emit("message", 'update-icon-size', value);
+        },
+        updateImageUrl: function(value) {
+            this.imageUrl = value;
+            this.$emit("message", "update-image-url", value);
+            //console.log('emiti update-redraw-canvas');
+            if (this.alreadyTransmitedImage) {
+                this.$emit("message", "update-redraw-canvas", true);
+            }
+            this.alreadyTransmitedImage = true;
         }
     },
     emits: ["message"]

@@ -4,7 +4,7 @@
             <div class="accordion-header" id="flush-wind">
                 <button class="accordion-button collapsed p-1" type="button" data-bs-toggle="collapse"
                     data-bs-target="#flush-collapseWind" aria-expanded="false" aria-controls="flush-collapseWind"
-                    id="collapseWind" @click.preven="this.isWindEnabled = !this.isWindEnabled">
+                    id="collapseWind" @click.prevent="this.isWindEnabled = !this.isWindEnabled">
                     <div class="d-flex w-100 justify-content-between pe-2">
                         <div>
                             Vento

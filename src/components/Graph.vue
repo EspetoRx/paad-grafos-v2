@@ -4,6 +4,7 @@
     </div>
 </template>
 <script>
+import {DataSet} from 'vis-data';
 export default {
     
     name: "Graph",
@@ -16,16 +17,17 @@ export default {
     computed: {
         graph_data() {
             return {
-                nodes: this.nodes,
-                edges: this.edges
+                nodes: new DataSet(this.nodes),
+                edges: new DataSet(this.edges)
             };
         },
     },
     mounted() {
         console.log("Graph Component mounted.");
         this.container = document.getElementById("graph");
-        this.$emit('update-network', this.container, this.graph_data, this.options);
+        this.$emit('canvas-start', this.container, this.graph_data, this.options);
+        console.log("emiti update network");
     },
-    emits: ['update-network']
+    emits: ['canvas-start']
 }
 </script>
