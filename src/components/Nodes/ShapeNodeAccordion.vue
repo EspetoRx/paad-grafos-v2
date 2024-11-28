@@ -45,8 +45,19 @@
         :labelValue="'Tamanho do ícone'"
         :tooltip="'Options.Nodes.Icon.Size - Altere o tamanho do ícone sendo utilizado.'"
         @update-value-from-range-input="updateIconSize"></InputRange>
+    <SwitchWithInfo
+        v-if="imageSelected || circularImageSelected"
+        :switchDisabled="false"
+        :switchId="'enable-image-object-sending'"
+        :switchInitialValue="imageObjectSendingEnabled"
+        :switchLabelEnabled="true"
+        :switchLabelValue="'Ativar envio de objeto'"
+        :switchTooltipEnabled="true"
+        :switchTooltip="'Object.Nodes.Image (Enable Object Sending) - Clique aqui para habilitar o envio de objeto para o campo.'"
+        @checkbox-status-changed="enableImageObjectSending"
+    ></SwitchWithInfo>
     <InputUrl
-        v-if="imageSelected"
+        v-if="imageSelected || circularImageSelected"
         :idInput="'nodes-shapes-image'"
         :labelValue="'URL da Imagem:'"
         placeholder="'http://www.google.com'"
@@ -64,6 +75,7 @@ import IonIcons from '../../assets/IonIcons.json';
 import InputRange from '../Common/Inputs/InputRange.vue';
 import InputColorPicker from '../Common/Inputs/InputColorPicker.vue';
 import InputUrl from '../Common/Inputs/InputUrl.vue';
+import SwitchWithInfo from '../Common/SwitchWithInfo.vue';
 export default {
     name: "Shape Node Accordion",
     props: ['checkboxValue'],
@@ -101,7 +113,8 @@ export default {
             iconSize: 50,
 
             ///////////////////// Imagens
-            imageUrl: "/paad-grafos-v2/src/assets/images/paad_logo.png"
+            imageObjectSendingEnabled: false,
+            imageUrl: "/paad-grafos-v2/public/images/paad_logo.png",
         }
     },
     components: {
@@ -110,7 +123,8 @@ export default {
         InputSelectSearch,
         InputRange,
         InputColorPicker,
-        InputUrl
+        InputUrl,
+        SwitchWithInfo
     },
     mounted() {
         
@@ -121,18 +135,31 @@ export default {
             this.shape = value;
             if (value == 'image') {
                 this.imageSelected = true;
+                this.circularImageSelected = false;
+                this.iconSelected = false;
+                this.customSelected = false;
                 this.$emit("message", "update-node-shape", value);
             } else if (value == 'circularImage') {
                 this.circularImageSelected = true;
+                this.imageSelected = false;
+                this.iconSelected = false;
+                this.customSelected = false;
+                this.$emit("message", "update-node-shape", value);
             } else if (value == 'icon') {
                 this.$emit("message", "init-icons", null);
                 this.$emit("message", "update-icon-font-face", '\'Font Awesome 6 Free\'');
                 this.$emit("message", "update-icon-code", String.fromCharCode(parseInt(this.iconSelectedOption.id, 16)));
                 this.iconSelected = true;
+                this.imageSelected = false;
+                this.circularImageSelected = false;
+                this.customSelected = false;
                 this.iconsNodeFontFace = 'fontAwesome';
                 this.$emit("message", "update-node-shape", value);
             } else if (value == 'custom') {
                 this.customSelected = true;
+                this.iconSelected = false;
+                this.imageSelected = false;
+                this.circularImageSelected = false;
             } else {
                 this.$emit("message", "update-node-shape", value);
             }
@@ -220,11 +247,13 @@ export default {
         updateImageUrl: function(value) {
             this.imageUrl = value;
             this.$emit("message", "update-image-url", value);
-            //console.log('emiti update-redraw-canvas');
             if (this.alreadyTransmitedImage) {
-                this.$emit("message", "update-redraw-canvas", true);
+                this.$emit("message", "update-canvas-key-change", true);
             }
             this.alreadyTransmitedImage = true;
+        },
+        enableImageObjectSending: function(value) {
+            this.imageObjectSendingEnabled = value;
         }
     },
     emits: ["message"]

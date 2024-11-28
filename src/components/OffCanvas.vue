@@ -24,7 +24,7 @@
                 :options="this.encapsulateOptions" @options-has-changed="optionsHasChanged"></physics>
             <nodes v-if="this.type == 'visjs-nodes'" :network="this.encapsulateLocalNetwork"
                 :options="this.encapsulateOptions" @options-has-changed="optionsHasChanged"
-                @nodes-has-changed="nodeshasChanged" :nodes="encapsulateNodes" @component-redraw="onComponentRedraw"></nodes>
+                @nodes-has-changed="nodeshasChanged" :nodes="encapsulateNodes" @component-key-change="onComponentKeyChange"></nodes>
             <div id="offcanvasBody"></div>
         </div>
     </div>
@@ -102,9 +102,9 @@ export default {
             this.encapsulateNodes = recievedNodes;
             this.$emit('nodes-has-changed', this.encapsulateNodes);
         },
-        onComponentRedraw: function(recievedFlag) {
+        onComponentKeyChange: function(recievedFlag) {
             if (recievedFlag) {
-                this.$emit('canvas-redraw')
+                this.$emit('canvas-key-change')
             }
         }
     },
@@ -112,7 +112,7 @@ export default {
         'toggle-off-canvas',
         'options-has-changed',
         'nodes-has-changed',
-        'canvas-redraw'
+        'canvas-key-change'
     ]
 }
 </script>

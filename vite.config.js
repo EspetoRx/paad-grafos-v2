@@ -7,13 +7,7 @@ import path from 'path';
 export default defineConfig({
   base: '/paad-grafos-v2/',
   plugins: [
-    vue({
-      template: {
-        compilerOptions: {
-          isCustomElement: (tag) => ['ion-icon'].includes(tag),
-        }
-      }
-    }),
+    vue(),
     mkcert()
   ],
   resolve: {

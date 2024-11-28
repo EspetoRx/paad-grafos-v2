@@ -3,12 +3,12 @@
         <top-navbar @toggle-off-canvas="toggleOffCanvas" @offcanvas-for-vis-configure="offCanvasForVisConfigure"
             @offcanvas-for-vis-physics="offCanvasForVisPhysics" @offcanvas-for-vis-nodes="offCanvasForVisNodes">
         </top-navbar>
-        <graph :nodes="nodes" :edges="edges" :options="options" @canvas-start="canvasStart" v-if="canvasEnabled" :key="canvasEnabled">
+        <graph :nodes="nodes" :edges="edges" :options="options" @canvas-start="canvasStart" v-if="canvasEnabled" :key="Hash">
         </graph>
         <bottom-navbar></bottom-navbar>
         <off-canvas :offCanvasEnabled="this.offCanvasEnabled" :title="this.offCanvas.title" :type="this.offCanvas.type"
             :localNetwork="this.encapsulateNetwork" :options="this.options" @toggle-off-canvas="this.toggleOffCanvas"
-            @options-has-changed="this.optionsHasChanged" :realNodes="this.nodes" @nodes-has-changed="this.nodesHasChanged" @canvas-redraw="onCanvasRedraw"></off-canvas>
+            @options-has-changed="this.optionsHasChanged" :realNodes="this.nodes" @nodes-has-changed="this.nodesHasChanged" @canvas-key-change="onCanvasKeyChange"></off-canvas>
     </div>
 </template>
 <script>
@@ -22,6 +22,7 @@ import OffCanvas from './components/OffCanvas.vue';
 import Graph from './components/Graph.vue';
 
 import BaseOptions from './assets/BaseOptions.json';
+import {hash} from './../src/utils/Hash';
 
 export default {
     data() {
@@ -48,6 +49,7 @@ export default {
             ],
             options: BaseOptions,
             encapsulateNetwork: null,
+            Hash: hash()
         }
     },
     components: {
@@ -114,12 +116,8 @@ export default {
             this.nodes = nodes;
         },
 
-        onCanvasRedraw: function() {
-            console.log("---REDESENHANDO---");
-            this.toggleOffCanvas();
-            this.canvasEnabled = !this.canvasEnabled;
-            //Vue.toRaw(this.encapsulateNetwork).destroy();
-            this.canvasEnabled = !this.canvasEnabled;
+        onCanvasKeyChange: function() {
+            this.Hash = hash();
         }
     },
     mounted() {

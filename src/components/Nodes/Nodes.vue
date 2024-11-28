@@ -480,8 +480,8 @@ export default {
                     break;
                 }
 
-                case 'update-redraw-canvas' : {
-                    this.$emit('component-redraw', value);
+                case 'update-canvas-key-change' : {
+                    this.$emit('component-key-change', value);
                 }
             }
         },
@@ -525,6 +525,6 @@ export default {
             this.$emit('options-has-changed', this.encapsulateOptions);
         }
     },
-    emits: ['options-has-changed', 'nodes-has-changed', 'component-redraw']
+    emits: ['options-has-changed', 'nodes-has-changed', 'component-key-change']
 }
 </script>
