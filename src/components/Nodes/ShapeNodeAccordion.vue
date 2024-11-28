@@ -114,7 +114,7 @@ export default {
 
             ///////////////////// Imagens
             imageObjectSendingEnabled: false,
-            imageUrl: "/paad-grafos-v2/public/images/paad_logo.png",
+            imageUrl: new URL(`/public/images/paad_logo.png`, import.meta.url).href,
         }
     },
     components: {
