@@ -3,7 +3,7 @@
         <top-navbar @toggle-off-canvas="toggleOffCanvas" @offcanvas-for-vis-configure="offCanvasForVisConfigure"
             @offcanvas-for-vis-physics="offCanvasForVisPhysics">
         </top-navbar>
-        <graph :nodes="nodes" :edges="edges" :options="options" @update-network="updateNetwork">
+        <graph :nodes="nodes" :edges="edges" :options="options" @canvas-start="startNetwork">
         </graph>
         <bottom-navbar></bottom-navbar>
         <off-canvas :offCanvasEnabled="offCanvasEnabled" 
@@ -11,11 +11,12 @@
             :localNetwork="this.encapsulateNetwork" 
             :options="this.options"
             @toggle-off-canvas="toggleOffCanvas"
-            @options-has-changed="optionsHasChanged"></off-canvas>
+            @options-has-changed="optionsHasChanged"
+            @component-redraw="networkCanvasRedraw"></off-canvas>
     </div>
 </template>
 <script>
-import { Network } from 'vis-network'
+import { network, Network } from 'vis-network'
 import * as Vue from 'vue';
 import { Tooltip } from 'bootstrap';
 
@@ -158,7 +159,7 @@ export default {
 
         },
 
-        updateNetwork(container, graph_data, options) {
+        startNetwork(container, graph_data, options) {
 
             let localNetwork = new Network(
                 container,
@@ -168,6 +169,10 @@ export default {
             this.encapsulateNetwork = localNetwork;
             this.optionsHasChanged(options);
 
+        },
+
+        networkCanvasRedraw() {
+            Vue.toRaw(this.encapsulateNetwork).redraw();
         },
 
         optionsHasChanged: function(options) {

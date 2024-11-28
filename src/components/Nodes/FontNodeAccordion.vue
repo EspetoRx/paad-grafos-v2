@@ -31,7 +31,7 @@
         ]" @update-selection="updateNodesFontFace"></InputSelect>
         <label-tooltip :labelValue="'Cor de Plano de fundo'"
             :tooltip="'Options.Nodes.Font.Background - Altere o plano de fundo da fonte dos rótulos dos vértices.'"
-            :forId="'options-nodes-font-background'" :hasSwitch="true" :switchId="'enable-font-background'"
+            :forId="'options-nodes-font-background'" :hasSwitch="true" :switchId="'options-nodes-font-background'"
             :switchTooltip="'Toggle Font Background On/Off. Altere entre a ativação do plano de fundo dos rótulos dos vértices.'"
             :switchDisabled="!this.checkboxValue" :switchInitialValue="false" :switchLabelEnabled="false" :switchLabelValue="''"
             @checkbox-status-changed="updateEnableFontBackground"></label-tooltip>
@@ -69,12 +69,12 @@
 </template>
 <script>
 
-import InputColorPicker from '../Common/InputColorPicker.vue';
+import InputColorPicker from '../Common/Inputs/InputColorPicker.vue';
 import LabelWithTooltip from '../Common/LabelWithTooltip.vue';
-import InputRange from '../Common/InputRange.vue';
-import InputSelect from '../Common/InputSelect.vue';
+import InputRange from '../Common/Inputs/InputRange.vue';
+import InputSelect from '../Common/Inputs/InputSelect.vue';
 import SwitchWithInfo from '../Common/SwitchWithInfo.vue';
-import InputText from '../Common/InputText.vue';
+import InputText from '../Common/Inputs/InputText.vue';
 
 export default {
     props: [

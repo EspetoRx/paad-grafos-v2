@@ -34,25 +34,27 @@
 <script>
 
 import AccordionFlush from '../Common/AccordionFlush.vue';
-import InputRange from '../Common/InputRange.vue';
+import InputRange from '../Common/Inputs/InputRange.vue';
 import SwitchWithInfo from '../Common/SwitchWithInfo.vue';
-import InputUrl from '../Common/InputUrl.vue';
+import InputUrl from '../Common/Inputs/InputUrl.vue';
 
 export default {
     name: "Nodes",
     props: [
         'options',
         'network',
-        'isNodesEnabled'
+        'isNodesEnabled',
+        'nodes',
     ],
     data() {
         return {
+            encapsulateNodes: null,
             encapsulateOptions: null,
             encapsulateNetwork: null,
             borderWidth: 1,
             borderWidthSelected: 2,
             borderWidthSelectedDisabled: true,
-            brokenImage: "https://www.google.com",
+            brokenImage: "/paad-grafos-v2/src/assets/images/paad_logo.png",
             firstAccordionItems: [],
             firstAccordionItemsComponents: [],
             fixedSwitchEnabled: true,
@@ -78,6 +80,7 @@ export default {
         console.log("Nodes Component Mounted");
         this.encapsulateNetwork = this.network;
         this.encapsulateOptions = this.options;
+        this.encapsulateNodes = this.nodes;
         this.borderWidth = this.encapsulateOptions.nodes.borderWidth;
         this.borderWidthSelected = this.encapsulateOptions.nodes.borderWidthSelected;
         this.brokenImage = this.encapsulateOptions.nodes.brokenImage;
@@ -184,6 +187,7 @@ export default {
                     break;
                 }
                 case "fixed": {
+                    console.log("Fixed: " + value)
                     this.encapsulateOptions.nodes.fixed = value;
                     this.$emit('options-has-changed', this.encapsulateOptions);
                     break;
@@ -469,6 +473,16 @@ export default {
                     this.$emit('options-has-changed', this.encapsulateOptions);
                     break;
                 }
+
+                case 'update-image-url': {
+                    this.encapsulateOptions.nodes.image = value;
+                    this.$emit('options-has-changed', this.encapsulateOptions);
+                    break;
+                }
+
+                case 'update-redraw-canvas' : {
+                    this.$emit('component-redraw', value);
+                }
             }
         },
         emitOpacity: function (value) {
@@ -511,6 +525,6 @@ export default {
             this.$emit('options-has-changed', this.encapsulateOptions);
         }
     },
-    emits: ['options-has-changed']
+    emits: ['options-has-changed', 'nodes-has-changed', 'component-redraw']
 }
 </script>

@@ -17,7 +17,7 @@
 </template>
 <script>
 
-import LabelWithTooltip from './LabelWithTooltip.vue';
+import LabelWithTooltip from '../LabelWithTooltip.vue';
 
 export default {
     name: "Input TextArea Component",

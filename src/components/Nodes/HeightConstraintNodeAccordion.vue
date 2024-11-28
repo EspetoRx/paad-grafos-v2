@@ -56,8 +56,8 @@
 </template>
 <script>
 import SwitchWithInfo from '../Common/SwitchWithInfo.vue';
-import InputRange from '../Common/InputRange.vue';
-import InputSelect from '../Common/InputSelect.vue';
+import InputRange from '../Common/Inputs/InputRange.vue';
+import InputSelect from '../Common/Inputs/InputSelect.vue';
 import LabelWithTooltip from '../Common/LabelWithTooltip.vue';
 export default{
     name: "Height Constraint Component",
