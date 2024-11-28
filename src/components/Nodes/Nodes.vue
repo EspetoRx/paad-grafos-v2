@@ -480,8 +480,27 @@ export default {
                     break;
                 }
 
-                case 'update-canvas-key-change' : {
+                case 'update-canvas-key-change': {
                     this.$emit('component-key-change', value);
+                    break;
+                }
+
+                case 'update-image-url-selected': {
+                    if (value[0]) {
+                        this.encapsulateOptions.nodes.image = {
+                            unselected: value[1],
+                            selected: value[2]
+                        }
+                    } else {
+                        this.encapsulateOptions.nodes.image = {
+                            unselected: value[1],
+                            selected: value[1]
+                        };
+                    }
+
+                    this.$emit('options-has-changed', this.encapsulateOptions);
+                    this.$emit('component-key-change', value);
+                    break;
                 }
             }
         },

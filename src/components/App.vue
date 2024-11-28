@@ -16,7 +16,7 @@
     </div>
 </template>
 <script>
-import { network, Network } from 'vis-network'
+import { Network } from 'vis-network'
 import * as Vue from 'vue';
 import { Tooltip } from 'bootstrap';
 

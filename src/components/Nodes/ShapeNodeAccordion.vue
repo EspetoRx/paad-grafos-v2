@@ -25,46 +25,33 @@
         :labelValue="'Grossura da fonte do ícone'"
         :tooltip="'Options.Nodes.Icon.Weight - Altere a grossura da fonte. Alguns ícone não tem grossura mais fina.'"
         @update-value-from-range-input="updateIconWeight"></InputRange>
-    <LabelWithTooltip
-        v-if="this.iconSelected"
-        :forId="'node-icon-color-picker'"
-        :hasSwitch="false"
-        :labelValue="'Cor do ícone'"
-        :tooltip="'Options.Nodes.Icon.Color - Altere a cor do ícone do vértice.'"
-    ></LabelWithTooltip>
-    <InputColorPicker
-        v-if="this.iconSelected"
-        :disabled="false"
-        :colorPickerDefaultColor="this.iconColor"
+    <LabelWithTooltip v-if="this.iconSelected" :forId="'node-icon-color-picker'" :hasSwitch="false"
+        :labelValue="'Cor do ícone'" :tooltip="'Options.Nodes.Icon.Color - Altere a cor do ícone do vértice.'">
+    </LabelWithTooltip>
+    <InputColorPicker v-if="this.iconSelected" :disabled="false" :colorPickerDefaultColor="this.iconColor"
         :colorPickerId="'node-icon-color-picker'"
-        :tooltip="'Options.Nodes.Icon.Color - Altere a cor do ícone do vértice'"
-        @update-color="updateIconColor"
-    ></InputColorPicker>
+        :tooltip="'Options.Nodes.Icon.Color - Altere a cor do ícone do vértice'" @update-color="updateIconColor">
+    </InputColorPicker>
     <InputRange v-if="this.iconSelected" :disabled="false" :max="100" :min="1" :step="1"
-        :initialValue="''+this.iconSize" :inputId="'input-icon-size'" :isLabelEnabled="true" :labelHasSwitch="false"
+        :initialValue="'' + this.iconSize" :inputId="'input-icon-size'" :isLabelEnabled="true" :labelHasSwitch="false"
         :labelValue="'Tamanho do ícone'"
         :tooltip="'Options.Nodes.Icon.Size - Altere o tamanho do ícone sendo utilizado.'"
         @update-value-from-range-input="updateIconSize"></InputRange>
-    <SwitchWithInfo
-        v-if="imageSelected || circularImageSelected"
-        :switchDisabled="false"
-        :switchId="'enable-image-object-sending'"
-        :switchInitialValue="imageObjectSendingEnabled"
-        :switchLabelEnabled="true"
-        :switchLabelValue="'Ativar envio de objeto'"
-        :switchTooltipEnabled="true"
+    <SwitchWithInfo v-if="imageSelected || circularImageSelected" :switchDisabled="false"
+        :switchId="'enable-image-object-sending'" :switchInitialValue="imageObjectSendingEnabled"
+        :switchLabelEnabled="true" :switchLabelValue="'Ativar envio de objeto'" :switchTooltipEnabled="true"
         :switchTooltip="'Object.Nodes.Image (Enable Object Sending) - Clique aqui para habilitar o envio de objeto para o campo.'"
-        @checkbox-status-changed="enableImageObjectSending"
-    ></SwitchWithInfo>
-    <InputUrl
-        v-if="imageSelected || circularImageSelected"
-        :idInput="'nodes-shapes-image'"
-        :labelValue="'URL da Imagem:'"
+        @checkbox-status-changed="enableImageObjectSending"></SwitchWithInfo>
+    <InputUrl v-if="imageSelected || circularImageSelected" :idInput="'nodes-shapes-image'"
+        :labelValue="(!imageObjectSendingEnabled ? 'URL da Imagem:' : 'URL da Imagem vértice não selecionado')"
+        :tooltip="`Entre com a URL da imagem a ser utilizada como vértice ${imageObjectSendingEnabled ?? `não selecionado`}.`"
+        :urlInitalValue="imageUrlUnselected" @url-value-update="updateImageUrl" :placeholder="'http://www.google.com'">
+    </InputUrl>
+    <InputUrl v-if="(imageSelected || circularImageSelected) && imageObjectSendingEnabled"
+        :idInput="'nodes-shapes-image-selected'" :labelValue="'URL da Imagem vértice selecionado:'"
         placeholder="'http://www.google.com'"
-        :tooltip="'Entre com a URL da imagem a ser utilizada como vértice.'"
-        :urlInitalValue="imageUrl"
-        @url-value-update="updateImageUrl"
-    ></InputUrl>
+        :tooltip="'Entre com a URL da imagem a ser utilizada como vértice selecionado.'"
+        :urlInitalValue="imageUrlSelected" @url-value-update="imageUrlObjectSelected"></InputUrl>
 </template>
 <script>
 import InputSelect from '../Common/Inputs/InputSelect.vue';
@@ -114,7 +101,8 @@ export default {
 
             ///////////////////// Imagens
             imageObjectSendingEnabled: false,
-            imageUrl: new URL(`/public/images/paad_logo.png`, import.meta.url).href,
+            imageUrlUnselected: new URL(`/public/images/paad_logo.png`, import.meta.url).href,
+            imageUrlSelected: new URL(`/public/images/paad_logo_frio_e_dramático.png`, import.meta.url).href,
         }
     },
     components: {
@@ -127,7 +115,7 @@ export default {
         SwitchWithInfo
     },
     mounted() {
-        
+
     },
     methods: {
         updateNodeShape: function (value) {
@@ -222,7 +210,7 @@ export default {
                 for (var icons in IonIcons) {
                     options.push({
                         id: IonIcons[icons].value,
-                        code: '<i class="icon '+IonIcons[icons].id+' me-2"></i>',
+                        code: '<i class="icon ' + IonIcons[icons].id + ' me-2"></i>',
                         label: IonIcons[icons].id
                     })
                 }
@@ -232,28 +220,40 @@ export default {
                 this.$emit("message", "update-icon-code", String.fromCharCode(parseInt("f2d2", 16)));
                 this.iconSelected = true;
                 this.iconsNodeFontFace = 'ionIcons';
-                this.iconSelectedOption = { id: "f3a0", code: "<i class=\"icon ion-android-person me-2\"></i>", label: "ion-android-person"};
+                this.iconSelectedOption = { id: "f3a0", code: "<i class=\"icon ion-android-person me-2\"></i>", label: "ion-android-person" };
             }
             this.$emit("message", 'update-icon-color', this.iconColor);
         },
-        updateIconColor: function(newValue) {
+        updateIconColor: function (newValue) {
             this.iconColor = newValue;
             this.$emit("message", 'update-icon-color', newValue);
         },
-        updateIconSize: function(value) {
+        updateIconSize: function (value) {
             this.iconSize = parseInt(value);
             this.$emit("message", 'update-icon-size', value);
         },
-        updateImageUrl: function(value) {
-            this.imageUrl = value;
+        updateImageUrl: function (value) {
+            this.imageUrlUnselected = value;
             this.$emit("message", "update-image-url", value);
             if (this.alreadyTransmitedImage) {
                 this.$emit("message", "update-canvas-key-change", true);
             }
             this.alreadyTransmitedImage = true;
         },
-        enableImageObjectSending: function(value) {
+        imageUrlObjectSelected: function (value) {
+            this.imageUrlSelected = value;
+            this.$emit("message", "update-image-url-selected", [value, this.imageUrlUnselected, this.imageUrlSelected]);
+        },
+        enableImageObjectSending: function (value) {
             this.imageObjectSendingEnabled = value;
+        },
+    },
+    watch: {
+        imageObjectSendingEnabled: function (newValue, oldValue) {
+            if (!newValue && oldValue) {
+                this.imageUrlSelected = this.imageUrlUnselected;
+                this.$emit("message", "update-image-url-selected", [false, this.imageUrlUnselected, this.imageUrlUnselected]);
+            }
         }
     },
     emits: ["message"]
