@@ -27,7 +27,7 @@ import {hash} from './../src/utils/Hash';
 export default {
     data() {
         return {
-            canvasEnabled: true,
+            canvasEnabled: false,
             offCanvasEnabled: false,
             offCanvas: {
                 title: '',
@@ -47,7 +47,7 @@ export default {
                 { from: 2, to: 5 },
                 { from: 3, to: 3 },
             ],
-            options: BaseOptions,
+            options: null,
             encapsulateNetwork: null,
             Hash: hash()
         }
@@ -121,6 +121,10 @@ export default {
         }
     },
     mounted() {
+        this.options = BaseOptions;
+        this.options.nodes.image = new URL(`/public/images/paad_logo.png`, import.meta.url).href;
+        this.options.nodes.brokenImage = new URL(`/public/images/paad_logo.png`, import.meta.url).href;
+        this.canvasEnabled = true;
         new Tooltip(document.body, {
             selector: "[data-bs-toggle='tooltip']",
         })

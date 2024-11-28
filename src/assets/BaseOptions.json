@@ -6,8 +6,8 @@
     "nodes": {
         "borderWidth": 1,
         "borderWidthSelected": 2,
-        "image" : "/paad-grafos-v2/public/images/paad_logo.png",
-        "brokenImage": "/paad-grafos-v2/public/images/paad_logo.png",
+        "image" : "",
+        "brokenImage": "",
         "chosen": {
             "node": true,
             "label": true
