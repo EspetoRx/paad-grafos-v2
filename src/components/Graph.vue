@@ -26,7 +26,6 @@ export default {
         console.log("Graph Component mounted.");
         this.container = document.getElementById("graph");
         this.$emit('canvas-start', this.container, this.graph_data, this.options);
-        console.log("emiti update network");
     },
     emits: ['canvas-start']
 }

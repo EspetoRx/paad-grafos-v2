@@ -502,6 +502,17 @@ export default {
                     this.$emit('component-key-change', value);
                     break;
                 }
+
+                case 'custom-render-node-update': {
+                    this.encapsulateOptions.nodes.ctxRenderer = value;
+                    this.$emit('options-has-changed', this.encapsulateOptions);
+                    break;
+                }
+
+                case 'send-toast': {
+                    this.$emit('send-toast', value);
+                    break;
+                }
             }
         },
         emitOpacity: function (value) {
@@ -544,6 +555,6 @@ export default {
             this.$emit('options-has-changed', this.encapsulateOptions);
         }
     },
-    emits: ['options-has-changed', 'nodes-has-changed', 'component-key-change']
+    emits: ['options-has-changed', 'nodes-has-changed', 'component-key-change', 'send-toast']
 }
 </script>

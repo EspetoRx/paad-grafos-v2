@@ -52,6 +52,16 @@
         placeholder="'http://www.google.com'"
         :tooltip="'Entre com a URL da imagem a ser utilizada como vértice selecionado.'"
         :urlInitalValue="imageUrlSelected" @url-value-update="imageUrlObjectSelected"></InputUrl>
+    <InputTextArea v-if="customSelected" :inputId="'options-nodes-shape-custom'" :inputEnabled="isCustomInputEnabled"
+        :inputInitialValue="customValue" :inputPlaceholder="'//Input the javascript function'" :inputRows="15"
+        :isLabelEnabled="true" :labelValue="'Editar customização do CTX Renderer'"
+        :tooltip="'Options.Nodes.ctxRenderer - Edite a função de crição de formas personalizadas com o CTX Renderer'"
+        :hasSwitch="true" :switchId="'options-nodes-shape-custom-enable-code'"
+        :switchTooltip="'Options.Nodes.ctxRenderer Enable code editing - Ative a edição de código'"
+        :switchInitialValue="isCustomInputEnabled" :switchLabelEnabled="false"
+        @checkbox-value-change="enableCtxRendererEditing" @input-value-change="updateCustomValue"></InputTextArea>
+    <button @click.prevent="updateNodeCustomShape" v-if="isCustomInputEnabled"
+        class="btn btn-primary form-control mt-1">Atualizar função de desenho do vértice</button>
 </template>
 <script>
 import InputSelect from '../Common/Inputs/InputSelect.vue';
@@ -63,6 +73,7 @@ import InputRange from '../Common/Inputs/InputRange.vue';
 import InputColorPicker from '../Common/Inputs/InputColorPicker.vue';
 import InputUrl from '../Common/Inputs/InputUrl.vue';
 import SwitchWithInfo from '../Common/SwitchWithInfo.vue';
+import InputTextArea from '../Common/Inputs/InputTextArea.vue';
 export default {
     name: "Shape Node Accordion",
     props: ['checkboxValue'],
@@ -103,6 +114,12 @@ export default {
             imageObjectSendingEnabled: false,
             imageUrlUnselected: new URL(`/public/images/paad_logo.png`, import.meta.url).href,
             imageUrlSelected: new URL(`/public/images/paad_logo_frio_e_dramático.png`, import.meta.url).href,
+
+            //Custom selected
+            customValue: "",
+            isCustomInputEnabled: false,
+            customFunction: null,
+
         }
     },
     components: {
@@ -112,12 +129,31 @@ export default {
         InputRange,
         InputColorPicker,
         InputUrl,
-        SwitchWithInfo
+        SwitchWithInfo,
+        InputTextArea
     },
     mounted() {
 
     },
     methods: {
+        updateCustomValue: function (value) {
+            console.log("Atualizei o customValue.");
+            this.customValue = value
+        },
+        updateNodeCustomShape: function () {
+            console.log("Entrei no customValue.");
+            try {
+                this.customFunction = eval(this.customValue);
+                this.$emit("message", "custom-render-node-update", this.customFunction);
+            } catch (ex) {
+                this.$emit("message", "send-toast", {
+                    toastTitle: "Erro!",
+                    toastIcon: "fa-circle-exclamation",
+                    toastBody: "Não foi possível utilizar sua função função para rendereização. Atualize sua página.",
+                    toastClasses: " bg-danger text-black"
+                });
+            }
+        },
         updateNodeShape: function (value) {
             console.log("Updated selection: " + value);
             this.shape = value;
@@ -148,7 +184,31 @@ export default {
                 this.iconSelected = false;
                 this.imageSelected = false;
                 this.circularImageSelected = false;
+
+                import('./scripts/ctxBaseRenderer.js?raw')
+                    .then(res => res.default)
+                    .then((t) => {
+                        //const s = document.querySelector('#app');
+                        this.customValue = t;
+                        this.customFunction = eval(t);
+
+                        if (this.customFunction != null) {
+                            this.$emit("message", "custom-render-node-update", this.customFunction);
+                            this.$emit("message", "update-node-shape", value);
+                            this.$emit("message", "send-toast", {
+                                toastTitle: "Cuidado",
+                                toastIcon: "fa-circle-exclamation",
+                                toastBody: "O input de Javascript pode levar a erros e a travamentos da aplicação. Use com cautela! Você pode aprender a desenhar no canvas usando <a class='text-white' href='https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Drawing_shapes'>este link</a>.",
+                                toastClasses: " bg-danger text-black"
+                            });
+                        }
+                    });
+
             } else {
+                this.customSelected = false;
+                this.iconSelected = false;
+                this.imageSelected = false;
+                this.circularImageSelected = false;
                 this.$emit("message", "update-node-shape", value);
             }
         },
@@ -247,6 +307,9 @@ export default {
         enableImageObjectSending: function (value) {
             this.imageObjectSendingEnabled = value;
         },
+        enableCtxRendererEditing: function (value) {
+            this.isCustomInputEnabled = value;
+        }
     },
     watch: {
         imageObjectSendingEnabled: function (newValue, oldValue) {

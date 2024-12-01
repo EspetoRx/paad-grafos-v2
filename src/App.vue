@@ -1,28 +1,33 @@
 <template>
     <div>
+        <ToastContainer :newToast="newToast"></ToastContainer>
         <top-navbar @toggle-off-canvas="toggleOffCanvas" @offcanvas-for-vis-configure="offCanvasForVisConfigure"
             @offcanvas-for-vis-physics="offCanvasForVisPhysics" @offcanvas-for-vis-nodes="offCanvasForVisNodes">
         </top-navbar>
-        <graph :nodes="nodes" :edges="edges" :options="options" @canvas-start="canvasStart" v-if="canvasEnabled" :key="Hash">
+        <graph :nodes="nodes" :edges="edges" :options="options" @canvas-start="canvasStart" v-if="canvasEnabled"
+            :key="Hash">
         </graph>
         <bottom-navbar></bottom-navbar>
         <off-canvas :offCanvasEnabled="this.offCanvasEnabled" :title="this.offCanvas.title" :type="this.offCanvas.type"
             :localNetwork="this.encapsulateNetwork" :options="this.options" @toggle-off-canvas="this.toggleOffCanvas"
-            @options-has-changed="this.optionsHasChanged" :realNodes="this.nodes" @nodes-has-changed="this.nodesHasChanged" @canvas-key-change="onCanvasKeyChange"></off-canvas>
+            @options-has-changed="this.optionsHasChanged" :realNodes="this.nodes"
+            @nodes-has-changed="this.nodesHasChanged" @canvas-key-change="onCanvasKeyChange"
+            @send-toast="emitNewToast"></off-canvas>
     </div>
 </template>
 <script>
 import { Network } from 'vis-network';
 import * as Vue from 'vue';
-import { Tooltip } from 'bootstrap';
+import { Tooltip, Toast } from 'bootstrap';
 
 import TopNavbar from './components/TopNavbar.vue';
 import BottomNavbar from './components/BottomNavbar.vue';
 import OffCanvas from './components/OffCanvas.vue';
 import Graph from './components/Graph.vue';
+import ToastContainer from './components/Common/Toast/ToastContainer.vue';
 
 import BaseOptions from './assets/BaseOptions.json';
-import {hash} from './../src/utils/Hash';
+import { hash } from './../src/utils/Hash';
 
 export default {
     data() {
@@ -49,14 +54,16 @@ export default {
             ],
             options: null,
             encapsulateNetwork: null,
-            Hash: hash()
+            Hash: hash(),
+            newToast: null
         }
     },
     components: {
         'top-navbar': TopNavbar,
         'bottom-navbar': BottomNavbar,
         'off-canvas': OffCanvas,
-        'graph': Graph
+        'graph': Graph,
+        'ToastContainer': ToastContainer
     },
     methods: {
 
@@ -70,14 +77,6 @@ export default {
 
             this.offCanvas.title = "<i class='fa-solid fa-screwdriver-wrench'></i> Vis Js. Configure";
             this.offCanvas.type = "visjs-configure";
-            /* var container = document.getElementById("offCanvasBody");
-            this.options.configure = {
-                enabled: true,
-                filter: true,
-                container: container,
-                showButton: true
-            }
-            this.optionsHasChanged(this.options); */
 
         },
 
@@ -92,7 +91,7 @@ export default {
 
             this.offCanvas.title = "<i class='fa-solid fa-circle'></i> Vis Js. Vértices";
             this.offCanvas.type = "visjs-nodes";
-        
+
         },
 
         canvasStart(container, graph_data, options) {
@@ -116,8 +115,12 @@ export default {
             this.nodes = nodes;
         },
 
-        onCanvasKeyChange: function() {
+        onCanvasKeyChange: function () {
             this.Hash = hash();
+        },
+
+        emitNewToast: function (value) {
+            this.newToast = value;
         }
     },
     mounted() {
@@ -127,7 +130,8 @@ export default {
         this.canvasEnabled = true;
         new Tooltip(document.body, {
             selector: "[data-bs-toggle='tooltip']",
-        })
+        });
+        new Toast();
     }
 }
 </script>
