@@ -5,6 +5,7 @@
             :switchButton="item.switch" :switchChecked="item.isChecked"
             :hasTooltip="item.hasTooltip" :tooltip="item.tooltip"
             :isCheckedEnabled="item.isCheckedEnabled"
+            :accordionDisabled="item.accordionDisabled??false"
             @toggle-switch-event="toggleSwitchEvent"
             @message="message"
         >

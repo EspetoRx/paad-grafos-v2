@@ -5,26 +5,16 @@
             :switchTooltip="'Options.Nodes.Hiden - Quando verdadeiro, os vértices não serão mostrados. Ainda farão parte da simulação de física, no entanto!'"
             :switchLabelEnabled="true" :switchLabelValue="'Esconder vértices'" @checkbox-status-changed="toggleHidden">
         </SwitchWithInfo>
-        <SwitchWithInfo
-            :switchId="'nodes-physics'"
-            :switchDisabled="false"
-            :switchInitialValue="physics"
+        <SwitchWithInfo :switchId="'nodes-physics'" :switchDisabled="false" :switchInitialValue="physics"
             :switchTooltipEnabled="true"
             :switchTooltip="'Options.Nodes.Physics - Quando falso, o vértice não faz parte da simulação física. Ele não se moverá, exceto quando arrastado manualmente.'"
-            :switchLabelEnabled="true"
-            :switchLabelValue="'Física Habilitada'"
-            @checkbox-status-changed="togglePhysics"
-        ></SwitchWithInfo>
-        <SwitchWithInfo
-            :switchId="'nodes-labelHighlightBold'"
-            :switchDisabled="false"
-            :switchInitialValue="labelHighlightBold"
-            :switchTooltipEnabled="true"
+            :switchLabelEnabled="true" :switchLabelValue="'Física Habilitada'" @checkbox-status-changed="togglePhysics">
+        </SwitchWithInfo>
+        <SwitchWithInfo :switchId="'nodes-labelHighlightBold'" :switchDisabled="false"
+            :switchInitialValue="labelHighlightBold" :switchTooltipEnabled="true"
             :switchTooltip="'Options.Nodes.LabelHighlightBold - Determina se o rótulo fica ou não em negrito quando o vértice é selecionado.'"
-            :switchLabelEnabled="true"
-            :switchLabelValue="'Destaque negrito selecionado'"
-            @checkbox-status-changed="toggleLabelHighlightBold"
-        ></SwitchWithInfo>
+            :switchLabelEnabled="true" :switchLabelValue="'Destaque negrito selecionado'"
+            @checkbox-status-changed="toggleLabelHighlightBold"></SwitchWithInfo>
         <InputRange :inputId="'nodes-borderWidth-range'" :isLabelEnabled="true" :min="0" :max="25" :step="1"
             :initialValue="this.borderWidth" :labelValue="'Grossura da Borda'"
             :tooltip="'Options.Nodes.BorderWidth - A grossura da borda do vértice. Padrão 1'"
@@ -90,12 +80,22 @@ export default {
             shape: 'ellipse',
             labelHighlightBold: true,
             physics: true,
+            scalingValue: null,
+            scalingAccordionDisabled: false,
+            scalingCheckboxEnabled: true,
+            scalingCheckboxValue: false
         }
     },
     watch: {
         brokenImage: function (newBrokenImage, oldBrokenImage) {
             this.encapsulateOptions.nodes.brokenImage = newBrokenImage;
-            this.$emit('options-has-changed', this.encapsulateOptions);
+
+        },
+        encapsulateOptions: {
+            handler: function (newValue, oldValue) {
+                this.$emit('options-has-changed', newValue);
+            },
+            deep: true
         }
     },
     mounted() {
@@ -106,6 +106,11 @@ export default {
         this.borderWidth = this.encapsulateOptions.nodes.borderWidth;
         this.borderWidthSelected = this.encapsulateOptions.nodes.borderWidthSelected;
         this.brokenImage = this.encapsulateOptions.nodes.brokenImage;
+
+        this.shape = "ellipse";
+        this.encapsulateOptions.nodes.shape = "ellipse";
+        this.checkObjectScale(this.shape);
+
         this.firstAccordionItems.push(
             {
                 item: 'chosen',
@@ -193,6 +198,19 @@ export default {
             }
         );
         this.firstAccordionItemsComponents.push({ item: 'shape', component: 'nodes.shape' });
+        this.firstAccordionItems.push(
+            {
+                item: 'scaling',
+                title: 'Escala',
+                switch: true,
+                isChecked: this.scalingCheckboxValue,
+                isCheckedEnabled: this.scalingCheckboxEnabled,
+                accordionDisabled: this.scalingAccordionDisabled,
+                hasTooltip: true,
+                tooltip: 'Options.Nodes.Scaling - Se a opção de valor for especificada, o tamanho dos nós será dimensionado de acordo com as propriedades deste objeto. Todas as formas de nós podem ser dimensionadas, mas algumas apenas quando o dimensionamento do rótulo está ativado, pois seu tamanho é baseado no tamanho do rótulo. Escaláveis apenas quando o dimensionamento do rótulo está ativado são elipse, círculo, banco de dados, caixa, texto. Sempre escaláveis são: imagem, circularImage, diamante, ponto, estrela, triângulo, triângulo para baixo, hexágono, quadrado e ícone. Lembre-se de que ao usar o dimensionamento, a opção de tamanho é negligenciada.'
+            }
+        )
+        this.firstAccordionItemsComponents.push({ item: 'scaling', component: 'nodes.scaling' })
     },
     components: {
         AccordionFlush,
@@ -213,31 +231,80 @@ export default {
             switch (switchId) {
                 case "chosen": {
                     this.encapsulateOptions.nodes.chosen = value;
-                    this.$emit('options-has-changed', this.encapsulateOptions);
                     break;
                 }
                 case "fixed": {
                     console.log("Fixed: " + value)
                     this.encapsulateOptions.nodes.fixed = value;
-                    this.$emit('options-has-changed', this.encapsulateOptions);
                     break;
                 }
                 case "font": {
                     if (!this.fontToggled && value == true) {
                         this.encapsulateOptions.nodes.font = {};
-                        this.$emit('options-has-changed', this.encapsulateOptions);
                     } else {
                         this.encapsulateOptions.nodes.font = "";
-                        this.$emit('options-has-changed', this.encapsulateOptions);
                     }
                     this.fontToggled = value;
                     break;
                 }
+
                 case 'heightConstraint': {
                     this.encapsulateOptions.nodes.heightConstraint = value;
-                    this.$emit('options-has-changed', this.encapsulateOptions);
                     this.heightConstraintSwitchValue = value;
+                    break;
                 }
+
+                case 'scaling': {
+                    this.scalingCheckboxValue = value;
+                    if (value) {
+                        this.scalingValue = {};
+                        this.encapsulateOptions.nodes.scaling = this.scalingValue;
+                        this.encapsulateOptions.nodes.value = 1;
+                    } else {
+                        this.scalingValue = null;
+                        if (Object.hasOwn(this.encapsulateOptions.nodes, "scaling")) delete this.encapsulateOptions.nodes.scaling;
+                        this.encapsulateOptions.nodes.value = undefined;
+                    }
+                }
+            }
+        },
+        checkObjectScale: function (value) {
+            if (Object.hasOwn(this.encapsulateOptions.nodes, "shape")) {
+                if (value == 'ellipse' ||
+                    value == 'circle' ||
+                    value == 'box' ||
+                    value == 'text' ||
+                    value == 'image' ||
+                    value == 'circularImage' ||
+                    value == 'diamond' ||
+                    value == 'dot' ||
+                    value == 'star' ||
+                    value == 'triangle' ||
+                    value == 'triangleDown' ||
+                    value == 'hexagon' ||
+                    value == 'square' ||
+                    value == 'icon'
+                ) {
+                    this.scalingAccordionDisabled = false;
+                    this.scalingCheckboxEnabled = true;
+                    this.scalingCheckboxValue = false;
+                    if(typeof this.firstAccordionItems[6] !== 'undefined') {
+                        this.firstAccordionItems[6].accordionDisabled = false;
+                        this.firstAccordionItems[6].isCheckedEnabled = true;
+                        this.firstAccordionItems[6].isChecked = false; 
+                    }
+                } else {
+                    this.scalingAccordionDisabled = true;
+                    this.scalingCheckboxEnabled = false;
+                    this.scalingCheckboxValue = false;
+                    if(typeof this.firstAccordionItems[6] !== 'undefined') {
+                        this.firstAccordionItems[6].accordionDisabled = true;
+                        this.firstAccordionItems[6].isCheckedEnabled = false;
+                        this.firstAccordionItems[6].isChecked = false; 
+                    }
+                }
+            } else {
+                this.encapsulateOptions.nodes.shape = "ellipse";
             }
         },
         isFontObject: function () {
@@ -247,30 +314,23 @@ export default {
             switch (message) {
                 case 'update-chosen-node': {
                     this.encapsulateOptions.nodes.chosen = { node: value, label: value };
-                    this.$emit('options-has-changed', this.encapsulateOptions);
                     break;
                 }
                 // Not working
                 case 'update-chosen-node-background-color': {
                     this.encapsulateOptions.nodes.chosen = { node: null, label: true };
-                    this.encapsulateOptions.nodes.chosen.node = (values, id, selected, hovering) => {
-
-                    }
-                    this.$emit('options-has-changed', this.encapsulateOptions);
                     break;
                 }
                 case 'update-node-color-background': {
                     this.encapsulateOptions.nodes.color = {
                         background: value
                     };
-                    this.$emit('options-has-changed', this.encapsulateOptions);
                     break;
                 }
                 case 'update-node-color-border': {
                     this.encapsulateOptions.nodes.color = {
                         border: value
                     };
-                    this.$emit('options-has-changed', this.encapsulateOptions);
                     break;
                 }
                 case 'update-node-highlight-border-color': {
@@ -279,7 +339,6 @@ export default {
                             border: value
                         }
                     };
-                    this.$emit('options-has-changed', this.encapsulateOptions);
                     break;
                 }
                 case 'update-node-highlight-background-color': {
@@ -288,7 +347,6 @@ export default {
                             background: value
                         }
                     };
-                    this.$emit('options-has-changed', this.encapsulateOptions);
                     break;
                 }
                 case 'update-node-hover-border-color': {
@@ -297,7 +355,6 @@ export default {
                             border: value
                         }
                     };
-                    this.$emit('options-has-changed', this.encapsulateOptions);
                     break;
                 }
                 case 'update-node-hover-background-color': {
@@ -306,7 +363,6 @@ export default {
                             background: value
                         }
                     };
-                    this.$emit('options-has-changed', this.encapsulateOptions);
                     break;
                 }
                 case 'enable-fixed-node-object-sending': {
@@ -318,7 +374,6 @@ export default {
                         this.encapsulateOptions.nodes.fixed = { x: false, y: false }
                     }
                     this.encapsulateOptions.nodes.fixed.x = value;
-                    this.$emit('options-has-changed', this.encapsulateOptions);
                     break;
                 }
                 case 'fix-nodes-y-coordinate': {
@@ -326,17 +381,14 @@ export default {
                         this.encapsulateOptions.nodes.fixed = { x: false, y: false }
                     }
                     this.encapsulateOptions.nodes.fixed.y = value;
-                    this.$emit('options-has-changed', this.encapsulateOptions);
                     break;
                 }
                 case 'node-font-object-enabled': {
                     if (this.fontToggled) {
                         if (!value) {
                             this.encapsulateOptions.nodes.font = "15px arial black";
-                            this.$emit('options-has-changed', this.encapsulateOptions);
                         } else {
                             this.encapsulateOptions.nodes.font = {};
-                            this.$emit('options-has-changed', this.encapsulateOptions);
                         }
                         this.fontObjectOrString = value;
                     }
@@ -345,13 +397,11 @@ export default {
                 case 'node-font-string': {
                     if (!this.fontObjectOrString) {
                         this.encapsulateOptions.nodes.font = value;
-                        this.$emit('options-has-changed', this.encapsulateOptions);
                     }
                 }
                 case 'node-font-color': {
                     if (this.fontToggled && this.isFontObject()) {
                         this.encapsulateOptions.nodes.font.color = value;
-                        this.$emit('options-has-changed', this.encapsulateOptions);
                     } else {
                         this.encapsulateOptions.nodes.font = "";
                     }
@@ -360,7 +410,6 @@ export default {
                 case 'node-font-size': {
                     if (this.fontToggled && this.isFontObject()) {
                         this.encapsulateOptions.nodes.font.size = parseInt(value);
-                        this.$emit('options-has-changed', this.encapsulateOptions);
                     } else {
                         this.encapsulateOptions.nodes.font = "";
                     }
@@ -369,7 +418,6 @@ export default {
                 case 'node-font-face': {
                     if (this.fontToggled && this.isFontObject()) {
                         this.encapsulateOptions.nodes.font.face = value;
-                        this.$emit('options-has-changed', this.encapsulateOptions);
                     } else {
                         this.encapsulateOptions.nodes.font = "";
                     }
@@ -379,10 +427,8 @@ export default {
                     if (this.fontToggled && this.isFontObject()) {
                         if (value) {
                             this.encapsulateOptions.nodes.font.background = "#ffffff";
-                            this.$emit('options-has-changed', this.encapsulateOptions);
                         } else {
                             this.encapsulateOptions.nodes.font.background = undefined;
-                            this.$emit('options-has-changed', this.encapsulateOptions);
                         }
 
                     } else {
@@ -393,7 +439,6 @@ export default {
                 case 'node-font-background': {
                     if (this.fontToggled && this.isFontObject()) {
                         this.encapsulateOptions.nodes.font.background = value;
-                        this.$emit('options-has-changed', this.encapsulateOptions);
                     } else {
                         this.encapsulateOptions.nodes.font = "";
                     }
@@ -402,7 +447,6 @@ export default {
                 case 'node-stroke-width': {
                     if (this.fontToggled && this.isFontObject()) {
                         this.encapsulateOptions.nodes.font.strokeWidth = parseInt(value);
-                        this.$emit('options-has-changed', this.encapsulateOptions);
                     } else {
                         this.encapsulateOptions.nodes.font = "";
                     }
@@ -411,7 +455,6 @@ export default {
                 case 'node-stroke-color': {
                     if (this.fontToggled && this.isFontObject()) {
                         this.encapsulateOptions.nodes.font.strokeColor = value;
-                        this.$emit('options-has-changed', this.encapsulateOptions);
                     } else {
                         this.encapsulateOptions.nodes.font = "";
                     }
@@ -430,7 +473,6 @@ export default {
                         if (!this.heightConstraintObjectEnabled) {
                             this.heightConstraintIntegerValue = value;
                             this.encapsulateOptions.nodes.heightConstraint = parseInt(value);
-                            this.$emit('options-has-changed', this.encapsulateOptions);
                         }
                     } else {
                         this.encapsulateOptions.nodes.heightConstraint = false;
@@ -442,7 +484,6 @@ export default {
                         if (this.heightConstraintObjectEnabled) {
                             this.heightConstraintObjectValue.minimum = parseInt(value);
                             this.encapsulateOptions.nodes.heightConstraint = this.heightConstraintObjectValue;
-                            this.$emit('options-has-changed', this.encapsulateOptions);
                         }
                     } else {
                         this.encapsulateOptions.nodes.heightConstraint = false;
@@ -454,7 +495,6 @@ export default {
                         if (this.heightConstraintObjectEnabled) {
                             this.heightConstraintObjectValue.valign = value;
                             this.encapsulateOptions.nodes.heightConstraint = this.heightConstraintObjectValue;
-                            this.$emit('options-has-changed', this.encapsulateOptions);
                         }
                     } else {
                         this.encapsulateOptions.nodes.heightConstraint = false;
@@ -464,57 +504,41 @@ export default {
                 case 'update-node-shape': {
                     this.shape = value;
                     this.encapsulateOptions.nodes.shape = value;
-                    this.$emit('options-has-changed', this.encapsulateOptions);
+                    this.checkObjectScale(value);
                     break;
                 }
-
                 case 'init-icons': {
                     this.encapsulateOptions.nodes.icon = { size: 50, weight: 300 };
-                    this.$emit('options-has-changed', this.encapsulateOptions);
                     break;
                 }
-
                 case 'update-icon-font-face': {
                     this.encapsulateOptions.nodes.icon.face = value;
-                    this.$emit('options-has-changed', this.encapsulateOptions);
                     break;
                 }
-
                 case 'update-icon-code': {
                     this.encapsulateOptions.nodes.icon.code = value;
-                    this.$emit('options-has-changed', this.encapsulateOptions);
                     break;
                 }
-
                 case 'update-icon-weight': {
                     this.encapsulateOptions.nodes.icon.weight = parseInt(value);
-                    this.$emit('options-has-changed', this.encapsulateOptions);
                     break;
                 }
-
                 case 'update-icon-color': {
                     this.encapsulateOptions.nodes.icon.color = value;
-                    this.$emit('options-has-changed', this.encapsulateOptions);
                     break;
                 }
-
                 case 'update-icon-size': {
                     this.encapsulateOptions.nodes.icon.size = parseInt(value);
-                    this.$emit('options-has-changed', this.encapsulateOptions);
                     break;
                 }
-
                 case 'update-image-url': {
                     this.encapsulateOptions.nodes.image = value;
-                    this.$emit('options-has-changed', this.encapsulateOptions);
                     break;
                 }
-
                 case 'update-canvas-key-change': {
                     this.$emit('component-key-change', value);
                     break;
                 }
-
                 case 'update-image-url-selected': {
                     if (value[0]) {
                         this.encapsulateOptions.nodes.image = {
@@ -528,98 +552,123 @@ export default {
                         };
                     }
 
-                    this.$emit('options-has-changed', this.encapsulateOptions);
                     this.$emit('component-key-change', value);
                     break;
                 }
-
                 case 'custom-render-node-update': {
                     this.encapsulateOptions.nodes.ctxRenderer = value;
-                    this.$emit('options-has-changed', this.encapsulateOptions);
                     break;
                 }
-
                 case 'send-toast': {
                     this.$emit('send-toast', value);
                     break;
                 }
-
                 case 'update-image-padding-top': {
                     if (!Object.hasOwn(this.encapsulateNodes, "imagePadding")) this.encapsulateOptions.nodes.imagePadding = {};
                     this.encapsulateOptions.nodes.imagePadding.top = value;
-                    this.$emit('options-has-changed', this.encapsulateOptions);
                     break;
                 }
-
                 case 'update-image-padding-bottom': {
                     if (!Object.hasOwn(this.encapsulateNodes, "imagePadding")) this.encapsulateOptions.nodes.imagePadding = {};
                     this.encapsulateOptions.nodes.imagePadding.bottom = value;
-                    this.$emit('options-has-changed', this.encapsulateOptions);
                     break;
                 }
-
                 case 'update-image-padding-left': {
                     if (!Object.hasOwn(this.encapsulateNodes, "imagePadding")) this.encapsulateOptions.nodes.imagePadding = {};
                     this.encapsulateOptions.nodes.imagePadding.left = value;
-                    this.$emit('options-has-changed', this.encapsulateOptions);
                     break;
                 }
-
                 case 'update-image-padding-right': {
                     if (!Object.hasOwn(this.encapsulateNodes, "imagePadding")) this.encapsulateOptions.nodes.imagePadding = {};
                     this.encapsulateOptions.nodes.imagePadding.right = value;
-                    this.$emit('options-has-changed', this.encapsulateOptions);
                     break;
                 }
-
                 case 'update-label-marging-top': {
                     if (!Object.hasOwn(this.encapsulateNodes, "margin")) this.encapsulateOptions.nodes.margin = {};
                     this.encapsulateOptions.nodes.margin.top = value;
-                    this.$emit('options-has-changed', this.encapsulateOptions);
                     break;
                 }
-
                 case 'update-label-marging-bottom': {
                     if (!Object.hasOwn(this.encapsulateNodes, "margin")) this.encapsulateOptions.nodes.margin = {};
                     this.encapsulateOptions.nodes.margin.bottom = value;
-                    this.$emit('options-has-changed', this.encapsulateOptions);
                     break;
                 }
-
                 case 'update-label-marging-left': {
                     if (!Object.hasOwn(this.encapsulateNodes, "margin")) this.encapsulateOptions.nodes.margin = {};
                     this.encapsulateOptions.nodes.margin.left = value;
-                    this.$emit('options-has-changed', this.encapsulateOptions);
                     break;
                 }
-
                 case 'update-label-marging-right': {
                     if (!Object.hasOwn(this.encapsulateNodes, "margin")) this.encapsulateOptions.nodes.margin = {};
                     this.encapsulateOptions.nodes.margin.right = value;
-                    this.$emit('options-has-changed', this.encapsulateOptions);
+                    break;
+                }
+                case 'options-nodes-scaling-min': {
+                    if (this.scalingCheckboxValue) this.encapsulateOptions.nodes.scaling.min = parseInt(value);
+                    break;
+                }
+                case 'options-nodes-scaling-max': {
+                    if (this.scalingCheckboxValue) this.encapsulateOptions.nodes.scaling.max = parseInt(value);
+                    break;
+                }
+                case 'options-nodes-scaling-label': {
+                    if (this.scalingCheckboxValue) this.encapsulateOptions.nodes.scaling.label = value;
+                    break;
+                }
+                case 'options-nodes-scaling-object': {
+                    if (this.scalingCheckboxValue) 
+                        if (value) this.encapsulateOptions.nodes.scaling.label = { enabled: value };
+                        else this.encapsulateOptions.nodes.scaling.label = value;
+                    break;
+                }
+                case 'options-nodes-scaling-object-enabled': {
+                    if (this.scalingCheckboxValue)
+                        this.encapsulateOptions.nodes.scaling.label.enabled = value;
+                    break;
+                }
+                case 'options-nodes-scaling-object-min': {
+                    if (this.scalingCheckboxValue)
+                        this.encapsulateOptions.nodes.scaling.label.min = parseInt(value);
+                    break;
+                }
+                case 'options-nodes-scaling-object-max': {
+                    if (this.scalingCheckboxValue)
+                        this.encapsulateOptions.nodes.scaling.label.max = parseInt(value);
+                    break;
+                }
+                case 'options-nodes-scaling-object-max-visibility': {
+                    if(this.scalingCheckboxValue)
+                        this.encapsulateOptions.nodes.scaling.label.maxVisible = parseInt(value);
+                    break;
+                }
+                case 'options-nodes-scaling-object-draw-threshold': {
+                    if(this.scalingCheckboxValue)
+                        this.encapsulateOptions.nodes.scaling.label.drawThreshold = parseInt(value);
+                    break;
+                }
+                case 'options-nodes-scaling-customScalingFunction': {
+                    if (this.scalingCheckboxValue) {
+                        this.encapsulateOptions.nodes.scaling.customScalingFunction = value;
+                    }
                     break;
                 }
             }
         },
         emitOpacity: function (value) {
             this.encapsulateOptions.nodes.opacity = parseFloat(value);
-            this.$emit('options-has-changed', this.encapsulateOptions);
         },
         emitBorderWidth: function (value) {
             this.borderWidth = value;
             this.encapsulateOptions.nodes.borderWidth = parseInt(value);
-            this.$emit('options-has-changed', this.encapsulateOptions);
             if (this.borderWidthSelectedDisabled) {
                 this.borderWidthSelected = 2 * this.encapsulateOptions.nodes.borderWidth;
                 this.encapsulateOptions.nodes.borderWidthSelected = this.borderWidthSelected;
-                this.$emit('options-has-changed', this.encapsulateOptions);
             }
         },
         onBorderWidthSelectedChange: function (value) {
             if (value) {
                 this.borderWidthSelected = 2 * this.encapsulateOptions.nodes.borderWidth;
                 this.encapsulateOptions.nodes.borderWidthSelected = this.borderWidthSelected;
-                this.$emit('options-has-changed', this.encapsulateOptions);
             }
             this.borderWidthSelectedDisabled = value;
         },
@@ -627,18 +676,15 @@ export default {
             if (!this.borderWidthSelectedDisabled) {
                 this.borderWidthSelected = parseInt(value);
                 this.encapsulateOptions.nodes.borderWidthSelected = this.borderWidthSelected;
-                this.$emit('options-has-changed', this.encapsulateOptions);
             }
         },
         updateBrokenImageValue: function (value) {
             this.brokenImage = value;
             this.encapsulateOptions.nodes.brokenImage = value;
-            this.$emit('options-has-changed', this.encapsulateOptions);
         },
         toggleHidden: function (value) {
             this.hidden = value;
             this.encapsulateOptions.nodes.hidden = value;
-            this.$emit('options-has-changed', this.encapsulateOptions);
         }
     },
     emits: ['options-has-changed', 'nodes-has-changed', 'component-key-change', 'send-toast']
