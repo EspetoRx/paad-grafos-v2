@@ -1,5 +1,8 @@
 <template>
     <div>
+        <ModalComponent :disabled="bsModalDisabled" :title="bsModalTitle" :bodyComponent="bsModalBody"
+            @modal-close="modalClose" @options-has-changed="optionsHasChanged" :options="options">
+        </ModalComponent>
         <ToastContainer :newToast="newToast"></ToastContainer>
         <top-navbar @toggle-off-canvas="toggleOffCanvas" @offcanvas-for-vis-configure="offCanvasForVisConfigure"
             @offcanvas-for-vis-physics="offCanvasForVisPhysics" @offcanvas-for-vis-nodes="offCanvasForVisNodes">
@@ -25,6 +28,7 @@ import BottomNavbar from './components/BottomNavbar.vue';
 import OffCanvas from './components/OffCanvas.vue';
 import Graph from './components/Graph.vue';
 import ToastContainer from './components/Common/Toast/ToastContainer.vue';
+import ModalComponent from './components/Common/Modal/Modal.vue';
 
 import BaseOptions from './assets/BaseOptions.json';
 import { hash } from './../src/utils/Hash';
@@ -55,7 +59,10 @@ export default {
             options: null,
             encapsulateNetwork: null,
             Hash: hash(),
-            newToast: null
+            newToast: null,
+            bsModalDisabled: true,
+            bsModalTitle: "",
+            bsModalBody: ""
         }
     },
     components: {
@@ -63,7 +70,8 @@ export default {
         'bottom-navbar': BottomNavbar,
         'off-canvas': OffCanvas,
         'graph': Graph,
-        'ToastContainer': ToastContainer
+        'ToastContainer': ToastContainer,
+        'ModalComponent': ModalComponent
     },
     methods: {
 
@@ -121,6 +129,11 @@ export default {
 
         emitNewToast: function (value) {
             this.newToast = value;
+        },
+
+        modalClose: function () {
+            console.log("Emiti o modalClose");
+            this.bsModalDisabled = true;
         }
     },
     mounted() {
@@ -132,6 +145,7 @@ export default {
             selector: "[data-bs-toggle='tooltip']",
         });
         new Toast();
+
     }
 }
 </script>
