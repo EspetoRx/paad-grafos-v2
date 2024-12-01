@@ -100,6 +100,56 @@
         <input type="number" class="form-control" placeholder="0" aria-label="Options.nodes.imagePading.right"
             aria-describedby="padding-image-right-label" id="padding-image-right" v-model="imagePaddingRight">
     </div>
+
+    <div class="input-group mb-1 mt-1" v-if="(marginLabelEnabled)">
+        <span class="input-group-text m-0 p-0" id="margin-label-top-label">
+            <LabelWithTooltip
+                :labelValue="'Margem do rótulo - top'"
+                :tooltip="'Options.nodes.margin.top - Altere o valor do margin do róduto do vértice em sua componente top'"
+                :forId="'margin-label-top'"
+                :hasSwitch="false"
+            ></LabelWithTooltip>
+        </span>
+        <input type="number" class="form-control" placeholder="0" aria-label="Options.nodes.margin.top"
+            aria-describedby="margin-label-top-label" id="margin-label-top" v-model="marginLabelTop">
+    </div>
+    <div class="input-group mb-1 mt-1" v-if="(marginLabelEnabled)">
+        <span class="input-group-text m-0 p-0" id="margin-label-bottom-label">
+            <LabelWithTooltip
+                :labelValue="'Margem do rótulo - bottom'"
+                :tooltip="'Options.nodes.margin.bottom - Altere o valor do margin do róduto do vértice em sua componente bottom'"
+                :forId="'margin-label-bottom'"
+                :hasSwitch="false"
+            ></LabelWithTooltip>
+        </span>
+        <input type="number" class="form-control" placeholder="0" aria-label="Options.nodes.margin.bottom"
+            aria-describedby="margin-label-bottom-label" id="margin-label-bottom" v-model="marginLabelBottom">
+    </div>
+    <div class="input-group mb-1 mt-1" v-if="(marginLabelEnabled)">
+        <span class="input-group-text m-0 p-0" id="margin-label-left-label">
+            <LabelWithTooltip
+                :labelValue="'Margem do rótulo - left'"
+                :tooltip="'Options.nodes.margin.left - Altere o valor do margin do róduto do vértice em sua componente left'"
+                :forId="'margin-label-left'"
+                :hasSwitch="false"
+            ></LabelWithTooltip>
+        </span>
+        <input type="number" class="form-control" placeholder="0" aria-label="Options.nodes.margin.left"
+            aria-describedby="margin-label-left-label" id="margin-label-left" v-model="marginLabelLeft">
+    </div>
+    <div class="input-group mb-1 mt-1" v-if="(marginLabelEnabled)">
+        <span class="input-group-text m-0 p-0" id="margin-label-right-label">
+            <LabelWithTooltip
+                :labelValue="'Margem do rótulo - right'"
+                :tooltip="'Options.nodes.margin.right - Altere o valor do margin do róduto do vértice em sua componente right'"
+                :forId="'margin-label-right'"
+                :hasSwitch="false"
+            ></LabelWithTooltip>
+        </span>
+        <input type="number" class="form-control" placeholder="0" aria-label="Options.nodes.margin.right"
+            aria-describedby="margin-label-right-label" id="margin-label-right" v-model="marginLabelRight">
+    </div>
+    
     <InputTextArea v-if="customSelected" :inputId="'options-nodes-shape-custom'" :inputEnabled="isCustomInputEnabled"
         :inputInitialValue="customValue" :inputPlaceholder="'//Input the javascript function'" :inputRows="15"
         :isLabelEnabled="true" :labelValue="'Editar customização do CTX Renderer'"
@@ -174,6 +224,13 @@ export default {
             imagePaddingBottom: 0,
             imagePaddingLeft: 0,
             imagePaddingRight: 0,
+
+            //Margin Label for box, circle, database, icon or text
+            marginLabelEnabled: false,
+            marginLabelTop: 5,
+            marginLabelBottom: 5,
+            marginLabelRight: 5,
+            marginLabelLeft: 5
         }
     },
     components: {
@@ -263,7 +320,12 @@ export default {
                 this.iconSelected = false;
                 this.imageSelected = false;
                 this.circularImageSelected = false;
+                this.marginLabelEnabled = false;
                 this.$emit("message", "update-node-shape", value);
+            }
+
+            if (value == 'box' || value == 'circle' || value == 'database' || value == 'icon' || value == 'text') {
+                this.marginLabelEnabled = true;
             }
         },
         iconsOptionSelected: function (newValue) {
@@ -383,7 +445,19 @@ export default {
         },
         imagePaddingRight: function(newValue, oldValue) {
             this.$emit("message", "update-image-padding-right", newValue);
-        }
+        },
+        marginLabelTop: function(newValue, oldValue) {
+            this.$emit("message", "update-label-marging-top", newValue);
+        },
+        marginLabelBottom: function(newValue, oldValue) {
+            this.$emit("message", "update-label-marging-bottom", newValue);
+        },
+        marginLabelLeft: function(newValue, oldValue) {
+            this.$emit("message", "update-label-marging-left", newValue);
+        },
+        marginLabelRight: function(newValue, oldValue) {
+            this.$emit("message", "update-label-marging-right", newValue);
+        },
     },
     emits: ["message"]
 }
