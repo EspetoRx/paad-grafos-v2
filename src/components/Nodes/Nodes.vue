@@ -2,9 +2,29 @@
     <div>
         <SwitchWithInfo :switchId="'nodes-hidden'" :switchDisabled="false" :switchInitialValue="this.hidden"
             :switchTooltipEnabled="true"
-            :switchTooltip="'Quando verdadeiro, os vértices não serão mostrados. Ainda farão parte da simulação de física, no entanto!'"
+            :switchTooltip="'Options.Nodes.Hiden - Quando verdadeiro, os vértices não serão mostrados. Ainda farão parte da simulação de física, no entanto!'"
             :switchLabelEnabled="true" :switchLabelValue="'Esconder vértices'" @checkbox-status-changed="toggleHidden">
         </SwitchWithInfo>
+        <SwitchWithInfo
+            :switchId="'nodes-physics'"
+            :switchDisabled="false"
+            :switchInitialValue="physics"
+            :switchTooltipEnabled="true"
+            :switchTooltip="'Options.Nodes.Physics - Quando falso, o vértice não faz parte da simulação física. Ele não se moverá, exceto quando arrastado manualmente.'"
+            :switchLabelEnabled="true"
+            :switchLabelValue="'Física Habilitada'"
+            @checkbox-status-changed="togglePhysics"
+        ></SwitchWithInfo>
+        <SwitchWithInfo
+            :switchId="'nodes-labelHighlightBold'"
+            :switchDisabled="false"
+            :switchInitialValue="labelHighlightBold"
+            :switchTooltipEnabled="true"
+            :switchTooltip="'Options.Nodes.LabelHighlightBold - Determina se o rótulo fica ou não em negrito quando o vértice é selecionado.'"
+            :switchLabelEnabled="true"
+            :switchLabelValue="'Destaque negrito selecionado'"
+            @checkbox-status-changed="toggleLabelHighlightBold"
+        ></SwitchWithInfo>
         <InputRange :inputId="'nodes-borderWidth-range'" :isLabelEnabled="true" :min="0" :max="25" :step="1"
             :initialValue="this.borderWidth" :labelValue="'Grossura da Borda'"
             :tooltip="'Options.Nodes.BorderWidth - A grossura da borda do vértice. Padrão 1'"
@@ -67,7 +87,9 @@ export default {
             heightConstraintIntegerValue: 0,
             heightConstraintObjectValue: {},
             hidden: false,
-            shape: 'ellipse'
+            shape: 'ellipse',
+            labelHighlightBold: true,
+            physics: true,
         }
     },
     watch: {
@@ -179,6 +201,14 @@ export default {
         InputUrl
     },
     methods: {
+        togglePhysics: function (value) {
+            this.encapsulateOptions.nodes.physics = value;
+            this.$emit("options-has-changed", this.encapsulateOptions);
+        },
+        toggleLabelHighlightBold: function (value) {
+            this.encapsulateOptions.nodes.labelHighlightBold = value;
+            this.$emit("options-has-changed", this.encapsulateOptions);
+        },
         toggleSwitchEvent: function (switchId, value) {
             switch (switchId) {
                 case "chosen": {
@@ -538,6 +568,34 @@ export default {
                 case 'update-image-padding-right': {
                     if (!Object.hasOwn(this.encapsulateNodes, "imagePadding")) this.encapsulateOptions.nodes.imagePadding = {};
                     this.encapsulateOptions.nodes.imagePadding.right = value;
+                    this.$emit('options-has-changed', this.encapsulateOptions);
+                    break;
+                }
+
+                case 'update-label-marging-top': {
+                    if (!Object.hasOwn(this.encapsulateNodes, "margin")) this.encapsulateOptions.nodes.margin = {};
+                    this.encapsulateOptions.nodes.margin.top = value;
+                    this.$emit('options-has-changed', this.encapsulateOptions);
+                    break;
+                }
+
+                case 'update-label-marging-bottom': {
+                    if (!Object.hasOwn(this.encapsulateNodes, "margin")) this.encapsulateOptions.nodes.margin = {};
+                    this.encapsulateOptions.nodes.margin.bottom = value;
+                    this.$emit('options-has-changed', this.encapsulateOptions);
+                    break;
+                }
+
+                case 'update-label-marging-left': {
+                    if (!Object.hasOwn(this.encapsulateNodes, "margin")) this.encapsulateOptions.nodes.margin = {};
+                    this.encapsulateOptions.nodes.margin.left = value;
+                    this.$emit('options-has-changed', this.encapsulateOptions);
+                    break;
+                }
+
+                case 'update-label-marging-right': {
+                    if (!Object.hasOwn(this.encapsulateNodes, "margin")) this.encapsulateOptions.nodes.margin = {};
+                    this.encapsulateOptions.nodes.margin.right = value;
                     this.$emit('options-has-changed', this.encapsulateOptions);
                     break;
                 }
