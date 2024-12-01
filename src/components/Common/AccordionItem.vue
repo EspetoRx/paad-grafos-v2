@@ -39,6 +39,7 @@ import FontNodeAccordion from '../Nodes/FontNodeAccordion.vue';
 import HeightConstraintNodeAccordion from '../Nodes/HeightConstraintNodeAccordion.vue';
 import ShapeNodeAccordion from '../Nodes/ShapeNodeAccordion.vue';
 import ScalingNodeAccordion from '../Nodes/ScalingNodeAccordion.vue';
+import ShadowNodeAccordion from '../Nodes/ShadowNodeAccordion.vue'
 
 export default {
     name: "Accordion Item",
@@ -91,6 +92,11 @@ export default {
             }
             case 'nodes.scaling': {
                 this.currentContent = 'ScalingNodeAccordion';
+                break;
+            }
+            case 'nodes.shadow': {
+                this.currentContent = 'ShadowNodeAccordion';
+                break;
             }
         }
     },
@@ -106,7 +112,8 @@ export default {
         FontNodeAccordion,
         HeightConstraintNodeAccordion,
         ShapeNodeAccordion,
-        ScalingNodeAccordion
+        ScalingNodeAccordion,
+        ShadowNodeAccordion
     },
     methods: {
         message: function(message, variables) {
