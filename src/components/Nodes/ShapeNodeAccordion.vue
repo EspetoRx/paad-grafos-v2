@@ -52,6 +52,54 @@
         placeholder="'http://www.google.com'"
         :tooltip="'Entre com a URL da imagem a ser utilizada como vértice selecionado.'"
         :urlInitalValue="imageUrlSelected" @url-value-update="imageUrlObjectSelected"></InputUrl>
+    <div class="input-group mb-1 mt-1" v-if="(imageSelected || circularImageSelected)">
+        <span class="input-group-text m-0 p-0" id="padding-image-top-label">
+            <LabelWithTooltip
+                :labelValue="'Padding da imagem - top'"
+                :tooltip="'Options.nodes.imagePadding.top - Altere o valor do padding da imagem em sua componente top'"
+                :forId="'padding-image-top'"
+                :hasSwitch="false"
+            ></LabelWithTooltip>
+        </span>
+        <input type="number" class="form-control" placeholder="0" aria-label="Options.nodes.imagePading.top"
+            aria-describedby="padding-image-top-label" id="padding-image-top" v-model="imagePaddingTop">
+    </div>
+    <div class="input-group mb-1 mt-1" v-if="(imageSelected || circularImageSelected)">
+        <span class="input-group-text m-0 p-0" id="padding-image-bottom-label">
+            <LabelWithTooltip
+                :labelValue="'Padding da imagem - bottom'"
+                :tooltip="'Options.nodes.imagePadding.bottom - Altere o valor do padding da imagem em sua componente bottom'"
+                :forId="'padding-image-bottom'"
+                :hasSwitch="false"
+            ></LabelWithTooltip>
+        </span>
+        <input type="number" class="form-control" placeholder="0" aria-label="Options.nodes.imagePading.bottom"
+            aria-describedby="padding-image-bottom-label" id="padding-image-bottom" v-model="imagePaddingBottom">
+    </div>
+    <div class="input-group mb-1 mt-1" v-if="(imageSelected || circularImageSelected)">
+        <span class="input-group-text m-0 p-0" id="padding-image-left-label">
+            <LabelWithTooltip
+                :labelValue="'Padding da imagem - left'"
+                :tooltip="'Options.nodes.imagePadding.left - Altere o valor do padding da imagem em sua componente left'"
+                :forId="'padding-image-left'"
+                :hasSwitch="false"
+            ></LabelWithTooltip>
+        </span>
+        <input type="number" class="form-control" placeholder="0" aria-label="Options.nodes.imagePading.left"
+            aria-describedby="padding-image-left-label" id="padding-image-left" v-model="imagePaddingLeft">
+    </div>
+    <div class="input-group mb-1 mt-1" v-if="(imageSelected || circularImageSelected)">
+        <span class="input-group-text m-0 p-0" id="padding-image-right-label">
+            <LabelWithTooltip
+                :labelValue="'Padding da imagem - right'"
+                :tooltip="'Options.nodes.imagePadding.right - Altere o valor do padding da imagem em sua componente right'"
+                :forId="'padding-image-right'"
+                :hasSwitch="false"
+            ></LabelWithTooltip>
+        </span>
+        <input type="number" class="form-control" placeholder="0" aria-label="Options.nodes.imagePading.right"
+            aria-describedby="padding-image-right-label" id="padding-image-right" v-model="imagePaddingRight">
+    </div>
     <InputTextArea v-if="customSelected" :inputId="'options-nodes-shape-custom'" :inputEnabled="isCustomInputEnabled"
         :inputInitialValue="customValue" :inputPlaceholder="'//Input the javascript function'" :inputRows="15"
         :isLabelEnabled="true" :labelValue="'Editar customização do CTX Renderer'"
@@ -60,6 +108,7 @@
         :switchTooltip="'Options.Nodes.ctxRenderer Enable code editing - Ative a edição de código'"
         :switchInitialValue="isCustomInputEnabled" :switchLabelEnabled="false"
         @checkbox-value-change="enableCtxRendererEditing" @input-value-change="updateCustomValue"></InputTextArea>
+    <!-- //Insert modal component with some examples. -->
     <button @click.prevent="updateNodeCustomShape" v-if="isCustomInputEnabled"
         class="btn btn-primary form-control mt-1">Atualizar função de desenho do vértice</button>
 </template>
@@ -120,6 +169,11 @@ export default {
             isCustomInputEnabled: false,
             customFunction: null,
 
+            //Image relative variables
+            imagePaddingTop: 0,
+            imagePaddingBottom: 0,
+            imagePaddingLeft: 0,
+            imagePaddingRight: 0,
         }
     },
     components: {
@@ -317,6 +371,18 @@ export default {
                 this.imageUrlSelected = this.imageUrlUnselected;
                 this.$emit("message", "update-image-url-selected", [false, this.imageUrlUnselected, this.imageUrlUnselected]);
             }
+        },
+        imagePaddingTop: function(newValue, oldValue) {
+            this.$emit("message", "update-image-padding-top", newValue);
+        },
+        imagePaddingBottom: function(newValue, oldValue) {
+            this.$emit("message", "update-image-padding-bottom", newValue);
+        },
+        imagePaddingLeft: function(newValue, oldValue) {
+            this.$emit("message", "update-image-padding-left", newValue);
+        },
+        imagePaddingRight: function(newValue, oldValue) {
+            this.$emit("message", "update-image-padding-right", newValue);
         }
     },
     emits: ["message"]

@@ -513,6 +513,34 @@ export default {
                     this.$emit('send-toast', value);
                     break;
                 }
+
+                case 'update-image-padding-top': {
+                    if (!Object.hasOwn(this.encapsulateNodes, "imagePadding")) this.encapsulateOptions.nodes.imagePadding = {};
+                    this.encapsulateOptions.nodes.imagePadding.top = value;
+                    this.$emit('options-has-changed', this.encapsulateOptions);
+                    break;
+                }
+
+                case 'update-image-padding-bottom': {
+                    if (!Object.hasOwn(this.encapsulateNodes, "imagePadding")) this.encapsulateOptions.nodes.imagePadding = {};
+                    this.encapsulateOptions.nodes.imagePadding.bottom = value;
+                    this.$emit('options-has-changed', this.encapsulateOptions);
+                    break;
+                }
+
+                case 'update-image-padding-left': {
+                    if (!Object.hasOwn(this.encapsulateNodes, "imagePadding")) this.encapsulateOptions.nodes.imagePadding = {};
+                    this.encapsulateOptions.nodes.imagePadding.left = value;
+                    this.$emit('options-has-changed', this.encapsulateOptions);
+                    break;
+                }
+
+                case 'update-image-padding-right': {
+                    if (!Object.hasOwn(this.encapsulateNodes, "imagePadding")) this.encapsulateOptions.nodes.imagePadding = {};
+                    this.encapsulateOptions.nodes.imagePadding.right = value;
+                    this.$emit('options-has-changed', this.encapsulateOptions);
+                    break;
+                }
             }
         },
         emitOpacity: function (value) {
