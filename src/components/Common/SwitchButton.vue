@@ -42,6 +42,9 @@ export default {
     watch: {
         checkboxValue: function(newCheckBoxValue, oldCheckBoxValue) {
             this.$emit('checkbox-status-changed', newCheckBoxValue);
+        },
+        switchInitialValue: function(newValue, oldValue) {
+            this.checkboxValue = newValue;
         }
     },
     emits: ['checkbox-status-changed']

@@ -4,11 +4,11 @@
             <div class="d-flex">
                 <div class="form-check form-switch pt-1 pb-1 ms-1 collapsed" v-if="switchButton">
                     <input class="form-check-input" type="checkbox" role="switch" :id="'flexSwitch-' + this.id"
-                        :checked="this.checkboxValue" v-model="this.checkboxValue" :disabled="!this.currentlyEnabled">
+                        :checked="this.checkboxValue" v-model="this.checkboxValue" :disabled="!this.isCheckedEnabled">
                 </div>
                 <button class="accordion-button collapsed p-0 pt-1 pb-1 flex-fill" type="button"
                     data-bs-toggle="collapse" :data-bs-target="'#flush-collapse-' + this.id" aria-expanded="false"
-                    :aria-controls="'flush-collapse-' + this.id">
+                    :aria-controls="'flush-collapse-' + this.id" :disabled="accordionDisabled">
                     <div class="d-flex w-100 justify-content-between" v-if="this.hasTooltip">
                         <div class="ms-2">
                             {{ this.title }}
@@ -38,6 +38,7 @@ import FixedNodeAccordion from '../Nodes/FixedNodeAccordion.vue';
 import FontNodeAccordion from '../Nodes/FontNodeAccordion.vue';
 import HeightConstraintNodeAccordion from '../Nodes/HeightConstraintNodeAccordion.vue';
 import ShapeNodeAccordion from '../Nodes/ShapeNodeAccordion.vue';
+import ScalingNodeAccordion from '../Nodes/ScalingNodeAccordion.vue';
 
 export default {
     name: "Accordion Item",
@@ -51,6 +52,7 @@ export default {
         hasTooltip: Boolean,
         tooltip: String,
         isCheckedEnabled: Boolean,
+        accordionDisabled: Boolean
     },
     data() {
         return {
@@ -87,6 +89,9 @@ export default {
                 this.currentContent = 'ShapeNodeAccordion';
                 break;
             }
+            case 'nodes.scaling': {
+                this.currentContent = 'ScalingNodeAccordion';
+            }
         }
     },
     watch: {
@@ -100,7 +105,8 @@ export default {
         FixedNodeAccordion,
         FontNodeAccordion,
         HeightConstraintNodeAccordion,
-        ShapeNodeAccordion
+        ShapeNodeAccordion,
+        ScalingNodeAccordion
     },
     methods: {
         message: function(message, variables) {
