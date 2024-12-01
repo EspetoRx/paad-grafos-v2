@@ -83,7 +83,9 @@ export default {
             scalingValue: null,
             scalingAccordionDisabled: false,
             scalingCheckboxEnabled: true,
-            scalingCheckboxValue: false
+            scalingCheckboxValue: false,
+            shadowCheckboxValue: false,
+            shadowCheckboxEnabled: true
         }
     },
     watch: {
@@ -210,7 +212,19 @@ export default {
                 tooltip: 'Options.Nodes.Scaling - Se a opção de valor for especificada, o tamanho dos nós será dimensionado de acordo com as propriedades deste objeto. Todas as formas de nós podem ser dimensionadas, mas algumas apenas quando o dimensionamento do rótulo está ativado, pois seu tamanho é baseado no tamanho do rótulo. Escaláveis apenas quando o dimensionamento do rótulo está ativado são elipse, círculo, banco de dados, caixa, texto. Sempre escaláveis são: imagem, circularImage, diamante, ponto, estrela, triângulo, triângulo para baixo, hexágono, quadrado e ícone. Lembre-se de que ao usar o dimensionamento, a opção de tamanho é negligenciada.'
             }
         )
-        this.firstAccordionItemsComponents.push({ item: 'scaling', component: 'nodes.scaling' })
+        this.firstAccordionItemsComponents.push({ item: 'scaling', component: 'nodes.scaling' });
+        this.firstAccordionItems.push(
+            {
+                item: 'shadow',
+                title: 'Sombra',
+                switch: true,
+                isChecked: this.shadowCheckboxValue,
+                isCheckedEnabled: this.shadowCheckboxEnabled,
+                hasTooltip: true,
+                tooltip: 'Options.Nodes.Shadow - Quando verdadeiro, o vértice invoca uma sombra usando as configurações padrão. Isso pode ser refinado posteriormente ofertando um objeto.'
+            }
+        )
+        this.firstAccordionItemsComponents.push({ item: 'shadow', component: 'nodes.shadow' });
     },
     components: {
         AccordionFlush,
@@ -288,19 +302,19 @@ export default {
                     this.scalingAccordionDisabled = false;
                     this.scalingCheckboxEnabled = true;
                     this.scalingCheckboxValue = false;
-                    if(typeof this.firstAccordionItems[6] !== 'undefined') {
+                    if (typeof this.firstAccordionItems[6] !== 'undefined') {
                         this.firstAccordionItems[6].accordionDisabled = false;
                         this.firstAccordionItems[6].isCheckedEnabled = true;
-                        this.firstAccordionItems[6].isChecked = false; 
+                        this.firstAccordionItems[6].isChecked = false;
                     }
                 } else {
                     this.scalingAccordionDisabled = true;
                     this.scalingCheckboxEnabled = false;
                     this.scalingCheckboxValue = false;
-                    if(typeof this.firstAccordionItems[6] !== 'undefined') {
+                    if (typeof this.firstAccordionItems[6] !== 'undefined') {
                         this.firstAccordionItems[6].accordionDisabled = true;
                         this.firstAccordionItems[6].isCheckedEnabled = false;
-                        this.firstAccordionItems[6].isChecked = false; 
+                        this.firstAccordionItems[6].isChecked = false;
                     }
                 }
             } else {
@@ -616,7 +630,7 @@ export default {
                     break;
                 }
                 case 'options-nodes-scaling-object': {
-                    if (this.scalingCheckboxValue) 
+                    if (this.scalingCheckboxValue)
                         if (value) this.encapsulateOptions.nodes.scaling.label = { enabled: value };
                         else this.encapsulateOptions.nodes.scaling.label = value;
                     break;
@@ -637,18 +651,61 @@ export default {
                     break;
                 }
                 case 'options-nodes-scaling-object-max-visibility': {
-                    if(this.scalingCheckboxValue)
+                    if (this.scalingCheckboxValue)
                         this.encapsulateOptions.nodes.scaling.label.maxVisible = parseInt(value);
                     break;
                 }
                 case 'options-nodes-scaling-object-draw-threshold': {
-                    if(this.scalingCheckboxValue)
+                    if (this.scalingCheckboxValue)
                         this.encapsulateOptions.nodes.scaling.label.drawThreshold = parseInt(value);
                     break;
                 }
                 case 'options-nodes-scaling-customScalingFunction': {
                     if (this.scalingCheckboxValue) {
                         this.encapsulateOptions.nodes.scaling.customScalingFunction = value;
+                    }
+                    break;
+                }
+                case 'option-nodes-shadow': {
+                    this.shadowCheckboxValue = value;
+                    this.encapsulateOptions.nodes.shadow = value;
+                    break;
+                }
+                case 'option-nodes-shadow-object': {
+                    if (value) {
+                        if (this.shadowCheckboxEnabled) {
+                            this.encapsulateOptions.nodes.shadow = { enabled: value };
+                        }
+                    } else {
+                        if (Object.hasOwn(this.encapsulateOptions.nodes.shadow, 'color')) delete this.encapsulateOptions.nodes.shadow.color;
+                        if (Object.hasOwn(this.encapsulateOptions.nodes.shadow, 'size')) delete this.encapsulateOptions.nodes.shadow.size;
+                        if (Object.hasOwn(this.encapsulateOptions.nodes.shadow, 'x')) delete this.encapsulateOptions.nodes.shadow.x;
+                        if (Object.hasOwn(this.encapsulateOptions.nodes.shadow, 'y')) delete this.encapsulateOptions.nodes.shadow.y;
+                        this.encapsulateOptions.nodes.shadow = true;
+                    }
+                    break;
+                }
+                case 'option-nodes-shadow-object-color': {
+                    if (this.shadowCheckboxEnabled) {
+                        this.encapsulateOptions.nodes.shadow.color = value;
+                    }
+                    break;
+                }
+                case 'option-nodes-shadow-object-size': {
+                    if (this.shadowCheckboxEnabled) {
+                        this.encapsulateOptions.nodes.shadow.size = value;
+                    }
+                    break;
+                }
+                case 'option-nodes-shadow-object-x': {
+                    if (this.shadowCheckboxEnabled) {
+                        this.encapsulateOptions.nodes.shadow.x = value;
+                    }
+                    break;
+                }
+                case 'option-nodes-shadow-object-y': {
+                    if (this.shadowCheckboxEnabled) {
+                        this.encapsulateOptions.nodes.shadow.y = value;
                     }
                     break;
                 }
