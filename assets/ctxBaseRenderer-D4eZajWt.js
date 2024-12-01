@@ -1,0 +1,4 @@
+const ctxBaseRenderer = '({ ctx, id, x, y, state: { selected, hover }, style, label }) => {\r\n    const r = style.size;\r\n    const drawNode = () => {\r\n        ctx.beginPath();\r\n        const sides = 6;\r\n        const a = (Math.PI * 2) / sides;\r\n        ctx.moveTo(x, y + r);\r\n        for (let i = 1; i < sides; i++) {\r\n            ctx.lineTo(x + r * Math.sin(a * i), y + r * Math.cos(a * i));\r\n        }\r\n        ctx.closePath();\r\n        ctx.save();\r\n        ctx.fillStyle = "red";\r\n        ctx.fill();\r\n        ctx.stroke();\r\n        ctx.restore();\r\n\r\n        ctx.font = "normal 12px sans-serif";\r\n        ctx.fillStyle = "black";\r\n        ctx.fillText(label, x - r + 10, y, 2 * r - 20);\r\n    };\r\n    return {\r\n        drawNode,\r\n        nodeDimensions: { width: 2 * r, height: 2 * r },\r\n    };\r\n}';
+export {
+  ctxBaseRenderer as default
+};
