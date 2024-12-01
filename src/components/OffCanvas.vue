@@ -11,13 +11,17 @@
     scrollbar-width: none;
     /* Firefox */
 }
+
+.offcanvas_maior {
+    width: 700px;
+}
 </style>
 <template>
     <div class="offcanvas offcanvas-end" :class="offCanvasEnabled ? 'show' : ''" tabindex="-1"
-        :style="{ visibility: offCanvasEnabled ? 'visible' : 'hidden' }">
+        :style="{ visibility: offCanvasEnabled ? 'visible' : 'hidden' }" id="offcanvasBodyEnclosure">
         <div class="offcanvas-header p-2">
             <h5 class="offcanvas-title" id="" v-html="title"></h5>
-            <button type="button" class="btn-close text-reset" @click.prevent="$emit('toggle-off-canvas')"></button>
+            <button type="button" class="btn-close text-reset" @click.prevent="checkOptions(); $emit('toggle-off-canvas')"></button>
         </div>
         <div class="offcanvas-body">
             <physics v-if="this.type == 'visjs-physics'" :localNetwork="this.encapsulateLocalNetwork"
@@ -34,6 +38,7 @@
 
 import physics from './Physics/Physics.vue';
 import nodes from './Nodes/Nodes.vue';
+import * as Vue from 'vue';
 
 export default {
     name: 'Off Canvas',
@@ -79,14 +84,11 @@ export default {
                         container: container,
                         showButton: true
                     }
+                    var offcanvasBody = document.getElementById("offcanvasBodyEnclosure");
+                    offcanvasBody.classList.add('offcanvas_maior');
                     this.optionsHasChanged(this.encapsulateOptions);
                 }
-            } else {
-                if (this.type == 'visjs-configure') {
-                    this.encapsulateOptions.configure.enabled = false;
-                    this.$emit('options-has-changed', this.encapsulateOptions);
-                }
-            }
+            } 
 
         },
     },
@@ -110,6 +112,23 @@ export default {
         },
         sendToast: function(value) {
             this.$emit('send-toast', value);
+        },
+        checkOptions: function() {
+            // Fazer Lógica melhor para não dar PAU...
+            /*if (this.type == 'visjs-configure') {
+                var optionsFromConfigurator = Vue.toRaw(this.encapsulateLocalNetwork).getOptionsFromConfigurator();
+                optionsFromConfigurator.nodes.shape = this.encapsulateOptions.nodes.shpae ?? 'ellipse';
+                optionsFromConfigurator.nodes.opacity = 1;
+                optionsFromConfigurator.configure = false;
+                optionsFromConfigurator.manipulation.enabled = false;
+                optionsFromConfigurator.manipulation.initiallyActive = false;
+                optionsFromConfigurator.physics = {solver : 'barnesHut'};
+                this.optionsHasChanged(optionsFromConfigurator);
+            }*/
+            if (this.type == 'visjs-configure') {
+                this.encapsulateOptions.configure = false;
+                this.$emit('options-has-changed', this.encapsulateOptions);
+            }
         }
     },
     emits: [
