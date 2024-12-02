@@ -5,7 +5,8 @@
         </ModalComponent>
         <ToastContainer :newToast="newToast"></ToastContainer>
         <top-navbar @toggle-off-canvas="toggleOffCanvas" @offcanvas-for-vis-configure="offCanvasForVisConfigure"
-            @offcanvas-for-vis-physics="offCanvasForVisPhysics" @offcanvas-for-vis-nodes="offCanvasForVisNodes">
+            @offcanvas-for-vis-physics="offCanvasForVisPhysics" @offcanvas-for-vis-nodes="offCanvasForVisNodes"
+            @offcanvas-for-vis-edges="offCanvasForVisEdges">
         </top-navbar>
         <graph :nodes="nodes" :edges="edges" :options="options" @canvas-start="canvasStart" v-if="canvasEnabled"
             :key="Hash">
@@ -92,6 +93,13 @@ export default {
 
             this.offCanvas.title = "<i class='fa-solid fa-earth-americas'></i> Vis Js. Física";
             this.offCanvas.type = "visjs-physics";
+
+        },
+
+        offCanvasForVisEdges() {
+
+            this.offCanvas.title = "<i class='fa-solid fa-code-branch'></i> Vis Js. Arestas";
+            this.offCanvas.type = "visjs-edges";
 
         },
 

@@ -17,12 +17,16 @@
                              <li><a class="dropdown-item" href="#" id="consoleLogNetwork">Another action</a></li>
                             <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
                                     data-bs-target="#exampleModal">Something else here</a></li> -->
+                        <li data-toggle="tooltip" title="Vis.Js Edges"><a class="dropdown-item"
+                                href="#" id="offcanvasEdgesButton"
+                                @click.prevent="offcanvasForVisEdges(); toggleOffCanvas()">
+                                <i class="fa-solid fa-code-branch"></i> Vis.JS Arestas</a></li>
                         <li data-toggle="tooltip" title="Vis.Js Native Configure HTML DOM."><a class="dropdown-item"
                                 href="#" id="offcanvasConfigureButton"
                                 @click.prevent="offcanvasForVisConfigure(); toggleOffCanvas()">
                                 <i class="fa-solid fa-screwdriver-wrench"></i> Vis.JS Configure</a></li>
                         <li data-toggle="tooltip" title="Vis.Js Nodes"><a class="dropdown-item" href="#"
-                                id="offcanvasConfigureButton"
+                                id="offCanvasNodesButton"
                                 @click.prevent="offcanvasForVisNodes(); toggleOffCanvas()">
                                 <i class="fa-solid fa-circle"></i> Vis.JS Vértices</a></li>
                         <li data-toggle="tooltip" title="Vis.Js Physics"><a class="dropdown-item" href="#"
@@ -93,6 +97,9 @@ export default {
         offcanvasForVisNodes() {
             this.$emit("offcanvas-for-vis-nodes");
         },
+        offcanvasForVisEdges: function() {
+            this.$emit("offcanvas-for-vis-edges");
+        },
         offcanvasForVisPhysics() {
             this.$emit("offcanvas-for-vis-physics");
         }
@@ -101,7 +108,8 @@ export default {
         'offcanvas-for-vis-configure',
         'toggle-off-canvas',
         'offcanvas-for-vis-physics',
-        'offcanvas-for-vis-nodes'
+        'offcanvas-for-vis-nodes',
+        'offcanvas-for-vis-edges'
     ],
 }
 </script>
