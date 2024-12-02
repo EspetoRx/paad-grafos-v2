@@ -1,3 +1,3 @@
 ((width) => {
-    return width+5;
+    return width+2;
 })
