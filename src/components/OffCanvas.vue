@@ -30,6 +30,8 @@
                 :options="this.encapsulateOptions" @options-has-changed="optionsHasChanged"
                 @nodes-has-changed="nodeshasChanged" :nodes="encapsulateNodes" @component-key-change="onComponentKeyChange"
                 @send-toast="sendToast"></nodes>
+            <edges v-if="this.type == 'visjs-edges'" :network="encapsulateLocalNetwork" :options="encapsulateOptions"
+                @options-has-changed="optionsHasChanged" @send-toast="sendToast"></edges>
             <div id="offcanvasBody"></div>
         </div>
     </div>
@@ -38,13 +40,14 @@
 
 import physics from './Physics/Physics.vue';
 import nodes from './Nodes/Nodes.vue';
-import * as Vue from 'vue';
+import edges from './Edges/Edges.vue'
 
 export default {
     name: 'Off Canvas',
     components: {
         'physics': physics,
         'nodes': nodes,
+        'edges': edges
     },
     props: [
         'offCanvasEnabled',
@@ -87,6 +90,12 @@ export default {
                     var offcanvasBody = document.getElementById("offcanvasBodyEnclosure");
                     offcanvasBody.classList.add('offcanvas_maior');
                     this.optionsHasChanged(this.encapsulateOptions);
+                }
+                if (this.type == "visjs-edges") {
+                    this.encapsulateLocalNetwork = this.localNetwork;
+                    this.encapsulateOptions = this.options;
+                    this.encapsulateOptions.edges = {};
+                    this.$emit('options-has-changed', this.encapsulateOptions);
                 }
             } 
 
