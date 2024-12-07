@@ -224,6 +224,18 @@ export default {
                     'ajuste mais refinado das características da borda e da etiqueta estará disponível quando uma borda for escolhida.'
             }
         );
+        this.firstAccordionItemsComponents.push({ item: 'color', component: 'edges.color' });
+        this.firstAccordionItems.push(
+            {
+                item: 'color',
+                title: 'Cor',
+                switch: false,
+                hasTooltip: true,
+                tooltip: 'O objeto de cor contem as informações de cor da aresta em todas as situações. ' +
+                    ' Quando as arestas somente precisam de uma única cor, um valor de cor \'rbg(120, 32, 14)\',  ' +
+                    '\'#ffffff\' ou \'red\' pode ser aplicado ao invés de um objeto.'
+            }
+        );
     },
     methods: {
         emitArrowStriketrhough: function (value) {
@@ -543,10 +555,10 @@ export default {
             }
             if (message == 'options-edges-chosen-edge-function') {
                 if (typeof this.localOptions.edges.chosen == "boolean") {
-                    this.localOptions.edges.chosen = {edge: true};
+                    this.localOptions.edges.chosen = { edge: true };
                 }
             }
-            if (message = 'options-edges-chosen-edge-function-value') {
+            if (message == 'options-edges-chosen-edge-function-value') {
                 if (!Object.hasOwn(typeof this.localOptions.edges, 'chosen')) {
                     this.localOptions.edges.chosen = {};
                     this.localOptions.edges.chosen.edge = value;
@@ -557,8 +569,8 @@ export default {
                 }
             }
             if (message == 'options-edges-chosen-label-function') {
-                if (typeof this.localOptions.edges.chosen == "boolean"){
-                    this.localOptions.edges.chosen = {label: true};
+                if (typeof this.localOptions.edges.chosen == "boolean") {
+                    this.localOptions.edges.chosen = { label: true };
                 }
             }
             if (message == 'options-edges-chosen-label-function-value') {
@@ -570,6 +582,43 @@ export default {
                     this.localOptions.edges.chosen.label = value;
                     this.$emit("canvas-key-change", true);
                 }
+            }
+            if (message == 'options-edges-color-string') {
+                this.localOptions.edges.color = value;
+            }
+            if (message == 'options-edges-color-color') {
+                if (typeof this.localOptions.edges.color === 'string' || this.localOptions.edges.color instanceof String) {
+                    this.localOptions.edges.color = {};
+                }
+                this.localOptions.edges.color.color = value;
+            }
+            if (message == 'options-edges-color-highlight') {
+                if (typeof this.localOptions.edges.color === 'string' || this.localOptions.edges.color instanceof String) {
+                    this.localOptions.edges.color = {};
+                }
+                this.localOptions.edges.color.highlight = value;
+            }
+            if (message == 'options-edges-color-hover') {
+                if (typeof this.localOptions.edges.color === 'string' || this.localOptions.edges.color instanceof String) {
+                    this.localOptions.edges.color = {};
+                }
+                this.localOptions.edges.color.hover = value;
+            }
+            if (message == 'options-edges-color-inherit') {
+                if (typeof this.localOptions.edges.color === 'string' || this.localOptions.edges.color instanceof String) {
+                    this.localOptions.edges.color = {};
+                }
+                console.log("Color inherit " + value);
+                if (value != false) {
+                    this.localOptions.edges.color = {};
+                    this.localOptions.edges.color.inherit = value;
+                }
+            }
+            if (message == 'options-edges-color-opacity') {
+                if (typeof this.localOptions.edges.color === 'string' || this.localOptions.edges.color instanceof String) {
+                    this.localOptions.edges.color = {};
+                }
+                this.localOptions.edges.color.opacity = value;
             }
         },
         openBsModal: function (title, body) {
@@ -583,7 +632,7 @@ export default {
             },
             deep: true
         },
-        optionsEdgesChosenSwitchChecked: function(newValue, oldValue) {
+        optionsEdgesChosenSwitchChecked: function (newValue, oldValue) {
             this.firstAccordionItems[2].isChecked = newValue;
         },
         bsModalReturnValue: function (newValue, oldValue) {
