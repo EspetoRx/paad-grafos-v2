@@ -62,7 +62,9 @@ import LabelWithTooltip from '../Common/LabelWithTooltip.vue';
 export default{
     name: "Height Constraint Component",
     props: [
-        'checkboxValue'
+        'checkboxValue',
+        'openBsModal',
+        'bsModalReturnValue',
     ],
     components: {
         SwitchWithInfo,
@@ -120,6 +122,6 @@ export default{
             }
         }
     },
-    emits: ["message"]
+    emits: ["message", "open-bs-modal"]
 }
 </script>

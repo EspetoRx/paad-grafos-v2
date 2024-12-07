@@ -73,17 +73,17 @@
         @checkbox-status-changed="toggleSelectionWidth"></SwitchWithInfo>
     <div class="border mt-1 mb-1 p-1" v-if="optionsEdgesSelectionWidthFunctionSending">
         <InputTextArea :inputId="'options-edges-selectionWidth-function'"
-            :inputEnabled="optionsEdgesSelectionWidthSwithcValue"
+            :inputEnabled="optionsEdgesSelectionWidthSwitchValue"
             :inputInitialValue="optionsEdgesSelectionWidthValueFunctionText"
             :inputPlaceholder="'//JS code para o hoverWidth'" :inputRows="3" :isLabelEnabled="true"
             :labelValue="'Função para largura da seleção'"
             :tooltip="'Options.Edges.selectionWidth (As function) - Como a largura pode ser alterada pelo valor e pelas funções de escala, um multiplicador constante ou valor agregado pode não fornecer os melhores resultados. Para resolver isso, você pode fornecer uma função. Ele recebe a largura numérica da borda. Neste exemplo simples, multiplique a largura por 2. Você pode taylor a lógica na função, desde que ela retorne um número.'"
             :hasSwitch="true" :switchId="'options-edges-selectionWidth-function-switch'"
             :switchTooltip="'Options.Edges.selectionWidth (As function) - Como a largura pode ser alterada pelo valor e pelas funções de escala, um multiplicador constante ou valor agregado pode não fornecer os melhores resultados. Para resolver isso, você pode fornecer uma função. Ele recebe a largura numérica da borda. Neste exemplo simples, multiplique a largura por 2. Você pode taylor a lógica na função, desde que ela retorne um número.'"
-            :switchDisabled="false" :switchInitialValue="optionsEdgesSelectionWidthSwithcValue"
+            :switchDisabled="false" :switchInitialValue="optionsEdgesSelectionWidthSwitchValue"
             :switchLabelEnabled="false" @checkbox-value-change="enableSelectionWidthFunction"
             @input-value-change="changeSelectionWidthFunctionValue"></InputTextArea>
-        <button v-if="optionsEdgesSelectionWidthSwithcValue" type="button" class="btn btn-primary form-control mt-2"
+        <button v-if="optionsEdgesSelectionWidthSwitchValue" type="button" class="btn btn-primary form-control mt-2"
             @click.prevent="sendEdgesSelectionWidthFunction">Registrar
             função</button>
     </div>
@@ -95,18 +95,23 @@
     </div>
     <InputGroupWithLabel :prepend="'Largura:'" :append="true" :inputType="'number'"
         :tooltip="'Options.Edges.Width - A largura da aresta. Se o valor for definido, ele não será usado.'"
-        :inputInitialValue="optionsEdgesWidth" @input-value-change="changeWidth"
-        :step="0.5"></InputGroupWithLabel>
+        :inputInitialValue="optionsEdgesWidth" @input-value-change="changeWidth" :step="0.5"></InputGroupWithLabel>
+    <AccordionFlush :id="'first-accordion'" :accordionItems="firstAccordionItems"
+        :accordionItemsComponents="firstAccordionItemsComponents" class="mt-2"
+        @toggle-switch-event="accordionToggleSwitchEvent" @message="message" @open-bs-modal="openBsModal" :bsModalReturnValue="bsModalReturnValue">
+    </AccordionFlush>
 </template>
 <script>
 import InputGroupWithLabel from '../Common/Inputs/InputGroupWithLabel.vue';
 import InputTextArea from '../Common/Inputs/InputTextArea.vue';
 import SwitchWithInfo from '../Common/SwitchWithInfo.vue';
+import AccordionFlush from '../Common/AccordionFlush.vue';
 export default {
     name: "Edges Component",
     props: [
         'network',
         'options',
+        'bsModalReturnValue'
     ],
     data() {
         return {
@@ -129,21 +134,63 @@ export default {
             optionsEdgesSelectionWidthFunctionSending: false,
             optionsEdgesSelectionWidthValue: 1,
             optionsEdgesSelectionWidthSwitchEnabled: true,
-            optionsEdgesSelectionWidthSwithcValue: false,
+            optionsEdgesSelectionWidthSwitchValue: false,
             optionsEdgesSelectionWidthValueFunctionText: "",
             optionsEdgesSelectionWidthValueFunction: null,
             optionsEdgesWidth: 1,
+            firstAccordionItems: [],
+            firstAccordionItemsComponents: [],
+            optionsEdgesArrowSwitchCheck: false,
+            optionsEdgesArrowsString: '',
+            optionsEdgesArrows: {
+                from: {
+                    enabled: false,
+                },
+                middle: {
+                    enabled: false,
+                },
+                to: {
+                    enabled: false,
+                }
+            },
+            optionsImageHeightEnabled: {
+                from: false,
+                middle: false,
+                to: false
+            },
+            optionsImageWidthEnabled: {
+                from: false,
+                middle: false,
+                to: false
+            },
         }
     },
     components: {
         SwitchWithInfo,
         InputGroupWithLabel,
-        InputTextArea
+        InputTextArea,
+        AccordionFlush
     },
     mounted() {
         console.log("Edges Component Mounted");
         this.localNetwork = this.network;
         this.localOptions = this.options;
+
+        this.firstAccordionItemsComponents.push({ item: 'arrows', component: 'edges.arrows' });
+        this.firstAccordionItems.push(
+            {
+                item: 'arrows',
+                title: 'Setas',
+                switch: true,
+                isChecked: this.optionsEdgesArrowSwitchCheck,
+                isCheckedEnabled: true,
+                hasTooltip: true,
+                tooltip: 'Para desenhar uma seta com configurações padrão, uma string pode ser fornecida. Por ' +
+                    'exemplo: <code>arrows:\'to, from, middle\'</code> ou <code>\'to;from\'</code>' +
+                    ', qualquer combinação com qualquer símbolo separador está bem. Se quiser controlar ' +
+                    'o tamanho das pontas das setas, você pode fornecer um objeto'
+            }
+        );
     },
     methods: {
         emitArrowStriketrhough: function (value) {
@@ -259,19 +306,185 @@ export default {
             this.localOptions.edges.selectionWidth = parseFloat(value);
         },
         enableSelectionWidthFunction: function (value) {
-            this.optionsEdgesSelectionWidthSwithcValue = value;
+            this.optionsEdgesSelectionWidthSwitchValue = value;
         },
         changeSelectionWidthFunctionValue: function (value) {
             this.optionsEdgesSelectionWidthValueFunctionText = value;
         },
         sendEdgesSelectionWidthFunction: function () {
-            this.optionsEdgesSelectionWidthSwithcValue = false;
+            this.optionsEdgesSelectionWidthSwitchValue = false;
             this.optionsEdgesSelectionWidthValueFunction = eval(this.optionsEdgesSelectionWidthValueFunctionText);
-            this.options.edges.selectionWidth = this.optionsEdgesSelectionWidthValueFunction;
+            this.localOptions.edges.selectionWidth = this.optionsEdgesSelectionWidthValueFunction;
         },
         changeWidth: function (value) {
-            this.optionsEdgesWidth = parseFloat(value);
-            this.options.edges.width = parseFloat(value);
+            this.localOptionsoptionsEdgesWidth = parseFloat(value);
+            this.localOptions.edges.width = parseFloat(value);
+        },
+        accordionToggleSwitchEvent: function (id, value) {
+            console.log(id, value);
+            if (id == 'arrows') {
+                this.optionsEdgesArrowSwitchCheck = value;
+                if (!value && Object.hasOwn(this.localOptions.edges, "arrows")) {
+                    this.optionsEdgesArrows.from.enabled = false;
+                    this.optionsEdgesArrows.middle.enabled = false;
+                    this.optionsEdgesArrows.to.enabled = false;
+                    this.localOptions.edges.arrows = this.optionsEdgesArrows;
+                }
+            }
+        },
+        message: function (message, value) {
+            if (message == 'send-toast') this.$emit('send-toast', value);
+            if (message == 'arrow-string-changed') {
+                this.optionsEdgesArrowsString = value;
+                this.localOptions.edges.arrows = value;
+            }
+            if (message == 'options-edges-arrows-disabled') {
+                this.optionsEdgesArrows.from.enabled = false;
+                this.optionsEdgesArrows.middle.enabled = false;
+                this.optionsEdgesArrows.to.enabled = false;
+                this.localOptions.edges.arrows = this.optionsEdgesArrows;
+            }
+            if (message == 'options-edges-arrows-from-enabled') {
+                this.optionsEdgesArrows.from.enabled = value;
+                this.localOptions.edges.arrows = this.optionsEdgesArrows;
+            }
+            if (message == 'options-edges-arrows-middle-enabled') {
+                this.optionsEdgesArrows.middle.enabled = value;
+                this.localOptions.edges.arrows = this.optionsEdgesArrows;
+            }
+            if (message == 'options-edges-arrows-to-enabled') {
+                this.optionsEdgesArrows.to.enabled = value;
+                this.localOptions.edges.arrows = this.optionsEdgesArrows;
+            }
+            if (message == 'options-edges-arrows-from-image-height-enabled') {
+                this.optionsImageHeightEnabled.from = value;
+                if (!value) {
+                    delete this.optionsEdgesArrows.from.imageHeight;
+                    delete this.localOptions.edges.arrows.from.imageHeight;
+                    this.$emit("canvas-key-change", true);
+                }
+            }
+            if (message == 'options-edges-arrows-middle-image-height-enabled') {
+                this.optionsImageHeightEnabled.middle = value;
+                if (!value) {
+                    delete this.optionsEdgesArrows.middle.imageHeight;
+                    delete this.localOptions.edges.arrows.middle.imageHeight;
+                    this.$emit("canvas-key-change", true);
+                }
+            }
+            if (message == 'options-edges-arrows-to-image-height-enabled') {
+                this.optionsImageHeightEnabled.to = value;
+                if (!value) {
+                    delete this.optionsEdgesArrows.middle.imageHeight;
+                    delete this.localOptions.edges.arrows.middle.imageHeight;
+                    this.$emit("canvas-key-change", true);
+                }
+            }
+            if (message == 'options-edges-arrows-from-image-height-value') {
+                if (this.optionsImageHeightEnabled.from) {
+                    this.optionsEdgesArrows.from.imageHeight = value;
+                    this.localOptions.edges.arrows = this.optionsEdgesArrows;
+                }
+            }
+            if (message == 'options-edges-arrows-middle-image-height-value') {
+                if (this.optionsImageHeightEnabled.middle) {
+                    this.optionsEdgesArrows.middle.imageHeight = value;
+                    this.localOptions.edges.arrows = this.optionsEdgesArrows;
+                }
+            }
+            if (message == 'options-edges-arrows-to-image-height-value') {
+                if (this.optionsImageHeightEnabled.to) {
+                    this.optionsEdgesArrows.to.imageHeight = value;
+                    this.localOptions.edges.arrows = this.optionsEdgesArrows;
+                }
+            }
+            if (message == 'options-edges-arrows-from-image-width-enabled') {
+                this.optionsImageWidthEnabled.from = value;
+                if (!value) {
+                    delete this.optionsEdgesArrows.from.imageWidth;
+                    delete this.localOptions.edges.arrows.from.imageWidth;
+                    this.$emit("canvas-key-change", true);
+                }
+            }
+            if (message == 'options-edges-arrows-middle-image-width-enabled') {
+                this.optionsImageWidthEnabled.middle = value;
+                if (!value) {
+                    delete this.optionsEdgesArrows.middle.imageWidth;
+                    delete this.localOptions.edges.arrows.middle.imageWidth;
+                    this.$emit("canvas-key-change", true);
+                }
+            }
+            if (message == 'options-edges-arrows-to-image-width-enabled') {
+                this.optionsImageWidthEnabled.to = value;
+                if (!value) {
+                    delete this.optionsEdgesArrows.to.imageWidth;
+                    delete this.localOptions.edges.arrows.to.imageWidth;
+                    this.$emit("canvas-key-change", true);
+                }
+            }
+            if (message == 'options-edges-arrows-from-image-width-value') {
+                if (this.optionsImageWidthEnabled.from) {
+                    this.optionsEdgesArrows.from.imageWidth = value;
+                    this.localOptions.edges.arrows = this.optionsEdgesArrows;
+                }
+            }
+            if (message == 'options-edges-arrows-middle-image-width-value') {
+                if (this.optionsImageWidthEnabled.middle) {
+                    this.optionsEdgesArrows.middle.imageWidth = value;
+                    this.localOptions.edges.arrows = this.optionsEdgesArrows;
+                }
+            }
+            if (message == 'options-edges-arrows-to-image-width-value') {
+                if (this.optionsImageWidthEnabled.to) {
+                    this.optionsEdgesArrows.to.imageWidth = value;
+                    this.localOptions.edges.arrows = this.optionsEdgesArrows;
+                }
+            }
+            if (message == 'options-edges-arrows-from-scale-factor') {
+                this.optionsEdgesArrows.from.scaleFactor = value;
+                this.localOptions.edges.arrows = this.optionsEdgesArrows;
+            }
+            if (message == 'options-edges-arrows-middle-scale-factor') {
+                this.optionsEdgesArrows.middle.scaleFactor = value;
+                this.localOptions.edges.arrows = this.optionsEdgesArrows;
+            }
+            if (message == 'options-edges-arrows-to-scale-factor') {
+                this.optionsEdgesArrows.to.scaleFactor = value;
+                this.localOptions.edges.arrows = this.optionsEdgesArrows;
+            }
+            if (message == 'options-edges-arrows-from-type'){
+                this.optionsEdgesArrows.from.type = value;
+                this.localOptions.edges.arrows = this.optionsEdgesArrows;
+            }
+            if (message == 'options-edges-arrows-middle-type'){
+                this.optionsEdgesArrows.middle.type = value;
+                this.localOptions.edges.arrows = this.optionsEdgesArrows;
+            }
+            if (message == 'options-edges-arrows-to-type'){
+                this.optionsEdgesArrows.to.type = value;
+                this.localOptions.edges.arrows = this.optionsEdgesArrows;
+            }
+            if (message == 'options-edges-arrows-from-src') {
+                if (this.optionsEdgesArrows.from.type == 'image') {
+                    this.optionsEdgesArrows.from.src = value;
+                    this.localOptions.edges.arrows = this.optionsEdgesArrows;
+                }
+            }
+            if (message == 'options-edges-arrows-middle-src') {
+                if (this.optionsEdgesArrows.middle.type == 'image') {
+                    this.optionsEdgesArrows.middle.src = value;
+                    this.localOptions.edges.arrows = this.optionsEdgesArrows;
+                }
+            }
+            if (message == 'options-edges-arrows-to-src') {
+                if (this.optionsEdgesArrows.to.type == 'image') {
+                    this.optionsEdgesArrows.to.src = value;
+                    this.localOptions.edges.arrows = this.optionsEdgesArrows;
+                }
+            }
+        },
+        openBsModal: function(title, body){            
+            this.$emit("open-bs-modal", title, body);
         }
     },
     watch: {
@@ -283,6 +496,6 @@ export default {
         }
 
     },
-    emits: ["options-has-changed", "send-toast"]
+    emits: ["options-has-changed", "send-toast", "canvas-key-change", "open-bs-modal"]
 }
 </script>

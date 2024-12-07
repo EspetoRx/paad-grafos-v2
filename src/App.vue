@@ -1,7 +1,7 @@
 <template>
     <div>
         <ModalComponent :disabled="bsModalDisabled" :title="bsModalTitle" :bodyComponent="bsModalBody"
-            @modal-close="modalClose" @options-has-changed="optionsHasChanged" :options="options">
+            @modal-close="modalClose" @modal-return-value="setModalReturnValue" :showClose="bsModalShowClose">
         </ModalComponent>
         <ToastContainer :newToast="newToast"></ToastContainer>
         <top-navbar @toggle-off-canvas="toggleOffCanvas" @offcanvas-for-vis-configure="offCanvasForVisConfigure"
@@ -14,9 +14,9 @@
         <bottom-navbar></bottom-navbar>
         <off-canvas :offCanvasEnabled="this.offCanvasEnabled" :title="this.offCanvas.title" :type="this.offCanvas.type"
             :localNetwork="this.encapsulateNetwork" :options="this.options" @toggle-off-canvas="this.toggleOffCanvas"
-            @options-has-changed="this.optionsHasChanged" :realNodes="this.nodes"
+            @options-has-changed="this.optionsHasChanged" :realNodes="this.nodes" :bsModalReturnValue="bsModalReturnValue"
             @nodes-has-changed="this.nodesHasChanged" @canvas-key-change="onCanvasKeyChange"
-            @send-toast="emitNewToast"></off-canvas>
+            @send-toast="emitNewToast" @open-bs-modal="enableModal"></off-canvas>
     </div>
 </template>
 <script>
@@ -61,9 +61,12 @@ export default {
             encapsulateNetwork: null,
             Hash: hash(),
             newToast: null,
+
             bsModalDisabled: true,
             bsModalTitle: "",
-            bsModalBody: ""
+            bsModalBody: "",
+            bsModalReturnValue: null,
+            bsModalShowClose: false,
         }
     },
     components: {
@@ -132,6 +135,7 @@ export default {
         },
 
         onCanvasKeyChange: function () {
+            console.log("Repintando o canvas.");
             this.Hash = hash();
         },
 
@@ -139,8 +143,18 @@ export default {
             this.newToast = value;
         },
 
+        enableModal: function (title, body) {
+            this.bsModalTitle = title;
+            this.bsModalBody = body;
+            this.bsModalDisabled = false;
+        },
+
+        setModalReturnValue: function (value) {
+            this.bsModalReturnValue = value;
+            setTimeout(() => this.bsModalReturnValue = null, 2000)
+        },
+
         modalClose: function () {
-            console.log("Emiti o modalClose");
             this.bsModalDisabled = true;
         }
     },

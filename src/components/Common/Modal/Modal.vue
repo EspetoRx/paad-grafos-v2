@@ -1,18 +1,21 @@
 <template>
-    <div :id="'modal-'+Hash" class="modal fade" tabindex="-1">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content  modal-dialog-scrollable">
-                <div class="modal-header w-100">
-                    <h5 class="modal-title" v-html="title"></h5>
-                    <button type="button" class="btn-close" @click="sendModalClose"></button>
-                </div>
-                <div class="modal-body w-100" id="modalBody">
-                    <component :is="currentCompnent"></component>
-                </div>
-                <!-- <div class="modal-footer">
+    <div>
+        <div :id="'modal-' + Hash" class="modal fade" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header w-100 pt-2 pb-2">
+                        <h5 class="modal-title" v-html="title"></h5>
+                        <button type="button" class="btn-close" @click="sendModalClose" v-if="showClose"></button>
+                    </div>
+                    <div class="modal-body w-100" id="modalBody">
+                        <slot></slot>
+                        <component :is="comp" @value-returned="returnValue"></component>
+                    </div>
+                    <!-- <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary">Save changes</button>
                 </div> -->
+                </div>
             </div>
         </div>
     </div>
@@ -20,21 +23,21 @@
 <script>
 import { hash } from "../../../utils/Hash";
 import { Modal } from 'bootstrap';
+import {defineAsyncComponent} from "vue";
 export default {
     name: "Modal Component",
     props: {
         disabled: Boolean,
         title: String,
         bodyComponent: String,
-        options: Object
+        callbackFunction: Function,
+        showClose: Boolean
     },
     data() {
         return {
             Hash: hash(),
             bsModalEl: null,
             bsModal: null,
-            currentCompnent: null,
-            encapsulateOptions: null,
         }
     },
     watch: {
@@ -63,16 +66,23 @@ export default {
         }
     },
     methods: {
-        sendModalClose: function() {
-            console.log("Emitting modal close")
+        sendModalClose: function () {
             this.bsModal.hide();
             this.$emit("modal-close");
+        },
+        returnValue: function (value) {
+            this.$emit("modal-return-value", value);
+            this.sendModalClose();
         }
     },
     mounted() {
         console.log("Modal Component mounted");
-        this.encapsulateOptions = this.options;
     },
-    emits: ["modal-close", "options-has-changed"]
+    computed: {
+        comp () {
+            if (this.bodyComponent == "RepaintCanvas") return defineAsyncComponent(() => import('./../Utils/RepaintCanvas.vue'));
+        }
+    },
+    emits: ["modal-close", "modal-return-value"]
 }
 </script>

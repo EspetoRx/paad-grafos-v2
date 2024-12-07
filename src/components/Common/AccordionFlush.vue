@@ -8,6 +8,8 @@
             :accordionDisabled="item.accordionDisabled??false"
             @toggle-switch-event="toggleSwitchEvent"
             @message="message"
+            @open-bs-modal="openBsModal"
+            :bsModalReturnValue="bsModalReturnValue"
         >
         </AccordionItem>
     </div>
@@ -22,6 +24,7 @@ export default {
         'id',
         'accordionItems',
         'accordionItemsComponents',
+        'bsModalReturnValue',
     ],
     components: {
         AccordionItem
@@ -32,8 +35,11 @@ export default {
         },
         message: function(message, value) {
             this.$emit('message', message, value);
+        },
+        openBsModal: function(title, body) {
+            this.$emit("open-bs-modal", title, body);
         }
     },
-    emits:['toggle-switch-event', 'message']
+    emits:['toggle-switch-event', 'message', 'open-bs-modal']
 }
 </script>

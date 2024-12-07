@@ -175,7 +175,7 @@ import SwitchWithInfo from '../Common/SwitchWithInfo.vue';
 import InputTextArea from '../Common/Inputs/InputTextArea.vue';
 export default {
     name: "Shape Node Accordion",
-    props: ['checkboxValue'],
+    props: ['checkboxValue', 'bsModalReturnValue', 'openBsModal'],
     data() {
         return {
             shape: 'ellipse',
@@ -459,6 +459,6 @@ export default {
             this.$emit("message", "update-label-marging-right", newValue);
         },
     },
-    emits: ["message"]
+    emits: ["message", "open-bs-modal"]
 }
 </script>

@@ -31,7 +31,8 @@
                 @nodes-has-changed="nodeshasChanged" :nodes="encapsulateNodes" @component-key-change="onComponentKeyChange"
                 @send-toast="sendToast"></nodes>
             <edges v-if="this.type == 'visjs-edges'" :network="encapsulateLocalNetwork" :options="encapsulateOptions"
-                @options-has-changed="optionsHasChanged" @send-toast="sendToast"></edges>
+                @options-has-changed="optionsHasChanged" @send-toast="sendToast" @canvas-key-change="onComponentKeyChange"
+                @open-bs-modal="enableBsModal" :bsModalReturnValue="bsModalReturnValue"></edges>
             <div id="offcanvasBody"></div>
         </div>
     </div>
@@ -55,7 +56,8 @@ export default {
         'type',
         'localNetwork',
         'options',
-        'realNodes'
+        'realNodes',
+        'bsModalReturnValue'
     ],
     data() {
         return {
@@ -138,6 +140,9 @@ export default {
                 this.encapsulateOptions.configure = false;
                 this.$emit('options-has-changed', this.encapsulateOptions);
             }
+        },
+        enableBsModal: function(title, body) {
+            this.$emit("open-bs-modal", title, body);
         }
     },
     emits: [
@@ -145,7 +150,8 @@ export default {
         'options-has-changed',
         'nodes-has-changed',
         'canvas-key-change',
-        'send-toast'
+        'send-toast',
+        'open-bs-modal'
     ]
 }
 </script>

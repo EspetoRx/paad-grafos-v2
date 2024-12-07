@@ -14,7 +14,7 @@
                             {{ this.title }}
                         </div>
                         <div class="flex-shrink-1 badge bg-info m-1" data-bs-toggle="tooltip"
-                            :title="this.tooltip">
+                            :title="this.tooltip" data-bs-html="true">
                             <i class="fa-solid fa-info text-right"></i>
                         </div>
                     </div>
@@ -25,7 +25,7 @@
         <div :id="'flush-collapse-' + this.id" class="accordion-collapse collapse ms-1 me-1"
             :data-bs-parent="'#accordionFlush-' + this.flushId">
             <div class="accordion-body p-0 pt-1 pb-1">
-                <component :is="currentContent" :checkboxValue="this.checkboxValue" @message="message"></component>
+                <component :is="currentContent" :checkboxValue="this.checkboxValue" @message="message" @open-bs-modal="openBsModal" :bsModalReturnValue="bsModalReturnValue"></component>
             </div>
         </div>
     </div>
@@ -39,7 +39,8 @@ import FontNodeAccordion from '../Nodes/FontNodeAccordion.vue';
 import HeightConstraintNodeAccordion from '../Nodes/HeightConstraintNodeAccordion.vue';
 import ShapeNodeAccordion from '../Nodes/ShapeNodeAccordion.vue';
 import ScalingNodeAccordion from '../Nodes/ScalingNodeAccordion.vue';
-import ShadowNodeAccordion from '../Nodes/ShadowNodeAccordion.vue'
+import ShadowNodeAccordion from '../Nodes/ShadowNodeAccordion.vue';
+import ArrowEdgeAccordion from '../Edges/ArrowEdgeAccordion.vue';
 
 export default {
     name: "Accordion Item",
@@ -53,7 +54,8 @@ export default {
         hasTooltip: Boolean,
         tooltip: String,
         isCheckedEnabled: Boolean,
-        accordionDisabled: Boolean
+        accordionDisabled: Boolean,
+        bsModalReturnValue: Boolean
     },
     data() {
         return {
@@ -98,6 +100,10 @@ export default {
                 this.currentContent = 'ShadowNodeAccordion';
                 break;
             }
+            case 'edges.arrows': {
+                this.currentContent = 'ArrowEdgeAccordion';
+                break;
+            }
         }
     },
     watch: {
@@ -113,7 +119,8 @@ export default {
         HeightConstraintNodeAccordion,
         ShapeNodeAccordion,
         ScalingNodeAccordion,
-        ShadowNodeAccordion
+        ShadowNodeAccordion,
+        ArrowEdgeAccordion
     },
     methods: {
         message: function(message, variables) {
@@ -128,8 +135,11 @@ export default {
                 this.$emit('message', message, variables);
             }
             
+        },
+        openBsModal(title, body) {
+            this.$emit("open-bs-modal", title, body);
         }
     },
-    emits: ['toggle-switch-event', 'message']
+    emits: ['toggle-switch-event', 'message', 'open-bs-modal']
 }
 </script>
