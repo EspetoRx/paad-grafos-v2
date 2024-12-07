@@ -98,7 +98,8 @@
         :inputInitialValue="optionsEdgesWidth" @input-value-change="changeWidth" :step="0.5"></InputGroupWithLabel>
     <AccordionFlush :id="'first-accordion'" :accordionItems="firstAccordionItems"
         :accordionItemsComponents="firstAccordionItemsComponents" class="mt-2"
-        @toggle-switch-event="accordionToggleSwitchEvent" @message="message" @open-bs-modal="openBsModal" :bsModalReturnValue="bsModalReturnValue">
+        @toggle-switch-event="accordionToggleSwitchEvent" @message="message" @open-bs-modal="openBsModal"
+        :bsModalReturnValue="bsModalReturnValue">
     </AccordionFlush>
 </template>
 <script>
@@ -163,6 +164,10 @@ export default {
                 middle: false,
                 to: false
             },
+            optionsEdgesEndPointOffsetSwitchChecked: false,
+            optionsEdgesEndpointOffset: null,
+            optionsEdgesChosenSwitchChecked: true,
+            awatingResponse: [],
         }
     },
     components: {
@@ -182,13 +187,41 @@ export default {
                 item: 'arrows',
                 title: 'Setas',
                 switch: true,
-                isChecked: this.optionsEdgesArrowSwitchCheck,
+                isChecked: this.optionsEdgesEndPointOffsetSwitchChecked,
                 isCheckedEnabled: true,
                 hasTooltip: true,
                 tooltip: 'Para desenhar uma seta com configurações padrão, uma string pode ser fornecida. Por ' +
                     'exemplo: <code>arrows:\'to, from, middle\'</code> ou <code>\'to;from\'</code>' +
                     ', qualquer combinação com qualquer símbolo separador está bem. Se quiser controlar ' +
                     'o tamanho das pontas das setas, você pode fornecer um objeto'
+            }
+        );
+        this.firstAccordionItemsComponents.push({ item: 'endPointOffset', component: 'edges.endPointOffset' });
+        this.firstAccordionItems.push(
+            {
+                item: 'endPointOffset',
+                title: 'Deslocamento do ponto final',
+                switch: true,
+                isChecked: this.optionsEdgesArrowSwitchCheck,
+                isCheckedEnabled: this.optionsEdgesArrowStrikethrough,
+                hasTooltip: true,
+                tooltip: 'Ajuste os pontos finais. Pode ser útil se você quiser que os pontos finais sejam' +
+                    ' colocados nas bordas dos nós. Este recurso só é possível quando o arrowStrikethrough for verdadeiro.'
+            }
+        );
+        this.firstAccordionItemsComponents.push({ item: 'chosen', component: 'edges.chosen' });
+        this.firstAccordionItems.push(
+            {
+                item: 'chosen',
+                title: 'Escolhido',
+                switch: true,
+                isChecked: this.optionsEdgesChosenSwitchChecked,
+                isCheckedEnabled: true,
+                hasTooltip: true,
+                tooltip: 'Quando verdadeiro, selecionar ou passar o mouse sobre uma borda irá alterá-la' +
+                    ' e as características de seu rótulo de acordo com o padrão. Quando falso, nenhuma alteração na ' +
+                    'aresta ou em seu rótulo ocorrerá quando a aresta for escolhida. Se um objeto for fornecido, um ' +
+                    'ajuste mais refinado das características da borda e da etiqueta estará disponível quando uma borda for escolhida.'
             }
         );
     },
@@ -223,7 +256,6 @@ export default {
         },
         emitHoverWidth: function (value) {
             this.optionsEdgesHoverWidthFunctionSending = value;
-            console.log("hoverwidthvalue " + value);
             if (!value) {
                 this.localOptions.edges.hoverWidth = this.optionsEdgesHoverWidthValue;
             } else {
@@ -321,7 +353,6 @@ export default {
             this.localOptions.edges.width = parseFloat(value);
         },
         accordionToggleSwitchEvent: function (id, value) {
-            console.log(id, value);
             if (id == 'arrows') {
                 this.optionsEdgesArrowSwitchCheck = value;
                 if (!value && Object.hasOwn(this.localOptions.edges, "arrows")) {
@@ -329,6 +360,28 @@ export default {
                     this.optionsEdgesArrows.middle.enabled = false;
                     this.optionsEdgesArrows.to.enabled = false;
                     this.localOptions.edges.arrows = this.optionsEdgesArrows;
+                }
+            }
+            if (id == 'endPointOffset') {
+                if (this.optionsEdgesArrowStrikethrough) {
+                    if (!value && Object.hasOwn(this.localOptions.edges, 'endPointOffset')) {
+                        this.optionsEdgesEndpointOffset = 0;
+                        this.localOptions.edges.endPointOffset = { from: 0, to: 0 };
+                    } else {
+                        this.optionsEdgesEndpointOffset = {};
+                        this.localOptions.edges.endPointOffset = this.optionsEdgesEndpointOffset;
+                    }
+                }
+            }
+            if (id == 'chosen') {
+                if (!value && this.optionsEdgesChosenSwitchChecked) {
+                    this.optionsEdgesChosenSwitchChecked = value;
+                    this.awatingResponse.push("repaint_canvas_edges_chosen_unselecting");
+                    this.$emit("open-bs-modal", "Repintar o canvas?", "RepaintCanvas");
+                } else if (value && !this.optionsEdgesChosenSwitchChecked) {
+                    this.optionsEdgesChosenSwitchChecked = value;
+                    this.awatingResponse.push("repaint_canvas_edges_chosen_selecting");
+                    this.$emit("open-bs-modal", "Repintar o canvas?", "RepaintCanvas");
                 }
             }
         },
@@ -452,15 +505,15 @@ export default {
                 this.optionsEdgesArrows.to.scaleFactor = value;
                 this.localOptions.edges.arrows = this.optionsEdgesArrows;
             }
-            if (message == 'options-edges-arrows-from-type'){
+            if (message == 'options-edges-arrows-from-type') {
                 this.optionsEdgesArrows.from.type = value;
                 this.localOptions.edges.arrows = this.optionsEdgesArrows;
             }
-            if (message == 'options-edges-arrows-middle-type'){
+            if (message == 'options-edges-arrows-middle-type') {
                 this.optionsEdgesArrows.middle.type = value;
                 this.localOptions.edges.arrows = this.optionsEdgesArrows;
             }
-            if (message == 'options-edges-arrows-to-type'){
+            if (message == 'options-edges-arrows-to-type') {
                 this.optionsEdgesArrows.to.type = value;
                 this.localOptions.edges.arrows = this.optionsEdgesArrows;
             }
@@ -482,8 +535,44 @@ export default {
                     this.localOptions.edges.arrows = this.optionsEdgesArrows;
                 }
             }
+            if (message == 'options-edges-endpointoffset-from') {
+                this.localOptions.edges.endPointOffset.from = value;
+            }
+            if (message == 'options-edges-endpointoffset-to') {
+                this.localOptions.edges.endPointOffset.to = value;
+            }
+            if (message == 'options-edges-chosen-edge-function') {
+                if (typeof this.localOptions.edges.chosen == "boolean") {
+                    this.localOptions.edges.chosen = {edge: true};
+                }
+            }
+            if (message = 'options-edges-chosen-edge-function-value') {
+                if (!Object.hasOwn(typeof this.localOptions.edges, 'chosen')) {
+                    this.localOptions.edges.chosen = {};
+                    this.localOptions.edges.chosen.edge = value;
+                    this.$emit("canvas-key-change", true);
+                } else {
+                    this.localOptions.edges.chosen.edge = value;
+                    this.$emit("canvas-key-change", true);
+                }
+            }
+            if (message == 'options-edges-chosen-label-function') {
+                if (typeof this.localOptions.edges.chosen == "boolean"){
+                    this.localOptions.edges.chosen = {label: true};
+                }
+            }
+            if (message == 'options-edges-chosen-label-function-value') {
+                if (!Object.hasOwn(typeof this.localOptions.edges, 'chosen')) {
+                    this.localOptions.edges.chosen = {};
+                    this.localOptions.edges.chosen.label = value;
+                    this.$emit("canvas-key-change", true);
+                } else {
+                    this.localOptions.edges.chosen.label = value;
+                    this.$emit("canvas-key-change", true);
+                }
+            }
         },
-        openBsModal: function(title, body){            
+        openBsModal: function (title, body) {
             this.$emit("open-bs-modal", title, body);
         }
     },
@@ -493,6 +582,36 @@ export default {
                 this.$emit("options-has-changed", newValue);
             },
             deep: true
+        },
+        optionsEdgesChosenSwitchChecked: function(newValue, oldValue) {
+            this.firstAccordionItems[2].isChecked = newValue;
+        },
+        bsModalReturnValue: function (newValue, oldValue) {
+            if (newValue == null || this.awatingResponse.length == 0) return;
+            if (this.awatingResponse.includes("repaint_canvas_edges_chosen_unselecting", 0)) {
+                this.awatingResponse = this.awatingResponse.filter(function (e) {
+                    e != "repaint_canvas_edges_chosen_unselecting"
+                });
+                if (newValue) {
+                    this.optionsEdgesChosenSwitchChecked = !newValue;
+                    this.localOptions.edges.chosen = this.optionsEdgesChosenSwitchChecked;
+                    this.$emit("canvas-key-change", true);
+                } else {
+                    this.optionsEdgesChosenSwitchChecked = true;
+                }
+            }
+            if (this.awatingResponse.includes("repaint_canvas_edges_chosen_selecting", 0)) {
+                this.awatingResponse = this.awatingResponse.filter(function (e) {
+                    e != "repaint_canvas_edges_chosen_selecting"
+                });
+                if (newValue) {
+                    this.optionsEdgesChosenSwitchChecked = true;
+                    this.localOptions.edges.chosen = this.optionsEdgesChosenSwitchChecked;
+                    this.$emit("canvas-key-change", true);
+                } else {
+                    this.optionsEdgesChosenSwitchChecked = false;
+                }
+            }
         }
 
     },
