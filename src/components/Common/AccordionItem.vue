@@ -43,6 +43,7 @@ import ShadowNodeAccordion from '../Nodes/ShadowNodeAccordion.vue';
 import ArrowEdgeAccordion from '../Edges/ArrowEdgeAccordion.vue';
 import EndPointOffsetAccordion from '../Edges/EndPointOffsetAccordion.vue';
 import ChosenEdgeAccordion from '../Edges/ChosenEdgeAccordion.vue';
+import ColorEdgeAccordion from '../Edges/ColorEdgeAccordion.vue';
 export default {
     name: "Accordion Item",
     props: {
@@ -113,6 +114,10 @@ export default {
                 this.currentContent = "ChosenEdgeAccordion";
                 break;
             }
+            case 'edges.color': {
+                this.currentContent = "ColorEdgeAccordion";
+                break;
+            }
         }
     },
     watch: {
@@ -134,7 +139,8 @@ export default {
         ShadowNodeAccordion,
         ArrowEdgeAccordion,
         EndPointOffsetAccordion,
-        ChosenEdgeAccordion
+        ChosenEdgeAccordion,
+        ColorEdgeAccordion
     },
     methods: {
         message: function(message, variables) {
