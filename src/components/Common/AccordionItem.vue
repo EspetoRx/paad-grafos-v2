@@ -41,7 +41,8 @@ import ShapeNodeAccordion from '../Nodes/ShapeNodeAccordion.vue';
 import ScalingNodeAccordion from '../Nodes/ScalingNodeAccordion.vue';
 import ShadowNodeAccordion from '../Nodes/ShadowNodeAccordion.vue';
 import ArrowEdgeAccordion from '../Edges/ArrowEdgeAccordion.vue';
-
+import EndPointOffsetAccordion from '../Edges/EndPointOffsetAccordion.vue';
+import ChosenEdgeAccordion from '../Edges/ChosenEdgeAccordion.vue';
 export default {
     name: "Accordion Item",
     props: {
@@ -104,11 +105,22 @@ export default {
                 this.currentContent = 'ArrowEdgeAccordion';
                 break;
             }
+            case 'edges.endPointOffset': {
+                this.currentContent = "EndPointOffsetAccordion";
+                break;
+            }
+            case 'edges.chosen': {
+                this.currentContent = "ChosenEdgeAccordion";
+                break;
+            }
         }
     },
     watch: {
         checkboxValue: function(newCheckbox, oldCheckbox){
             this.$emit('toggle-switch-event', this.id, newCheckbox);
+        },
+        switchChecked: function(newVAlue, oldValue) {
+            this.checkboxValue = newVAlue;
         }
     },
     components: {
@@ -120,7 +132,9 @@ export default {
         ShapeNodeAccordion,
         ScalingNodeAccordion,
         ShadowNodeAccordion,
-        ArrowEdgeAccordion
+        ArrowEdgeAccordion,
+        EndPointOffsetAccordion,
+        ChosenEdgeAccordion
     },
     methods: {
         message: function(message, variables) {
