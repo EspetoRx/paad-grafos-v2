@@ -1,7 +1,7 @@
 <template>
     <div class="input-group m-0 mt-1 mb-1">
         <div v-if="prepend" class="input-group-text p-1" :id="'basic-addon-prepend-' + Hash" data-bs-toggle="tooltip" :title="tooltip" v-html="prepend"></div>
-        <input :type="inputType" :id="'input-' + Hash" class="form-control" v-model="inputValue" :aria-describedby="'basic-addon-prepend-' + Hash" :disabled="disabled" 
+        <input :type="inputType" :id="'input-' + Hash" :class="'form-control ' + ((classes)??'')" v-model="inputValue" :aria-describedby="'basic-addon-prepend-' + Hash" :disabled="disabled" 
             :min="min" :max="max" :step="step">
         <div class="input-group-text p-0" v-if="append">
             <span class="input-group-text p-0" :id="'basic-addon-append-'+ Hash" >
@@ -42,6 +42,9 @@ export default {
             required: false
         },
         step: {
+            required: false
+        },
+        classes: {
             required: false
         }
     },

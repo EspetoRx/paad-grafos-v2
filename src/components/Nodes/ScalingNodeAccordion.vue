@@ -68,7 +68,7 @@ import SwitchWithInfo from '../Common/SwitchWithInfo.vue';
 export default {
     name: "Scaling Node Accordion",
     props: [
-        'checkboxValue'
+        'checkboxValue', 'bsModalReturnValue', 'openBsModal'
     ],
     data() {
         return {
@@ -178,6 +178,6 @@ export default {
         SwitchWithInfo,
         InputTextArea
     },
-    emits: ['message']
+    emits: ['message', 'open-bs-modal']
 }
 </script>

@@ -42,7 +42,9 @@ export default {
         checkboxValue: {
             required: false,
             default: false
-        }
+        },
+        bsOpenModal: Boolean,
+        bsModalReturnValue: {}
     },
     methods: {
         sendObject: function (value) {
@@ -80,6 +82,6 @@ export default {
         LabelWithTooltip,
         InputGroupWithLabel
     },
-    emits: ["message"]
+    emits: ["message", "open-bs-modal"]
 }
 </script>

@@ -78,7 +78,9 @@ import InputText from '../Common/Inputs/InputText.vue';
 
 export default {
     props: [
-        'checkboxValue'
+        'checkboxValue',
+        'openBsModal',
+        'bsModalReturnValue'
     ],
     data() {
         return {
@@ -155,6 +157,6 @@ export default {
             }
         }
     },
-    emits: ['message']
+    emits: ['message', 'open-bs-modal']
 }
 </script>

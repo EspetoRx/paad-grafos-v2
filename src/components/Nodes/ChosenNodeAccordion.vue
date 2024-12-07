@@ -48,7 +48,7 @@ import InputColorPicker from '../Common/Inputs/InputColorPicker.vue';
 
 export default {
     name: "Chosen Node Options",
-    props: ['checkboxValue'],
+    props: ['checkboxValue', 'bsModalReturnValue', 'openBsModal'],
     data() {
         return{
             enableObject: false,
@@ -82,6 +82,6 @@ export default {
             this.$emit("message", message, value);
         }
     },
-    emits: ['message']
+    emits: ['message', 'open-bs-modal']
 }
 </script>

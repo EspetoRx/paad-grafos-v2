@@ -115,7 +115,7 @@ import InputColorPicker from '../Common/Inputs/InputColorPicker.vue';
 
 export default {
     name: "Nodes Color Component",
-    props: ['checkboxValue'],
+    props: ['checkboxValue', 'bsModalReturnValue', 'openBsModal'],
     methods: {
         updateBorderColor: function(value) {
             this.$emit("message", "update-node-color-border", value);
@@ -140,6 +140,6 @@ export default {
         'label-tooltip': LabelWithTooltip,
         'input-color': InputColorPicker
     },
-    emits: ['message']
+    emits: ['message', 'open-bs-modal']
 }
 </script>

@@ -38,7 +38,7 @@ import SwitchWithInfo from '../Common/SwitchWithInfo.vue';
 
 export default {
     name: "Fixed Node Accordion Component",
-    props: ['checkboxValue'],
+    props: ['checkboxValue', 'bsModalReturnValue', 'openBsModal'],
     data() {
         return {
             enableObjectChekcboxValue: false
@@ -59,6 +59,6 @@ export default {
             this.$emit("message", 'fix-nodes-y-coordinate', value);
         }
     },
-    emits: ["message"]
+    emits: ["message", 'open-bs-modal']
 }
 </script>
