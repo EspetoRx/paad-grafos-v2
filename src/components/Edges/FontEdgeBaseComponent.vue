@@ -1,5 +1,5 @@
 <template>
-    <p v-if="!checkboxValue" class="m-0">Ative para começar</p>
+    <p v-if="!checkboxValue" class="m-0 p-1">Ative para começar</p>
     <LabelWithTooltip v-if="checkboxValue" :labelValue="(sendObject) ? 'Enviando objeto' : 'Enviando String'"
         :tooltip="'Options.Edges.Font.' + capitalizeFirstLetter(arrowType) + ' (Toggle String/Object Sending) - Alterne entre o envio de string e de objeto.'"
         :forId="'font-string-sending-' + arrowType" :hasSwitch="true" :switchId="'font-string-sending-' + arrowType"

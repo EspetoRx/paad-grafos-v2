@@ -16,7 +16,7 @@
             :localNetwork="this.encapsulateNetwork" :options="this.options" @toggle-off-canvas="this.toggleOffCanvas"
             @options-has-changed="this.optionsHasChanged" :realNodes="this.nodes" :bsModalReturnValue="bsModalReturnValue"
             @nodes-has-changed="this.nodesHasChanged" @canvas-key-change="onCanvasKeyChange"
-            @send-toast="emitNewToast" @open-bs-modal="enableModal"></off-canvas>
+            @send-toast="emitNewToast" @open-bs-modal="enableModal" @edges-has-changed="edgesHasChanged" :realEdges="this.edges"></off-canvas>
     </div>
 </template>
 <script>
@@ -51,11 +51,11 @@ export default {
                 { id: 5, label: "Vértice 5" },
             ],
             edges: [
-                { from: 1, to: 3 },
-                { from: 1, to: 2 },
-                { from: 2, to: 4 },
-                { from: 2, to: 5 },
-                { from: 3, to: 3 },
+                { from: 1, to: 3, label: "<b>Aresta 1</b>" },
+                { from: 1, to: 2, label: "<b><i>Aresta 2</i></b>" },
+                { from: 2, to: 4, label: "<i>Aresta 3</i>" },
+                { from: 2, to: 5, label: "<code>Aresta 4</code>" },
+                { from: 3, to: 3, label: "Aresta 5" },
             ],
             options: null,
             encapsulateNetwork: null,
@@ -132,6 +132,10 @@ export default {
 
         nodesHasChanged(nodes) {
             this.nodes = nodes;
+        },
+
+        edgesHasChanged(edges) {
+            this.edges = edges;
         },
 
         onCanvasKeyChange: function () {

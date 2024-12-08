@@ -30,6 +30,7 @@ import { hash } from '../../../utils/Hash';
 import SwitchButton from '../SwitchButton.vue';
 import ArrowsEdgeBaseComponent from '../../Edges/ArrowsEdgeBaseComponent.vue';
 import FontEdgeBaseComponent from '../../Edges/FontEdgeBaseComponent.vue';
+import ScalingLabelEdgeBaseComponent from '../../Edges/ScalingLabelEdgeBaseComponent.vue';
 export default {
     name: "Accordion Item Component",
     props: [
@@ -58,7 +59,8 @@ export default {
     components: {
         SwitchButton,
         ArrowsEdgeBaseComponent,
-        FontEdgeBaseComponent
+        FontEdgeBaseComponent,
+        ScalingLabelEdgeBaseComponent
     },
     methods: {
         chekckboxValueChange(value) {

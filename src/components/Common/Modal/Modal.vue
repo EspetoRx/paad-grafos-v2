@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div :id="'modal-' + Hash" class="modal fade" tabindex="-1">
+        <div :id="'modal-' + Hash" class="modal fade" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header w-100 pt-2 pb-2">

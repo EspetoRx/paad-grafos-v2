@@ -32,23 +32,23 @@
                 @send-toast="sendToast"></nodes>
             <edges v-if="this.type == 'visjs-edges'" :network="encapsulateLocalNetwork" :options="encapsulateOptions"
                 @options-has-changed="optionsHasChanged" @send-toast="sendToast" @canvas-key-change="onComponentKeyChange"
-                @open-bs-modal="enableBsModal" :bsModalReturnValue="bsModalReturnValue"></edges>
+                @open-bs-modal="enableBsModal" :bsModalReturnValue="bsModalReturnValue" @edges-has-changed="edgesHasChanged" :edges="encapsulateEdges"></edges>
             <div id="offcanvasBody"></div>
         </div>
     </div>
 </template>
 <script>
 
-import physics from './Physics/Physics.vue';
-import nodes from './Nodes/Nodes.vue';
-import edges from './Edges/Edges.vue'
+import Physics from './Physics/Physics.vue';
+import Nodes from './Nodes/Nodes.vue';
+import Edges from './Edges/Edges.vue'
 
 export default {
     name: 'Off Canvas',
     components: {
-        'physics': physics,
-        'nodes': nodes,
-        'edges': edges
+        'physics': Physics,
+        'nodes': Nodes,
+        'edges': Edges
     },
     props: [
         'offCanvasEnabled',
@@ -57,6 +57,7 @@ export default {
         'localNetwork',
         'options',
         'realNodes',
+        'realEdges',
         'bsModalReturnValue'
     ],
     data() {
@@ -64,7 +65,8 @@ export default {
             encapsulateLocalNetwork: null,
             encapsulateOptions: null,
             container: document.getElementById("offcanvasBody"),
-            encapsulateNodes: null
+            encapsulateNodes: null,
+            encapsulateEdges: null
         }
     },
     watch: {
@@ -106,6 +108,7 @@ export default {
     mounted() {
         console.log("OffCanvas Component Mounted");
         this.encapsulateNodes = this.realNodes;
+        this.encapsulateEdges = this.realEdges
     },
     methods: {
         optionsHasChanged(recievedOptions) {
@@ -120,6 +123,10 @@ export default {
             if (recievedFlag) {
                 this.$emit('canvas-key-change')
             }
+        },
+        edgesHasChanged(recievedEdges) {
+            this.encapsulateEdges = recievedEdges;
+            this.$emit('edges-has-changed', this.encapsulateEdges);
         },
         sendToast: function(value) {
             this.$emit('send-toast', value);
@@ -151,7 +158,8 @@ export default {
         'nodes-has-changed',
         'canvas-key-change',
         'send-toast',
-        'open-bs-modal'
+        'open-bs-modal',
+        'edges-has-changed'
     ]
 }
 </script>

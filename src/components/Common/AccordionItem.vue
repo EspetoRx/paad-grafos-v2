@@ -13,8 +13,8 @@
                         <div class="ms-2">
                             {{ this.title }}
                         </div>
-                        <div class="flex-shrink-1 badge bg-info m-1" data-bs-toggle="tooltip"
-                            :title="this.tooltip" data-bs-html="true">
+                        <div class="flex-shrink-1 badge bg-info m-1" data-bs-toggle="tooltip" :title="this.tooltip"
+                            data-bs-html="true">
                             <i class="fa-solid fa-info text-right"></i>
                         </div>
                     </div>
@@ -25,7 +25,8 @@
         <div :id="'flush-collapse-' + this.id" class="accordion-collapse collapse ms-1 me-1"
             :data-bs-parent="'#accordionFlush-' + this.flushId">
             <div class="accordion-body p-0 pt-1 pb-1">
-                <component :is="currentContent" :checkboxValue="this.checkboxValue" @message="message" @open-bs-modal="openBsModal" :bsModalReturnValue="bsModalReturnValue"></component>
+                <component :is="currentContent" :checkboxValue="checkboxValue" @message="message"
+                    @open-bs-modal="openBsModal" :bsModalReturnValue="bsModalReturnValue"></component>
             </div>
         </div>
     </div>
@@ -45,6 +46,7 @@ import EndPointOffsetAccordion from '../Edges/EndPointOffsetAccordion.vue';
 import ChosenEdgeAccordion from '../Edges/ChosenEdgeAccordion.vue';
 import ColorEdgeAccordion from '../Edges/ColorEdgeAccordion.vue';
 import FontEdgeAccordion from '../Edges/FontEdgeAccordion.vue';
+import ScalingEdgeAccordion from '../Edges/ScalingEdgeAccordion.vue';
 export default {
     name: "Accordion Item",
     props: {
@@ -65,6 +67,7 @@ export default {
             checkboxValue: false,
             currentlyEnabled: false,
             currentContent: null,
+            alteredByFather: false,
         }
     },
     mounted() {
@@ -75,11 +78,11 @@ export default {
                 this.currentContent = 'ChosenNodeAccordion';
                 break;
             }
-            case 'nodes.color' : {
+            case 'nodes.color': {
                 this.currentContent = "ColorNodeAccordion";
                 break;
             }
-            case 'nodes.fixed' : {
+            case 'nodes.fixed': {
                 this.currentContent = 'FixedNodeAccordion';
                 break;
             }
@@ -123,14 +126,24 @@ export default {
                 this.currentContent = "FontEdgeAccordion";
                 break;
             }
+            case 'edges.scaling': {
+                this.currentContent = "ScalingEdgeAccordion";
+                break;
+            }
         }
     },
     watch: {
-        checkboxValue: function(newCheckbox, oldCheckbox){
-            this.$emit('toggle-switch-event', this.id, newCheckbox);
+        checkboxValue: function (newCheckbox, oldCheckbox) {
+            if (!this.alteredByFather) {
+                this.$emit('toggle-switch-event', this.id, newCheckbox);
+            }
+            this.alteredByFather = false;
         },
-        switchChecked: function(newVAlue, oldValue) {
-            this.checkboxValue = newVAlue;
+        switchChecked: function(newVal, oldVal) {
+            if (this.checkboxValue != newVal) {
+                this.alteredByFather = true;
+            }
+            this.checkboxValue = newVal;
         }
     },
     components: {
@@ -146,10 +159,11 @@ export default {
         EndPointOffsetAccordion,
         ChosenEdgeAccordion,
         ColorEdgeAccordion,
-        FontEdgeAccordion
+        FontEdgeAccordion,
+        ScalingEdgeAccordion
     },
     methods: {
-        message: function(message, variables) {
+        message: function (message, variables) {
             if (message == 'enable-fixed-node-object-sending') {
                 if (variables == true) {
                     this.checkboxValue = false;
@@ -160,7 +174,7 @@ export default {
             } else {
                 this.$emit('message', message, variables);
             }
-            
+
         },
         openBsModal(title, body) {
             this.$emit("open-bs-modal", title, body);
