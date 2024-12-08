@@ -94,7 +94,6 @@ export default{
             this.$emit('message', 'height-constraint-object-minimum', value);
         },
         updateHeightConstraintObjectValign: function(value){
-            console.log('Update height constraint valign' + value);
             this.hcObjectValign = value;
             this.$emit('message', 'height-constraint-object-valign', value);
         }

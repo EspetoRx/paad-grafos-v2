@@ -248,7 +248,6 @@ export default {
                     break;
                 }
                 case "fixed": {
-                    console.log("Fixed: " + value)
                     this.encapsulateOptions.nodes.fixed = value;
                     break;
                 }

@@ -6,8 +6,8 @@
 
     </tooltip-label>
     <div class="d-flex">
-        <input type="text" class="form-control w-25 h-75 text-center form-control-sm p-0" :value="this.objectValue"
-            :id="inputId + '-textfield'" disabled>
+        <input type="text" class="form-control w-25 h-75 text-center form-control-sm p-0" v-model="this.objectValue"
+            :id="inputId + '-textfield'">
         <input type="range" v-model="this.objectValue" class="form-range d-flex-fill m-2 h-75" :min="min" :max="max"
             :step="step" :id="inputId" :disabled="disabled || false" >
     </div>

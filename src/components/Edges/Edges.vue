@@ -168,6 +168,8 @@ export default {
             optionsEdgesEndpointOffset: null,
             optionsEdgesChosenSwitchChecked: true,
             awatingResponse: [],
+            optionsEdgesFontSwitchValue: false,
+            optionsEdgesFontString: ""
         }
     },
     components: {
@@ -234,6 +236,19 @@ export default {
                 tooltip: 'O objeto de cor contem as informações de cor da aresta em todas as situações. ' +
                     ' Quando as arestas somente precisam de uma única cor, um valor de cor \'rbg(120, 32, 14)\',  ' +
                     '\'#ffffff\' ou \'red\' pode ser aplicado ao invés de um objeto.'
+            }
+        );
+        this.firstAccordionItemsComponents.push({ item: 'font', component: 'edges.font' });
+        this.firstAccordionItems.push(
+            {
+                item: 'font',
+                title: 'Fonte',
+                switch: true,
+                isChecked: this.optionsEdgesFontSwitchValue,
+                isCheckedEnabled: true,
+                hasTooltip: true,
+                tooltip: 'Esse objeto define os detalhes do rótulo. Um versão curta também é suportada na forma ' +
+                    ' \'size face color\' por exemplo \'14px arial red\'.' 
             }
         );
     },
@@ -396,6 +411,12 @@ export default {
                     this.$emit("open-bs-modal", "Repintar o canvas?", "RepaintCanvas");
                 }
             }
+            if (id == 'font') {
+                this.optionsEdgesFontSwitchValue = value;
+                if (this.optionsEdgesFontString != "") {
+                    this.localOptions.edges.font = this.optionsEdgesFontString;
+                }
+            }
         },
         message: function (message, value) {
             if (message == 'send-toast') this.$emit('send-toast', value);
@@ -547,12 +568,8 @@ export default {
                     this.localOptions.edges.arrows = this.optionsEdgesArrows;
                 }
             }
-            if (message == 'options-edges-endpointoffset-from') {
-                this.localOptions.edges.endPointOffset.from = value;
-            }
-            if (message == 'options-edges-endpointoffset-to') {
-                this.localOptions.edges.endPointOffset.to = value;
-            }
+            if (message == 'options-edges-endpointoffset-from') this.localOptions.edges.endPointOffset.from = value;
+            if (message == 'options-edges-endpointoffset-to') this.localOptions.edges.endPointOffset.to = value;
             if (message == 'options-edges-chosen-edge-function') {
                 if (typeof this.localOptions.edges.chosen == "boolean") {
                     this.localOptions.edges.chosen = { edge: true };
@@ -583,9 +600,7 @@ export default {
                     this.$emit("canvas-key-change", true);
                 }
             }
-            if (message == 'options-edges-color-string') {
-                this.localOptions.edges.color = value;
-            }
+            if (message == 'options-edges-color-string') this.localOptions.edges.color = value;
             if (message == 'options-edges-color-color') {
                 if (typeof this.localOptions.edges.color === 'string' || this.localOptions.edges.color instanceof String) {
                     this.localOptions.edges.color = {};
@@ -608,7 +623,6 @@ export default {
                 if (typeof this.localOptions.edges.color === 'string' || this.localOptions.edges.color instanceof String) {
                     this.localOptions.edges.color = {};
                 }
-                console.log("Color inherit " + value);
                 if (value != false) {
                     this.localOptions.edges.color = {};
                     this.localOptions.edges.color.inherit = value;
@@ -620,6 +634,50 @@ export default {
                 }
                 this.localOptions.edges.color.opacity = value;
             }
+            if (message == 'options-edges-font-string-value') this.localOptions.edges.font = value;
+            if (message == 'options-edges-font-object-sending') this.localOptions.edges.font = {};
+            if (message == 'options-edges-font-color') this.localOptions.edges.font.color = value;
+            if (message == 'options-edges-font-size') this.localOptions.edges.font.size = parseInt(value);
+            if (message == 'options-edges-font-face') this.localOptions.edges.font.face = value;
+            if (message == 'options-edges-font-background-enabled') if (!value) delete this.localOptions.edges.font.background;
+            if (message == 'options-edges-font-background-color') this.localOptions.edges.font.background = value;
+            if (message == "options-edges-font-strokeWidth") this.localOptions.edges.font.strokeWidth = parseFloat(value);
+            if (message == "options-edges-font-strokeColor") this.localOptions.edges.font.strokeColor = value;
+            if (message == 'options-edges-font-align') this.localOptions.edges.font.align = value;
+            if (message == 'options-edges-font-vadjust') this.localOptions.edges.font.vadjust = parseFloat(value);
+            if (message == 'options-edges-font-multi-enabled') this.localOptions.edges.font.multi = value;
+            if (message == 'options-edges-font-multi') this.localOptions.edges.font.multi = value;
+            if (message == 'update-checkbox-accordion-bold') {if (!value) this.localOptions.edges.font.bold = "";}
+            if (message == 'options-edges-font-object-sending-bold') this.localOptions.edges.font.bold = value;
+            if (message == 'options-edges-font-object-sending-ital') this.localOptions.edges.font.ital = value;
+            if (message == 'options-edges-font-object-sending-boldital') this.localOptions.edges.font.boldital = value;
+            if (message == 'options-edges-font-object-sending-mono') this.localOptions.edges.font.mono = value;
+            if (message == 'options-edges-font-string-bold') this.localOptions.edges.font.bold = value;
+            if (message == 'options-edges-font-string-ital') this.localOptions.edges.font.ital = value;
+            if (message == 'options-edges-font-string-boldital') this.localOptions.edges.font.boldital = value;
+            if (message == 'options-edges-font-string-mono') this.localOptions.edges.font.mono = value;
+            if (message == 'options-edges-font-color-bold') this.localOptions.edges.font.bold.color = value;
+            if (message == 'options-edges-font-color-ital') this.localOptions.edges.font.ital.color = value;
+            if (message == 'options-edges-font-color-boldital') this.localOptions.edges.font.boldital.color = value;
+            if (message == 'options-edges-font-color-mono') this.localOptions.edges.font.mono.color = value;
+            if (message == 'options-edges-font-size-bold') this.localOptions.edges.font.bold.size = parseFloat(value);
+            if (message == 'options-edges-font-size-ital') this.localOptions.edges.font.ital.size = parseFloat(value);
+            if (message == 'options-edges-font-size-boldital') this.localOptions.edges.font.boldital.size = parseFloat(value);
+            if (message == 'options-edges-font-size-mono') this.localOptions.edges.font.mono.size = parseFloat(value);
+            if (message == 'options-edges-font-face-bold') this.localOptions.edges.font.bold.face = value;
+            if (message == 'options-edges-font-face-ital') this.localOptions.edges.font.ital.face = value;
+            if (message == 'options-edges-font-face-boldital') this.localOptions.edges.font.boldital.face = value;
+            if (message == 'options-edges-font-face-mono') this.localOptions.edges.font.mono.face = value;
+            if (message == 'options-edges-font-mod-bold') this.localOptions.edges.font.bold.mod = value;
+            if (message == 'options-edges-font-mod-ital') this.localOptions.edges.font.ital.mod = value;
+            if (message == 'options-edges-font-mod-boldital') this.localOptions.edges.font.boldital.mod = value;
+            if (message == 'options-edges-font-mod-mono') this.localOptions.edges.font.mono.mod = value;
+            if (message == 'options-edges-font-vadjust-bold') this.localOptions.edges.font.bold.vadjust = parseFloat(value);
+            if (message == 'options-edges-font-vadjust-ital') this.localOptions.edges.font.ital.vadjust = parseFloat(value);
+            if (message == 'options-edges-font-vadjust-boldital') this.localOptions.edges.font.boldital.vadjust = parseFloat(value);
+            if (message == 'options-edges-font-vadjust-mono') this.localOptions.edges.font.mono.vadjust = parseFloat(value);
+
+
         },
         openBsModal: function (title, body) {
             this.$emit("open-bs-modal", title, body);

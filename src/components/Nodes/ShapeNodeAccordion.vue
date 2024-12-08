@@ -248,11 +248,9 @@ export default {
     },
     methods: {
         updateCustomValue: function (value) {
-            console.log("Atualizei o customValue.");
             this.customValue = value
         },
         updateNodeCustomShape: function () {
-            console.log("Entrei no customValue.");
             try {
                 this.customFunction = eval(this.customValue);
                 this.$emit("message", "custom-render-node-update", this.customFunction);
@@ -266,7 +264,6 @@ export default {
             }
         },
         updateNodeShape: function (value) {
-            console.log("Updated selection: " + value);
             this.shape = value;
             if (value == 'image') {
                 this.imageSelected = true;

@@ -29,6 +29,7 @@
 import { hash } from '../../../utils/Hash';
 import SwitchButton from '../SwitchButton.vue';
 import ArrowsEdgeBaseComponent from '../../Edges/ArrowsEdgeBaseComponent.vue';
+import FontEdgeBaseComponent from '../../Edges/FontEdgeBaseComponent.vue';
 export default {
     name: "Accordion Item Component",
     props: [
@@ -43,8 +44,12 @@ export default {
         return {
             Hash: hash(),
             itemId: 'flush-collapse-' + hash(),
-            accordionComponent: 'ArrowsEdgeBaseComponent',
             checkboxItemComponent: false
+        }
+    },
+    computed: {
+        accordionComponent: function() {
+            return this.accordionBody;
         }
     },
     mounted() {
@@ -52,11 +57,11 @@ export default {
     },
     components: {
         SwitchButton,
-        ArrowsEdgeBaseComponent
+        ArrowsEdgeBaseComponent,
+        FontEdgeBaseComponent
     },
     methods: {
         chekckboxValueChange(value) {
-            console.log("Passei no chekckboxValueChange do accordionitem.");
             this.checkboxItemComponent = value;
             this.$emit("message", "update-checkbox-accordion", this.accordionItem, value);
         },
