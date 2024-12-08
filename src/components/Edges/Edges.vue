@@ -95,7 +95,7 @@
     </div>
     <InputGroupWithLabel :prepend="'Largura:'" :append="true" :inputType="'number'"
         :tooltip="'Options.Edges.Width - A largura da aresta. Se o valor for definido, ele não será usado.'"
-        :inputInitialValue="optionsEdgesWidth" @input-value-change="changeWidth" :step="0.5"></InputGroupWithLabel>
+        :inputInitialValue="optionsEdgesWidth" @input-value-change="changeWidth" :step="0.5" :disabled="optionsEdgesScalingSwitchValue"></InputGroupWithLabel>
     <AccordionFlush :id="'first-accordion'" :accordionItems="firstAccordionItems"
         :accordionItemsComponents="firstAccordionItemsComponents" class="mt-2"
         @toggle-switch-event="accordionToggleSwitchEvent" @message="message" @open-bs-modal="openBsModal"
@@ -112,12 +112,14 @@ export default {
     props: [
         'network',
         'options',
+        'edges',
         'bsModalReturnValue'
     ],
     data() {
         return {
             localOptions: null,
             localNetwork: null,
+            localEdges: null,
             optionsEdgesArrowStrikethrough: true,
             optionsEdgesDashes: false,
             optionsEdgesDashesArraySending: false,
@@ -169,7 +171,8 @@ export default {
             optionsEdgesChosenSwitchChecked: true,
             awatingResponse: [],
             optionsEdgesFontSwitchValue: false,
-            optionsEdgesFontString: ""
+            optionsEdgesFontString: "",
+            optionsEdgesScalingSwitchValue: false,
         }
     },
     components: {
@@ -182,6 +185,7 @@ export default {
         console.log("Edges Component Mounted");
         this.localNetwork = this.network;
         this.localOptions = this.options;
+        this.localEdges = this.edges;
 
         this.firstAccordionItemsComponents.push({ item: 'arrows', component: 'edges.arrows' });
         this.firstAccordionItems.push(
@@ -249,6 +253,18 @@ export default {
                 hasTooltip: true,
                 tooltip: 'Esse objeto define os detalhes do rótulo. Um versão curta também é suportada na forma ' +
                     ' \'size face color\' por exemplo \'14px arial red\'.' 
+            }
+        );
+        this.firstAccordionItemsComponents.push({ item: 'scaling', component: 'edges.scaling' });
+        this.firstAccordionItems.push(
+            {
+                item: 'scaling',
+                title: 'Dimensionamento',
+                switch: true,
+                isChecked: this.optionsEdgesScalingSwitchValue,
+                isCheckedEnabled: true,
+                hasTooltip: true,
+                tooltip: 'Se a opção de valor for especificada, a largura das bordas será dimensionada de acordo com as propriedades deste objeto. Lembre-se de que ao usar o dimensionamento, a opção de largura é negligenciada.' 
             }
         );
     },
@@ -417,9 +433,21 @@ export default {
                     this.localOptions.edges.font = this.optionsEdgesFontString;
                 }
             }
+            if (id == 'scaling') {
+                this.optionsEdgesScalingSwitchValue = value;
+                this.firstAccordionItems[5].isChecked = this.optionsEdgesScalingSwitchValue;
+                if (value) {
+                    this.awatingResponse.push("repaint_canvas_edges_scaling_selecting");
+                } else {
+                    this.awatingResponse.push("repaint_canvas_edges_scaling_unselecting");
+                }
+                this.$emit("open-bs-modal", "Repintar o canvas?", "RepaintCanvas");
+            }
         },
         message: function (message, value) {
+            console.log("Message: " + message + " Value: " + value);
             if (message == 'send-toast') this.$emit('send-toast', value);
+            if (message == 'repaint-component') this.$emit("canvas-key-change", true);
             if (message == 'arrow-string-changed') {
                 this.optionsEdgesArrowsString = value;
                 this.localOptions.edges.arrows = value;
@@ -676,8 +704,12 @@ export default {
             if (message == 'options-edges-font-vadjust-ital') this.localOptions.edges.font.ital.vadjust = parseFloat(value);
             if (message == 'options-edges-font-vadjust-boldital') this.localOptions.edges.font.boldital.vadjust = parseFloat(value);
             if (message == 'options-edges-font-vadjust-mono') this.localOptions.edges.font.mono.vadjust = parseFloat(value);
-
-
+            if (message == 'options-edges-scaling-min' && !(this.awatingResponse.length > 0)) this.localOptions.edges.scaling.min = parseInt(value);
+            if (message == 'update-checkbox-accordion-scalingLabel') {this.localOptions.edges.scaling.label = { enabled: true, min: 14, max: 30, maxVisible: 30,  drawThreshold: 5 }; this.$emit('canvas-key-change', true) };
+            if (message == 'options-edges-scaling-object-sending-scalingLabel') this.localOptions.edges.scaling.label = { enabled: true };
+            if (message == 'options-edges-scaling-object-min-scalingLabel') this.localOptions.edges.scaling.label.min = parseInt(value);
+            if (message == 'options-edges-scaling-object-max-scalingLabel') this.localOptions.edges.scaling.label.max = parseInt(value);
+            if (message == 'options-edges-scaling-object-maxVisible-scalingLabel') this.localOptions.edges.scaling.label.maxVisible = parseInt(value);
         },
         openBsModal: function (title, body) {
             this.$emit("open-bs-modal", title, body);
@@ -719,9 +751,41 @@ export default {
                     this.optionsEdgesChosenSwitchChecked = false;
                 }
             }
+            if (this.awatingResponse.includes("repaint_canvas_edges_scaling_selecting", 0)) {
+                this.awatingResponse = this.awatingResponse.filter(function (e) {
+                    e != "repaint_canvas_edges_scaling_selecting"
+                });
+                this.optionsEdgesScalingSwitchValue = newValue;
+                this.firstAccordionItems[5].isChecked = this.optionsEdgesScalingSwitchValue;
+                if (newValue) {
+                    let i = 0;
+                    this.localEdges.forEach(function(element){
+                        element.value = i++;
+                    });
+                    this.$emit('edges-has-changed', this.localEdges)
+                    this.localOptions.edges.scaling = {};
+                    this.$emit('canvas-key-change', true);
+                }
+            }
+            if (this.awatingResponse.includes("repaint_canvas_edges_scaling_unselecting", 0)) {
+                this.awatingResponse = this.awatingResponse.filter(function (e) {
+                    e != "repaint_canvas_edges_scaling_unselecting"
+                });
+                this.optionsEdgesScalingSwitchValue = !newValue;
+                this.firstAccordionItems[5].isChecked = this.optionsEdgesScalingSwitchValue;
+                if (newValue) {
+                    this.localEdges.forEach(function(element){
+                        element.value = undefined;
+                    });
+                    console.log(this.localEdges);
+                    this.$emit('edges-has-changed', this.localEdges)
+                    this.localOptions.edges.scaling = {};
+                    this.$emit('canvas-key-change', true);
+                }
+            }
         }
 
     },
-    emits: ["options-has-changed", "send-toast", "canvas-key-change", "open-bs-modal"]
+    emits: ["options-has-changed", "send-toast", "canvas-key-change", "open-bs-modal", "edges-has-changed"]
 }
 </script>
