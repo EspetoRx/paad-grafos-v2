@@ -92,7 +92,6 @@ export default {
             }
         },
         message: function(message, value) {
-            console.log("Passei no message do ArrowEdgeAccordion");
             this.$emit("message", message, value);
         },
         message: function(message, accordionItem, value) {
