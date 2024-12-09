@@ -47,6 +47,7 @@ import ChosenEdgeAccordion from '../Edges/ChosenEdgeAccordion.vue';
 import ColorEdgeAccordion from '../Edges/ColorEdgeAccordion.vue';
 import FontEdgeAccordion from '../Edges/FontEdgeAccordion.vue';
 import ScalingEdgeAccordion from '../Edges/ScalingEdgeAccordion.vue';
+import SelfReferenceEdgeAccordion from '../Edges/SelfReferenceEdgeAccordion.vue';
 export default {
     name: "Accordion Item",
     props: {
@@ -130,6 +131,10 @@ export default {
                 this.currentContent = "ScalingEdgeAccordion";
                 break;
             }
+            case 'edges.selfReference': {
+                this.currentContent = "SelfReferenceEdgeAccordion";
+                break;
+            }
         }
     },
     watch: {
@@ -160,7 +165,8 @@ export default {
         ChosenEdgeAccordion,
         ColorEdgeAccordion,
         FontEdgeAccordion,
-        ScalingEdgeAccordion
+        ScalingEdgeAccordion,
+        SelfReferenceEdgeAccordion
     },
     methods: {
         message: function (message, variables) {
