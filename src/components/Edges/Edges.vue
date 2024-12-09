@@ -267,6 +267,18 @@ export default {
                 tooltip: 'Se a opção de valor for especificada, a largura das bordas será dimensionada de acordo com as propriedades deste objeto. Lembre-se de que ao usar o dimensionamento, a opção de largura é negligenciada.' 
             }
         );
+        this.firstAccordionItemsComponents.push({ item: 'selfReference', component: 'edges.selfReference' });
+        this.firstAccordionItems.push(
+            {
+                item: 'selfReference',
+                title: 'Autorreferência / Laços',
+                switch: false,
+                hasTooltip: true,
+                tooltip: 'O objeto de cor contem as informações de cor da aresta em todas as situações. ' +
+                    ' Quando as arestas somente precisam de uma única cor, um valor de cor \'rbg(120, 32, 14)\',  ' +
+                    '\'#ffffff\' ou \'red\' pode ser aplicado ao invés de um objeto.'
+            }
+        );
     },
     methods: {
         emitArrowStriketrhough: function (value) {
@@ -711,6 +723,9 @@ export default {
             if (message == 'options-edges-scaling-object-max-scalingLabel') this.localOptions.edges.scaling.label.max = parseInt(value);
             if (message == 'options-edges-scaling-object-maxVisible-scalingLabel') this.localOptions.edges.scaling.label.maxVisible = parseInt(value);
             if (message == 'options-edges-scaling-customScalingFunction') this.localOptions.edges.scaling.customScalingFunction = value;
+            if (message == 'options-edges-selfReference-size') this.localOptions.edges.selfReference = { size: parseInt(value) };
+            if (message == 'options-edges-selfReference-angle') this.localOptions.edges.selfReference.angle = parseFloat(value);
+            if (message == 'options-edges-selfReference-render-behind-the-node') this.localOptions.edges.selfReference.renderBehindTheNode = value;
         },
         openBsModal: function (title, body) {
             this.$emit("open-bs-modal", title, body);
