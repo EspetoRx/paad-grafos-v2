@@ -50,6 +50,7 @@ import ScalingEdgeAccordion from '../Edges/ScalingEdgeAccordion.vue';
 import SelfReferenceEdgeAccordion from '../Edges/SelfReferenceEdgeAccordion.vue';
 import ShadowEdgeAccordion from '../Edges/ShadowEdgeAccordion.vue';
 import SmoothEdgeAccordion from '../Edges/SmoothEdgeAccordion.vue';
+import WidthConstraintEdgeAccordion from '../Edges/WidthConstraintEdgeAccordion.vue';
 export default {
     name: "Accordion Item",
     props: {
@@ -145,6 +146,10 @@ export default {
                 this.currentContent = "SmoothEdgeAccordion";
                 break;
             }
+            case 'edges.widthConstraint': {
+                this.currentContent = "WidthConstraintEdgeAccordion";
+                break;
+            }
         }
     },
     watch: {
@@ -178,7 +183,8 @@ export default {
         ScalingEdgeAccordion,
         SelfReferenceEdgeAccordion,
         ShadowEdgeAccordion,
-        SmoothEdgeAccordion
+        SmoothEdgeAccordion,
+        WidthConstraintEdgeAccordion
     },
     methods: {
         message: function (message, variables) {

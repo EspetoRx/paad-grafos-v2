@@ -175,6 +175,7 @@ export default {
             optionsEdgesScalingSwitchValue: false,
             optionsEdgesShadowSwitchValue: false,
             optionsEdgesSmoothSwitchValue: true,
+            optionsEdgesWidthConstraintSwitchValue: false,
         }
     },
     components: {
@@ -307,6 +308,18 @@ export default {
                     'Há uma diferença entre curvas suaves dinâmicas e curvas suaves estáticas. As curvas suaves dinâmicas '+
                     'possuem um nó de suporte invisível que participa da simulação física. Se você tiver muitas arestas, '+
                     'considere escolher um tipo diferente de curvas suaves e dinâmicas para obter melhor desempenho.' 
+            }
+        );
+        this.firstAccordionItemsComponents.push({ item: 'widthConstraint', component: 'edges.widthConstraint' });
+        this.firstAccordionItems.push(
+            {
+                item: 'widthConstraint',
+                title: 'Constante de Largura',
+                switch: true,
+                isChecked: this.optionsEdgesWidthConstraintSwitchValue,
+                isCheckedEnabled: true,
+                hasTooltip: true,
+                tooltip: 'Options.Edges.WidthConstraint (Toggle false/true) - Se for falso, nenhuma restrição de largura será aplicada. Se um número for especificado, a largura máxima do rótulo da borda será definida como o valor. As linhas do rótulo da borda serão quebradas para ficarem abaixo do máximo.' 
             }
         );
     },
@@ -494,6 +507,11 @@ export default {
                 this.optionsEdgesSmoothSwitchValue = value;
                 this.firstAccordionItems[8].isChecked = this.optionsEdgesSmoothSwitchValue;
                 this.localOptions.edges.smooth = value;
+            }
+            if (id == "widthConstraint") {
+                this.optionsEdgesWidthConstraintSwitchValue = value;
+                this.firstAccordionItems[9].isChecked = this.optionsEdgesWidthConstraintSwitchValue;
+                this.localOptions.edges.widthConstraint = value;
             }
         },
         message: function (message, value) {
@@ -775,6 +793,7 @@ export default {
             if (message == 'options-edges-smooth-type') if (typeof this.localOptions.edges.smooth != "boolean") this.localOptions.edges.smooth.type = value;
             if (message == 'options-edges-smooth-forceDirection') if (typeof this.localOptions.edges.smooth != "boolean") this.localOptions.edges.smooth.forceDirection = value;
             if (message == 'options-edges-smooth-roundness') if (typeof this.localOptions.edges.smooth != "boolean") this.localOptions.edges.smooth.roundness = parseFloat(value);
+            if (message == 'options-edges-widthConstraint-value') this.localOptions.edges.widthConstraint = parseInt(value);
         },
         openBsModal: function (title, body) {
             this.$emit("open-bs-modal", title, body);
