@@ -710,6 +710,7 @@ export default {
             if (message == 'options-edges-scaling-object-min-scalingLabel') this.localOptions.edges.scaling.label.min = parseInt(value);
             if (message == 'options-edges-scaling-object-max-scalingLabel') this.localOptions.edges.scaling.label.max = parseInt(value);
             if (message == 'options-edges-scaling-object-maxVisible-scalingLabel') this.localOptions.edges.scaling.label.maxVisible = parseInt(value);
+            if (message == 'options-edges-scaling-customScalingFunction') this.localOptions.edges.scaling.customScalingFunction = value;
         },
         openBsModal: function (title, body) {
             this.$emit("open-bs-modal", title, body);
