@@ -9,17 +9,17 @@
         :forId="'input-select-' + arrowType + '-type'" :hasSwitch="false"></LabelWithTooltip>
     <InputSelect v-if="checkboxValue" :selectId="'input-select-' + arrowType + '-type'" :options="[
         { value: 'arrow', label: 'Seta', selected: true },
-        { value: 'bar', label: 'Barra', selected: true },
+        { value: 'bar', label: 'Barra', selected: false },
         { value: 'box', label: 'Caixa', selected: false },
         { value: 'circle', label: 'Círculo', selected: false },
-        { value: 'curve', label: 'Curvo', selected: true },
-        { value: 'diamond', label: 'Diamond', selected: true },
+        { value: 'curve', label: 'Curvo', selected: false },
+        { value: 'diamond', label: 'Diamond', selected: false },
         { value: 'image', label: 'Imagem', selected: false },
-        { value: 'inv_curve', label: 'Curva Inversa', selected: true },
-        { value: 'inv_triangle', label: 'Triângulo Inverso', selected: true },
-        { value: 'triangle', label: 'Triângulo', selected: true },
-        { value: 'vee', label: 'Vee', selected: true },
-        { value: 'crow', label: 'Crow', selected: true },
+        { value: 'inv_curve', label: 'Curva Inversa', selected: false },
+        { value: 'inv_triangle', label: 'Triângulo Inverso', selected: false },
+        { value: 'triangle', label: 'Triângulo', selected: false },
+        { value: 'vee', label: 'Vee', selected: false },
+        { value: 'crow', label: 'Crow', selected: false },
     ]" :disabled="false" @update-selection="changeType"></InputSelect>
 
     <InputUrl v-if="checkboxValue && type=='image'" :idInput="'input-url-'+arrowType+'-src'" labelValue="Url da imagem"

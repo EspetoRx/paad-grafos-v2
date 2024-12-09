@@ -24,7 +24,7 @@ export default {
         'switchTooltipEnabled',
         'switchTooltip',
         'switchLabelEnabled',
-        'switchLabelValue'
+        'switchLabelValue',
     ],
     components: {
         'switch-button': SwitchButton
