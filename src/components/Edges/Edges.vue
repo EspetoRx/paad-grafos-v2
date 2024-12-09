@@ -173,6 +173,7 @@ export default {
             optionsEdgesFontSwitchValue: false,
             optionsEdgesFontString: "",
             optionsEdgesScalingSwitchValue: false,
+            optionsEdgesShadowSwitchValue: false,
         }
     },
     components: {
@@ -277,6 +278,18 @@ export default {
                 tooltip: 'O objeto de cor contem as informações de cor da aresta em todas as situações. ' +
                     ' Quando as arestas somente precisam de uma única cor, um valor de cor \'rbg(120, 32, 14)\',  ' +
                     '\'#ffffff\' ou \'red\' pode ser aplicado ao invés de um objeto.'
+            }
+        );
+        this.firstAccordionItemsComponents.push({ item: 'shadow', component: 'edges.shadow' });
+        this.firstAccordionItems.push(
+            {
+                item: 'shadow',
+                title: 'Sombra',
+                switch: true,
+                isChecked: this.optionsEdgesShadowSwitchValue,
+                isCheckedEnabled: true,
+                hasTooltip: true,
+                tooltip: 'Options.Edges.Shadow (Toggle false/true) - Quando verdadeiro, a aresta projeta uma sombra usando as configurações padrão. Isso fornece o raio do círculo e a posição.' 
             }
         );
     },
@@ -454,6 +467,11 @@ export default {
                     this.awatingResponse.push("repaint_canvas_edges_scaling_unselecting");
                 }
                 this.$emit("open-bs-modal", "Repintar o canvas?", "RepaintCanvas");
+            }
+            if (id == 'shadow') {
+                this.optionsEdgesShadowSwitchValue = value;
+                this.firstAccordionItems[7].isChecked = this.optionsEdgesShadowSwitchValue;
+                this.localOptions.edges.shadow = value;
             }
         },
         message: function (message, value) {
@@ -726,6 +744,11 @@ export default {
             if (message == 'options-edges-selfReference-size') this.localOptions.edges.selfReference = { size: parseInt(value) };
             if (message == 'options-edges-selfReference-angle') this.localOptions.edges.selfReference.angle = parseFloat(value);
             if (message == 'options-edges-selfReference-render-behind-the-node') this.localOptions.edges.selfReference.renderBehindTheNode = value;
+            if (message == 'options-edges-shadow-object-enabled') this.localOptions.edges.shadow = {enabled: true};
+            if (message == 'options-edges-shadow-color') if(typeof this.localOptions.edges.shadow != "boolean") this.localOptions.edges.shadow.color = value;
+            if (message == 'options-edges-shadow-size') if(typeof this.localOptions.edges.shadow != "boolean") this.localOptions.edges.shadow.size = parseInt(value);
+            if (message == 'options-edges-shadow-x') if (typeof this.localOptions.edges.shadow != "boolean") this.localOptions.edges.shadow.x = parseInt(value);
+            if (message == 'options-edges-shadow-y') if (typeof this.localOptions.edges.shadow != "boolean") this.localOptions.edges.shadow.y = parseInt(value);
         },
         openBsModal: function (title, body) {
             this.$emit("open-bs-modal", title, body);
