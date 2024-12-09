@@ -174,6 +174,7 @@ export default {
             optionsEdgesFontString: "",
             optionsEdgesScalingSwitchValue: false,
             optionsEdgesShadowSwitchValue: false,
+            optionsEdgesSmoothSwitchValue: true,
         }
     },
     components: {
@@ -290,6 +291,22 @@ export default {
                 isCheckedEnabled: true,
                 hasTooltip: true,
                 tooltip: 'Options.Edges.Shadow (Toggle false/true) - Quando verdadeiro, a aresta projeta uma sombra usando as configurações padrão. Isso fornece o raio do círculo e a posição.' 
+            }
+        );
+        this.firstAccordionItemsComponents.push({ item: 'smooth', component: 'edges.smooth' });
+        this.firstAccordionItems.push(
+            {
+                item: 'smooth',
+                title: 'Maciez',
+                switch: true,
+                isChecked: this.optionsEdgesSmoothSwitchValue,
+                isCheckedEnabled: true,
+                hasTooltip: true,
+                tooltip: 'Options.Edges.Smooth (Toggle false/true) - Quando verdadeiro, a aresta é desenhada como uma '+
+                    'curva Bézier dinâmica. O desenho dessas curvas demora mais que o das curvas retas, mas fica melhor. '+
+                    'Há uma diferença entre curvas suaves dinâmicas e curvas suaves estáticas. As curvas suaves dinâmicas '+
+                    'possuem um nó de suporte invisível que participa da simulação física. Se você tiver muitas arestas, '+
+                    'considere escolher um tipo diferente de curvas suaves e dinâmicas para obter melhor desempenho.' 
             }
         );
     },
@@ -472,6 +489,11 @@ export default {
                 this.optionsEdgesShadowSwitchValue = value;
                 this.firstAccordionItems[7].isChecked = this.optionsEdgesShadowSwitchValue;
                 this.localOptions.edges.shadow = value;
+            }
+            if (id == 'smooth') {
+                this.optionsEdgesSmoothSwitchValue = value;
+                this.firstAccordionItems[8].isChecked = this.optionsEdgesSmoothSwitchValue;
+                this.localOptions.edges.smooth = value;
             }
         },
         message: function (message, value) {
@@ -749,6 +771,10 @@ export default {
             if (message == 'options-edges-shadow-size') if(typeof this.localOptions.edges.shadow != "boolean") this.localOptions.edges.shadow.size = parseInt(value);
             if (message == 'options-edges-shadow-x') if (typeof this.localOptions.edges.shadow != "boolean") this.localOptions.edges.shadow.x = parseInt(value);
             if (message == 'options-edges-shadow-y') if (typeof this.localOptions.edges.shadow != "boolean") this.localOptions.edges.shadow.y = parseInt(value);
+            if (message == 'options-edges-smooth-enabled') this.localOptions.edges.smooth = {enabled: true};
+            if (message == 'options-edges-smooth-type') if (typeof this.localOptions.edges.smooth != "boolean") this.localOptions.edges.smooth.type = value;
+            if (message == 'options-edges-smooth-forceDirection') if (typeof this.localOptions.edges.smooth != "boolean") this.localOptions.edges.smooth.forceDirection = value;
+            if (message == 'options-edges-smooth-roundness') if (typeof this.localOptions.edges.smooth != "boolean") this.localOptions.edges.smooth.roundness = parseFloat(value);
         },
         openBsModal: function (title, body) {
             this.$emit("open-bs-modal", title, body);
