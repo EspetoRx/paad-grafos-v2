@@ -37,7 +37,7 @@
             @update-value-from-range-input="emitOpacity"></InputRange>
         <AccordionFlush :id="'first-accordion'" :accordionItems="firstAccordionItems"
             :accordionItemsComponents="firstAccordionItemsComponents" class="mt-2"
-            @toggle-switch-event="toggleSwitchEvent" @message="message">
+            @toggle-switch-event="toggleSwitchEvent" @message="message" @open-bs-modal="openBsModal" :bsModalReturnValue="bsModalReturnValue">
         </AccordionFlush>
     </div>
 </template>
@@ -55,6 +55,7 @@ export default {
         'network',
         'isNodesEnabled',
         'nodes',
+        'bsModalReturnValue',
     ],
     data() {
         return {
@@ -71,6 +72,7 @@ export default {
             fontSwitchEnabled: true,
             fontToggled: false,
             fontObjectOrString: true,
+            chosenSwitchValue: true,
             heightConstraintSwitchEnabled: true,
             heightConstraintSwitchValue: false,
             heightConstraintObjectEnabled: false,
@@ -85,7 +87,8 @@ export default {
             scalingCheckboxEnabled: true,
             scalingCheckboxValue: false,
             shadowCheckboxValue: false,
-            shadowCheckboxEnabled: true
+            shadowCheckboxEnabled: true,
+            awaitingResponse: []
         }
     },
     watch: {
@@ -98,6 +101,35 @@ export default {
                 this.$emit('options-has-changed', newValue);
             },
             deep: true
+        },
+        bsModalReturnValue: function (newValue, oldValue) {
+            if (newValue == null) return;
+            if (this.awaitingResponse.includes("repaint_canvas_nodes_chosen_unselecting", 0)) {
+                this.awaitingResponse = this.awaitingResponse.filter(function (e) {
+                    e != "repaint_canvas_nodes_chosen_unselecting"
+                });
+                if (newValue) {
+                    this.chosenSwitchValue = !newValue;
+                    this.encapsulateOptions.nodes.chosen = this.chosenSwitchValue;
+                    this.$emit("options-has-changed", this.encapsulateOptions);
+                    this.$emit("component-key-change", true);
+                } else {
+                    this.chosenSwitchValue = true;
+                }
+            }
+            if (this.awaitingResponse.includes("repaint_canvas_nodes_chosen_selecting", 0)) {
+                this.awaitingResponse = this.awaitingResponse.filter(function (e) {
+                    e != "repaint_canvas_nodes_chosen_selecting"
+                });
+                if (newValue) {
+                    this.chosenSwitchValue = newValue;
+                    this.encapsulateOptions.nodes.chosen = this.chosenSwitchValue;
+                    this.$emit("options-has-changed", this.encapsulateOptions);
+                    this.$emit("component-key-change", true);
+                } else {
+                    this.chosenSwitchValue = false;
+                }
+            }
         }
     },
     mounted() {
@@ -118,8 +150,8 @@ export default {
                 item: 'chosen',
                 title: 'Selecionado',
                 switch: true,
-                isChecked: (typeof this.encapsulateOptions.nodes.chosen == "boolean") ? this.encapsulateOptions.nodes.chosen : this.encapsulateOptions.nodes.chosen != null,
-                isCheckedEnabled: (typeof this.encapsulateOptions.nodes.chosen == "boolean"),
+                isChecked: this.chosenSwitchValue,
+                isCheckedEnabled: true,
                 hasTooltip: true,
                 tooltip: 'Quando verdadeiro, selecionar ou sobrepor um vértice mudará a si e seu rótulo de acordo com o padrão. ' +
                     'Quando falso, nenhuma alteração no vértice ou em seu rótulo ocorrerá quando o mesmo é escolhido. ' +
@@ -244,7 +276,15 @@ export default {
         toggleSwitchEvent: function (switchId, value) {
             switch (switchId) {
                 case "chosen": {
-                    this.encapsulateOptions.nodes.chosen = value;
+                    if (!value && this.chosenSwitchValue) {
+                        this.awaitingResponse.push("repaint_canvas_nodes_chosen_unselecting");
+                        this.$emit("open-bs-modal", "Repintar o canvas?", "RepaintCanvas");
+                        this.chosenSwitchValue = value;
+                    } else if (value && !this.chosenSwitchValue) {
+                        this.awaitingResponse.push("repaint_canvas_nodes_chosen_selecting");
+                        this.$emit("open-bs-modal", "Repintar o canvas?", "RepaintCanvas");
+                        this.chosenSwitchValue = value;
+                    }
                     break;
                 }
                 case "fixed": {
@@ -324,11 +364,15 @@ export default {
             return typeof this.encapsulateOptions.nodes.font == "object";
         },
         message: function (message, value) {
+            console.log("Message: " + message + " Value: " + value);
             switch (message) {
-                case 'update-chosen-node': {
-                    this.encapsulateOptions.nodes.chosen = { node: value, label: value };
-                    break;
-                }
+                case 'send-toast': {this.$emit("send-toast", value); break;}
+                case 'repaint-component': {this.$emit("component-key-change", true); break}
+                case 'options-nodes-chosen-object-enabled': {this.encapsulateOptions.nodes.chosen = {}; break;}
+                case 'options-nodes-chosen-node-boolean': {this.encapsulateOptions.nodes.chosen.node = value; break;}
+                case 'options-nodes-chosen-node-function-value': {this.encapsulateOptions.nodes.chosen.node = value; break;}
+                case 'options-nodes-chosen-label-boolean': {this.encapsulateOptions.nodes.chosen.label = value; break;}
+                case 'options-nodes-chosen-label-function-value': {this.encapsulateOptions.nodes.chosen.label = value; break;}
                 // Not working
                 case 'update-chosen-node-background-color': {
                     this.encapsulateOptions.nodes.chosen = { node: null, label: true };
@@ -741,8 +785,11 @@ export default {
         toggleHidden: function (value) {
             this.hidden = value;
             this.encapsulateOptions.nodes.hidden = value;
+        },
+        openBsModal: function (title, body) {
+            this.$emit("open-bs-modal", title, body);
         }
     },
-    emits: ['options-has-changed', 'nodes-has-changed', 'component-key-change', 'send-toast']
+    emits: ['options-has-changed', 'nodes-has-changed', 'component-key-change', 'send-toast', 'open-bs-modal']
 }
 </script>

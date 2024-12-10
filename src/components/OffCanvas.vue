@@ -29,7 +29,7 @@
             <nodes v-if="this.type == 'visjs-nodes'" :network="this.encapsulateLocalNetwork"
                 :options="this.encapsulateOptions" @options-has-changed="optionsHasChanged"
                 @nodes-has-changed="nodeshasChanged" :nodes="encapsulateNodes" @component-key-change="onComponentKeyChange"
-                @send-toast="sendToast"></nodes>
+                @send-toast="sendToast" @open-bs-modal="enableBsModal" :bsModalReturnValue="bsModalReturnValue"></nodes>
             <edges v-if="this.type == 'visjs-edges'" :network="encapsulateLocalNetwork" :options="encapsulateOptions"
                 @options-has-changed="optionsHasChanged" @send-toast="sendToast" @canvas-key-change="onComponentKeyChange"
                 @open-bs-modal="enableBsModal" :bsModalReturnValue="bsModalReturnValue" @edges-has-changed="edgesHasChanged" :edges="encapsulateEdges"></edges>
