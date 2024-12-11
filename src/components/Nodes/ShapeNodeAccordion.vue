@@ -138,7 +138,32 @@
     <button @click.prevent="updateNodeCustomShape" v-if="isCustomInputEnabled"
         class="btn btn-primary form-control mt-1">Atualizar função de desenho do vértice</button>
 
-    <div class="m-1 p-1 border" v-if="(this.shape != 'text' && this.shape != 'image' && this.shape != 'icon' && this.shape != 'custom')">
+    <div class="m-1 p-1 border" v-if="this.shape == 'image' || this.shape == 'circularImage'">
+        <SwitchWithInfo v-if="this.shape == 'image'" :switchId="'options-nodes-shapesProperties-useBorderWithImage'"
+            :switchDisabled="false" :switchInitialValue="useBorderWithImage" :switchTooltipEnabled="true"
+            :switchTooltip="'Options.Nodes.ShapeProperties.UseBorderWithImage - Esta propriedade se aplica apenas ao formato da imagem. Quando verdadeiro, o objeto colorido é usado. Um retângulo com a cor de fundo é desenhado atrás dele e possui uma borda. Isto significa que todas as opções de fronteira são levadas em consideração.'"
+            :switchLabelEnabled="true" :switchLabelValue="'Usar borda na imagem'"
+            @checkbox-status-changed="changeUseBorderWithImage"></SwitchWithInfo>
+        <SwitchWithInfo :switchId="'options-nodes-shapesProperties-interpolation'" :switchDisabled="false"
+            :switchInitialValue="imageInterpolation" :switchTooltipEnabled="true"
+            :switchTooltip="'Options.Nodes.ShapeProperties.Interpolation - Esta propriedade se aplica apenas às formas image e circularImage. Quando verdadeiro, a imagem é reamostrada quando reduzida, resultando em uma imagem melhor ao custo do tempo computacional.'"
+            :switchLabelEnabled="true" :switchLabelValue="'Interpolação de Imagem'"
+            @checkbox-status-changed="changeImageInterpolation"></SwitchWithInfo>
+        <SwitchWithInfo :switchId="'options-nodes-shapesProperties-useImageSize'" :switchDisabled="false"
+            :switchInitialValue="useImageSize" :switchTooltipEnabled="true"
+            :switchTooltip="'Options.Nodes.ShapeProperties.UseImageSize - Esta propriedade se aplica apenas às formas image e circularImage. Quando falso, é utilizada a opção tamanho, quando verdadeiro, é utilizado o tamanho da imagem. Importante: se estiver definido como verdadeiro, a imagem não poderá ser dimensionada com a opção de valor!'"
+            :switchLabelEnabled="true" :switchLabelValue="'Tamanho original da Imagem'"
+            @checkbox-status-changed="changeUseImageSize"></SwitchWithInfo>
+        <LabelWithTooltip :labelValue="'Coordenada de origem:'"
+            :tooltip="'Options.Nodes.ShapeProperties.CoordinateOrigin - Esta propriedade se aplica apenas às formas image e circularImage. Decide se (x, y) do nó será o centro da imagem ou o canto superior esquerdo.'"
+            :forId="'options-nodes-shapeProperties-coordinateOrigin'" :hasSwitch="false"></LabelWithTooltip>
+        <InputSelect :selectId="'options-nodes-shapeProperties-coordinateOrigin'" :options="[
+            { value: 'center', label: 'Centro', selected: true },
+            { value: 'top-left', label: 'Topo Esquerdo', selected: false },
+        ]" :disabled="false" @update-selection="changeCoordinateOrigin"></InputSelect>
+    </div>
+    <div class="m-1 p-1 border"
+        v-if="(this.shape != 'text' && this.shape != 'image' && this.shape != 'icon' && this.shape != 'custom') || (shape == 'image' && useBorderWithImage)">
         <SwitchWithInfo :switchId="'options-nodes-shapeProperties-borderDashes'" :switchDisabled="false"
             :switchInitialValue="borderDashesEnabled" :switchTooltipEnabled="true"
             :switchTooltip="'Options.Nodes.ShapeProperties.BorderDashes - Esta propriedade se aplica a todas as formas que possuem bordas. Você define os travessões fornecendo um Array. Formato da matriz: [comprimento do traço, comprimento do intervalo]. Você também pode usar um booleano, false é desabilitado e true é o padrão [5,15].'"
@@ -154,6 +179,12 @@
             :labelValue="'Tamanho do espaço:'"
             :tooltip="'Options.Nodes.ShapeProperties.BorderDashes.EmptySize - Tamanho do espaço.'" :disabled="false"
             @update-value-from-range-input="changeBorderDashesEmptySize"></InputRange>
+    </div>
+    <div class="m-1 p-1 border" v-if="this.shape == 'box'">
+        <InputRange :inputId="'options-nodes-shapeProperties-borderRadius'" :isLabelEnabled="true" :min="1" :max="100"
+            :step="1" :initialValue="boxBorderRadius" :labelValue="'Raio da borda:'"
+            :tooltip="'Options.Nodes.ShapeProperties.BorderRadius - Esta propriedade é usada apenas para o formato de caixa. Permite determinar a redondeza dos cantos da forma.'"
+            :disabled="false" @update-value-from-range-input="changeBoxBorderRadius"></InputRange>
     </div>
 </template>
 <script>
@@ -230,6 +261,13 @@ export default {
             borderDashesEnabled: false,
             borderDashesDashSize: "5",
             borderDashesEmptySize: "15",
+
+            boxBorderRadius: 6,
+
+            imageInterpolation: true,
+            useImageSize: false,
+            useBorderWithImage: false,
+            coordinateOrigin: "center",
         }
     },
     components: {
@@ -433,6 +471,26 @@ export default {
         changeBorderDashesEmptySize: function (value) {
             this.borderDashesEmptySize = value;
             this.$emit('message', 'options.nodes.shapeProperties.borderDashes.emptySize', value);
+        },
+        changeBoxBorderRadius: function (value) {
+            this.boxBorderRadius = value;
+            this.$emit('message', 'options.nodes.shapeProperties.borderRadius', value);
+        },
+        changeImageInterpolation: function (value) {
+            this.imageInterpolation = value;
+            this.$emit("message", "options.nodes.shapeProperties.interpolation", value);
+        },
+        changeUseImageSize: function (value) {
+            this.useImageSize = value;
+            this.$emit("message", "options.nodes.shapeProperties.useImageSize", value);
+        },
+        changeUseBorderWithImage: function (value) {
+            this.useBorderWithImage = value;
+            this.$emit("message", "options.nodes.shapeProperties.useBorderWithImage", value);
+        },
+        changeCoordinateOrigin: function(value) {
+            this.coordinateOrigin = value;
+            this.$emit("message", "options.nodes.shapeProperties.coordinateOrigin", value);
         }
     },
     watch: {

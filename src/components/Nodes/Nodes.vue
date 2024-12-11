@@ -37,7 +37,8 @@
             @update-value-from-range-input="emitOpacity"></InputRange>
         <AccordionFlush :id="'first-accordion'" :accordionItems="firstAccordionItems"
             :accordionItemsComponents="firstAccordionItemsComponents" class="mt-2"
-            @toggle-switch-event="toggleSwitchEvent" @message="message" @open-bs-modal="openBsModal" :bsModalReturnValue="bsModalReturnValue">
+            @toggle-switch-event="toggleSwitchEvent" @message="message" @open-bs-modal="openBsModal"
+            :bsModalReturnValue="bsModalReturnValue">
         </AccordionFlush>
     </div>
 </template>
@@ -103,7 +104,7 @@ export default {
             },
             deep: true
         },
-        chosenSwitchValue: function(newValue, oldValue) {
+        chosenSwitchValue: function (newValue, oldValue) {
             this.firstAccordionItems[0].isChecked = newValue;
         },
         fixedSwitchValue: function (newValue, oldValue) {
@@ -408,13 +409,13 @@ export default {
         message: function (message, value) {
             console.log("Message: " + message + " Value: " + value);
             switch (message) {
-                case 'send-toast': {this.$emit("send-toast", value); break;}
-                case 'repaint-component': {this.$emit("component-key-change", true); break}
-                case 'options-nodes-chosen-object-enabled': {this.encapsulateOptions.nodes.chosen = {}; break;}
-                case 'options-nodes-chosen-node-boolean': {this.encapsulateOptions.nodes.chosen.node = value; break;}
-                case 'options-nodes-chosen-node-function-value': {this.encapsulateOptions.nodes.chosen.node = value; break;}
-                case 'options-nodes-chosen-label-boolean': {this.encapsulateOptions.nodes.chosen.label = value; break;}
-                case 'options-nodes-chosen-label-function-value': {this.encapsulateOptions.nodes.chosen.label = value; break;}
+                case 'send-toast': { this.$emit("send-toast", value); break; }
+                case 'repaint-component': { this.$emit("component-key-change", true); break }
+                case 'options-nodes-chosen-object-enabled': { this.encapsulateOptions.nodes.chosen = {}; break; }
+                case 'options-nodes-chosen-node-boolean': { this.encapsulateOptions.nodes.chosen.node = value; break; }
+                case 'options-nodes-chosen-node-function-value': { this.encapsulateOptions.nodes.chosen.node = value; break; }
+                case 'options-nodes-chosen-label-boolean': { this.encapsulateOptions.nodes.chosen.label = value; break; }
+                case 'options-nodes-chosen-label-function-value': { this.encapsulateOptions.nodes.chosen.label = value; break; }
                 // Not working
                 case 'update-chosen-node-background-color': {
                     this.encapsulateOptions.nodes.chosen = { node: null, label: true };
@@ -464,7 +465,7 @@ export default {
                     };
                     break;
                 }
-                case 'options-nodes-fixed-object-sending' : {
+                case 'options-nodes-fixed-object-sending': {
                     if (value) this.encapsulateOptions.nodes.fixed = { x: this.fixedSwitchValue, y: this.fixedSwitchValue };
                     else this.encapsulateOptions.nodes.fixed = this.fixedSwitchValue;
                     break;
@@ -806,6 +807,11 @@ export default {
                     this.encapsulateOptions.nodes.shapeProperties.borderDashes = [this.borderDashesDashSize, this.borderDashesEmptySize];
                     break;
                 }
+                case 'options.nodes.shapeProperties.borderRadius': { this.encapsulateOptions.nodes.shapeProperties.borderRadius = parseInt(value); break; }
+                case 'options.nodes.shapeProperties.interpolation': { this.encapsulateOptions.nodes.shapeProperties.interpolation = value; break; }
+                case 'options.nodes.shapeProperties.useImageSize': { this.encapsulateOptions.nodes.shapeProperties.useImageSize = value; break; }
+                case 'options.nodes.shapeProperties.useBorderWithImage': { this.encapsulateOptions.nodes.shapeProperties.useBorderWithImage = value; break; }
+                case 'options.nodes.shapeProperties.coordinateOrigin': { this.encapsulateOptions.nodes.shapeProperties.coordinateOrigin = value; break; }
             }
         },
         emitOpacity: function (value) {
