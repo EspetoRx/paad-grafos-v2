@@ -53,103 +53,79 @@
         :tooltip="'Entre com a URL da imagem a ser utilizada como vértice selecionado.'"
         :urlInitalValue="imageUrlSelected" @url-value-update="imageUrlObjectSelected"></InputUrl>
     <div class="input-group mb-1 mt-1" v-if="(imageSelected || circularImageSelected)">
-        <span class="input-group-text m-0 p-0" id="padding-image-top-label">
-            <LabelWithTooltip
-                :labelValue="'Padding da imagem - top'"
+        <span class="input-group-text m-0 p-0 ps-1" id="padding-image-top-label">
+            <LabelWithTooltip :labelValue="'Padding da imagem - top'"
                 :tooltip="'Options.nodes.imagePadding.top - Altere o valor do padding da imagem em sua componente top'"
-                :forId="'padding-image-top'"
-                :hasSwitch="false"
-            ></LabelWithTooltip>
+                :forId="'padding-image-top'" :hasSwitch="false"></LabelWithTooltip>
         </span>
         <input type="number" class="form-control" placeholder="0" aria-label="Options.nodes.imagePading.top"
             aria-describedby="padding-image-top-label" id="padding-image-top" v-model="imagePaddingTop">
     </div>
     <div class="input-group mb-1 mt-1" v-if="(imageSelected || circularImageSelected)">
-        <span class="input-group-text m-0 p-0" id="padding-image-bottom-label">
-            <LabelWithTooltip
-                :labelValue="'Padding da imagem - bottom'"
+        <span class="input-group-text m-0 p-0 ps-1" id="padding-image-bottom-label">
+            <LabelWithTooltip :labelValue="'Padding da imagem - bottom'"
                 :tooltip="'Options.nodes.imagePadding.bottom - Altere o valor do padding da imagem em sua componente bottom'"
-                :forId="'padding-image-bottom'"
-                :hasSwitch="false"
-            ></LabelWithTooltip>
+                :forId="'padding-image-bottom'" :hasSwitch="false"></LabelWithTooltip>
         </span>
         <input type="number" class="form-control" placeholder="0" aria-label="Options.nodes.imagePading.bottom"
             aria-describedby="padding-image-bottom-label" id="padding-image-bottom" v-model="imagePaddingBottom">
     </div>
     <div class="input-group mb-1 mt-1" v-if="(imageSelected || circularImageSelected)">
-        <span class="input-group-text m-0 p-0" id="padding-image-left-label">
-            <LabelWithTooltip
-                :labelValue="'Padding da imagem - left'"
+        <span class="input-group-text m-0 p-0 ps-1" id="padding-image-left-label">
+            <LabelWithTooltip :labelValue="'Padding da imagem - left'"
                 :tooltip="'Options.nodes.imagePadding.left - Altere o valor do padding da imagem em sua componente left'"
-                :forId="'padding-image-left'"
-                :hasSwitch="false"
-            ></LabelWithTooltip>
+                :forId="'padding-image-left'" :hasSwitch="false"></LabelWithTooltip>
         </span>
         <input type="number" class="form-control" placeholder="0" aria-label="Options.nodes.imagePading.left"
             aria-describedby="padding-image-left-label" id="padding-image-left" v-model="imagePaddingLeft">
     </div>
     <div class="input-group mb-1 mt-1" v-if="(imageSelected || circularImageSelected)">
-        <span class="input-group-text m-0 p-0" id="padding-image-right-label">
-            <LabelWithTooltip
-                :labelValue="'Padding da imagem - right'"
+        <span class="input-group-text m-0 p-0 ps-1" id="padding-image-right-label">
+            <LabelWithTooltip :labelValue="'Padding da imagem - right'"
                 :tooltip="'Options.nodes.imagePadding.right - Altere o valor do padding da imagem em sua componente right'"
-                :forId="'padding-image-right'"
-                :hasSwitch="false"
-            ></LabelWithTooltip>
+                :forId="'padding-image-right'" :hasSwitch="false"></LabelWithTooltip>
         </span>
         <input type="number" class="form-control" placeholder="0" aria-label="Options.nodes.imagePading.right"
             aria-describedby="padding-image-right-label" id="padding-image-right" v-model="imagePaddingRight">
     </div>
 
     <div class="input-group mb-1 mt-1" v-if="(marginLabelEnabled)">
-        <span class="input-group-text m-0 p-0" id="margin-label-top-label">
-            <LabelWithTooltip
-                :labelValue="'Margem do rótulo - top'"
+        <span class="input-group-text m-0 p-0 ps-1" id="margin-label-top-label">
+            <LabelWithTooltip :labelValue="'Margem do rótulo - top'"
                 :tooltip="'Options.nodes.margin.top - Altere o valor do margin do róduto do vértice em sua componente top'"
-                :forId="'margin-label-top'"
-                :hasSwitch="false"
-            ></LabelWithTooltip>
+                :forId="'margin-label-top'" :hasSwitch="false"></LabelWithTooltip>
         </span>
         <input type="number" class="form-control" placeholder="0" aria-label="Options.nodes.margin.top"
             aria-describedby="margin-label-top-label" id="margin-label-top" v-model="marginLabelTop">
     </div>
     <div class="input-group mb-1 mt-1" v-if="(marginLabelEnabled)">
-        <span class="input-group-text m-0 p-0" id="margin-label-bottom-label">
-            <LabelWithTooltip
-                :labelValue="'Margem do rótulo - bottom'"
+        <span class="input-group-text m-0 p-0 ps-1" id="margin-label-bottom-label">
+            <LabelWithTooltip :labelValue="'Margem do rótulo - bottom'"
                 :tooltip="'Options.nodes.margin.bottom - Altere o valor do margin do róduto do vértice em sua componente bottom'"
-                :forId="'margin-label-bottom'"
-                :hasSwitch="false"
-            ></LabelWithTooltip>
+                :forId="'margin-label-bottom'" :hasSwitch="false"></LabelWithTooltip>
         </span>
         <input type="number" class="form-control" placeholder="0" aria-label="Options.nodes.margin.bottom"
             aria-describedby="margin-label-bottom-label" id="margin-label-bottom" v-model="marginLabelBottom">
     </div>
     <div class="input-group mb-1 mt-1" v-if="(marginLabelEnabled)">
-        <span class="input-group-text m-0 p-0" id="margin-label-left-label">
-            <LabelWithTooltip
-                :labelValue="'Margem do rótulo - left'"
+        <span class="input-group-text m-0 p-0 ps-1" id="margin-label-left-label">
+            <LabelWithTooltip :labelValue="'Margem do rótulo - left'"
                 :tooltip="'Options.nodes.margin.left - Altere o valor do margin do róduto do vértice em sua componente left'"
-                :forId="'margin-label-left'"
-                :hasSwitch="false"
-            ></LabelWithTooltip>
+                :forId="'margin-label-left'" :hasSwitch="false"></LabelWithTooltip>
         </span>
         <input type="number" class="form-control" placeholder="0" aria-label="Options.nodes.margin.left"
             aria-describedby="margin-label-left-label" id="margin-label-left" v-model="marginLabelLeft">
     </div>
     <div class="input-group mb-1 mt-1" v-if="(marginLabelEnabled)">
-        <span class="input-group-text m-0 p-0" id="margin-label-right-label">
-            <LabelWithTooltip
-                :labelValue="'Margem do rótulo - right'"
+        <span class="input-group-text m-0 p-0 ps-1" id="margin-label-right-label">
+            <LabelWithTooltip :labelValue="'Margem do rótulo - right'"
                 :tooltip="'Options.nodes.margin.right - Altere o valor do margin do róduto do vértice em sua componente right'"
-                :forId="'margin-label-right'"
-                :hasSwitch="false"
-            ></LabelWithTooltip>
+                :forId="'margin-label-right'" :hasSwitch="false"></LabelWithTooltip>
         </span>
         <input type="number" class="form-control" placeholder="0" aria-label="Options.nodes.margin.right"
             aria-describedby="margin-label-right-label" id="margin-label-right" v-model="marginLabelRight">
     </div>
-    
+
     <InputTextArea v-if="customSelected" :inputId="'options-nodes-shape-custom'" :inputEnabled="isCustomInputEnabled"
         :inputInitialValue="customValue" :inputPlaceholder="'//Input the javascript function'" :inputRows="15"
         :isLabelEnabled="true" :labelValue="'Editar customização do CTX Renderer'"
@@ -161,6 +137,24 @@
     <!-- //Insert modal component with some examples. -->
     <button @click.prevent="updateNodeCustomShape" v-if="isCustomInputEnabled"
         class="btn btn-primary form-control mt-1">Atualizar função de desenho do vértice</button>
+
+    <div class="m-1 p-1 border" v-if="(this.shape != 'text' && this.shape != 'image' && this.shape != 'icon' && this.shape != 'custom')">
+        <SwitchWithInfo :switchId="'options-nodes-shapeProperties-borderDashes'" :switchDisabled="false"
+            :switchInitialValue="borderDashesEnabled" :switchTooltipEnabled="true"
+            :switchTooltip="'Options.Nodes.ShapeProperties.BorderDashes - Esta propriedade se aplica a todas as formas que possuem bordas. Você define os travessões fornecendo um Array. Formato da matriz: [comprimento do traço, comprimento do intervalo]. Você também pode usar um booleano, false é desabilitado e true é o padrão [5,15].'"
+            :switchLabelEnabled="true" :switchLabelValue="'Traços na borda'"
+            @checkbox-status-changed="changeBorderDashesEnabled"></SwitchWithInfo>
+        <InputRange v-if="borderDashesEnabled" :inputId="'options-nodes-shapeProperties-borderDashes-dashSize'"
+            :isLabelEnabled="true" :min="1" :max="100" :step="1" :initialValue="borderDashesDashSize"
+            :labelValue="'Tamanho do traço:'"
+            :tooltip="'Options.Nodes.ShapeProperties.BorderDashes.DashSize - Tamanho do traço.'" :disabled="false"
+            @update-value-from-range-input="changeBorderDashesDashSize"></InputRange>
+        <InputRange v-if="borderDashesEnabled" :inputId="'options-nodes-shapeProperties-borderDashes-emptySize'"
+            :isLabelEnabled="true" :min="1" :max="100" :step="1" :initialValue="borderDashesEmptySize"
+            :labelValue="'Tamanho do espaço:'"
+            :tooltip="'Options.Nodes.ShapeProperties.BorderDashes.EmptySize - Tamanho do espaço.'" :disabled="false"
+            @update-value-from-range-input="changeBorderDashesEmptySize"></InputRange>
+    </div>
 </template>
 <script>
 import InputSelect from '../Common/Inputs/InputSelect.vue';
@@ -230,7 +224,12 @@ export default {
             marginLabelTop: 5,
             marginLabelBottom: 5,
             marginLabelRight: 5,
-            marginLabelLeft: 5
+            marginLabelLeft: 5,
+
+            // ShapeProperties
+            borderDashesEnabled: false,
+            borderDashesDashSize: "5",
+            borderDashesEmptySize: "15",
         }
     },
     components: {
@@ -422,6 +421,18 @@ export default {
         },
         enableCtxRendererEditing: function (value) {
             this.isCustomInputEnabled = value;
+        },
+        changeBorderDashesEnabled: function (value) {
+            this.borderDashesEnabled = value;
+            this.$emit('message', 'options.nodes.shapeProperties.borderDashes', value);
+        },
+        changeBorderDashesDashSize: function (value) {
+            this.borderDashesDashSize = value;
+            this.$emit('message', 'options.nodes.shapeProperties.borderDashes.dashSize', value);
+        },
+        changeBorderDashesEmptySize: function (value) {
+            this.borderDashesEmptySize = value;
+            this.$emit('message', 'options.nodes.shapeProperties.borderDashes.emptySize', value);
         }
     },
     watch: {
@@ -431,28 +442,28 @@ export default {
                 this.$emit("message", "update-image-url-selected", [false, this.imageUrlUnselected, this.imageUrlUnselected]);
             }
         },
-        imagePaddingTop: function(newValue, oldValue) {
+        imagePaddingTop: function (newValue, oldValue) {
             this.$emit("message", "update-image-padding-top", newValue);
         },
-        imagePaddingBottom: function(newValue, oldValue) {
+        imagePaddingBottom: function (newValue, oldValue) {
             this.$emit("message", "update-image-padding-bottom", newValue);
         },
-        imagePaddingLeft: function(newValue, oldValue) {
+        imagePaddingLeft: function (newValue, oldValue) {
             this.$emit("message", "update-image-padding-left", newValue);
         },
-        imagePaddingRight: function(newValue, oldValue) {
+        imagePaddingRight: function (newValue, oldValue) {
             this.$emit("message", "update-image-padding-right", newValue);
         },
-        marginLabelTop: function(newValue, oldValue) {
+        marginLabelTop: function (newValue, oldValue) {
             this.$emit("message", "update-label-marging-top", newValue);
         },
-        marginLabelBottom: function(newValue, oldValue) {
+        marginLabelBottom: function (newValue, oldValue) {
             this.$emit("message", "update-label-marging-bottom", newValue);
         },
-        marginLabelLeft: function(newValue, oldValue) {
+        marginLabelLeft: function (newValue, oldValue) {
             this.$emit("message", "update-label-marging-left", newValue);
         },
-        marginLabelRight: function(newValue, oldValue) {
+        marginLabelRight: function (newValue, oldValue) {
             this.$emit("message", "update-label-marging-right", newValue);
         },
     },

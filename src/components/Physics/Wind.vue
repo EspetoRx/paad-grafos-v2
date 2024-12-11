@@ -31,7 +31,7 @@
                         <div class="input-group input-group-sm p-0 mb-1">
                             <span class="input-group-text" id="addon-physics-wind-y-label" data-bs-toggle="tooltip"
                                 title="A quantidade de força a ser aplicada empurrando vértices não fixados para a baixo (valores positivos) ou para a cima (valores negativos).">Coord
-                                X:</span>
+                                Y:</span>
                             <input type="number" step="1" class="form-control" placeholder="windY"
                                 aria-label="windY" aria-describedby="addon-physics-wind-y-label" id="physics-wind-y" v-model="windY">
                         </div>

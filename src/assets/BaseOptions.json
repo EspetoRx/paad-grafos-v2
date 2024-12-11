@@ -11,7 +11,8 @@
         "chosen": {
             "node": true,
             "label": true
-        }
+        },
+        "shapeProperties": {}
     },
     "physics": {
         "enabled": true,
