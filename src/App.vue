@@ -6,7 +6,7 @@
         <ToastContainer :newToast="newToast"></ToastContainer>
         <top-navbar @toggle-off-canvas="toggleOffCanvas" @offcanvas-for-vis-configure="offCanvasForVisConfigure"
             @offcanvas-for-vis-physics="offCanvasForVisPhysics" @offcanvas-for-vis-nodes="offCanvasForVisNodes"
-            @offcanvas-for-vis-edges="offCanvasForVisEdges">
+            @offcanvas-for-vis-edges="offCanvasForVisEdges" @offcanvas-for-vis-interactions="offcanvasForVisInteractions">
         </top-navbar>
         <graph :nodes="nodes" :edges="edges" :options="options" @canvas-start="canvasStart" v-if="canvasEnabled"
             :key="Hash">
@@ -103,6 +103,13 @@ export default {
 
             this.offCanvas.title = "<i class='fa-solid fa-code-branch'></i> Vis Js. Arestas";
             this.offCanvas.type = "visjs-edges";
+
+        },
+
+        offcanvasForVisInteractions() {
+
+            this.offCanvas.title = "<i class='fa-solid fa-computer-mouse'></i> Vis Js. Interações";
+            this.offCanvas.type = "visjs-interactions";
 
         },
 
