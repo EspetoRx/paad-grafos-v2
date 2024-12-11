@@ -37,6 +37,7 @@ export default {
     watch: {
         accordionItems: {
             handler: function (newValue, oldValue) {
+                console.log("Accordion Items Has Been Changed");
                 this.localAccordionItems = newValue;
             }
         }
