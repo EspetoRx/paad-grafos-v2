@@ -65,7 +65,7 @@ export default {
             borderWidth: 1,
             borderWidthSelected: 2,
             borderWidthSelectedDisabled: true,
-            brokenImage: "/paad-grafos-v2/src/assets/images/paad_logo.png",
+            brokenImage: new URL(`/public/images/paad_logo.png`, import.meta.url).href,
             firstAccordionItems: [],
             firstAccordionItemsComponents: [],
             fixedSwitchValue: false,
@@ -88,7 +88,9 @@ export default {
             scalingCheckboxValue: false,
             shadowCheckboxValue: false,
             shadowCheckboxEnabled: true,
-            awaitingResponse: []
+            awaitingResponse: [],
+            borderDashesDashSize: 5,
+            borderDashesEmptySize: 15,
         }
     },
     watch: {
@@ -791,6 +793,17 @@ export default {
                     if (this.shadowCheckboxEnabled) {
                         this.encapsulateOptions.nodes.shadow.y = value;
                     }
+                    break;
+                }
+                case 'options.nodes.shapeProperties.borderDashes': { this.encapsulateOptions.nodes.shapeProperties.borderDashes = value; break; }
+                case 'options.nodes.shapeProperties.borderDashes.dashSize': {
+                    this.borderDashesDashSize = parseInt(value);
+                    this.encapsulateOptions.nodes.shapeProperties.borderDashes = [this.borderDashesDashSize, this.borderDashesEmptySize];
+                    break;
+                }
+                case 'options.nodes.shapeProperties.borderDashes.emptySize': {
+                    this.borderDashesEmptySize = parseInt(value);
+                    this.encapsulateOptions.nodes.shapeProperties.borderDashes = [this.borderDashesDashSize, this.borderDashesEmptySize];
                     break;
                 }
             }
