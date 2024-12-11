@@ -68,7 +68,7 @@ export default {
             brokenImage: "/paad-grafos-v2/src/assets/images/paad_logo.png",
             firstAccordionItems: [],
             firstAccordionItemsComponents: [],
-            fixedSwitchEnabled: true,
+            fixedSwitchValue: false,
             fontSwitchEnabled: true,
             fontToggled: false,
             fontObjectOrString: true,
@@ -94,7 +94,6 @@ export default {
     watch: {
         brokenImage: function (newBrokenImage, oldBrokenImage) {
             this.encapsulateOptions.nodes.brokenImage = newBrokenImage;
-
         },
         encapsulateOptions: {
             handler: function (newValue, oldValue) {
@@ -102,8 +101,14 @@ export default {
             },
             deep: true
         },
+        chosenSwitchValue: function(newValue, oldValue) {
+            this.firstAccordionItems[0].isChecked = newValue;
+        },
+        fixedSwitchValue: function (newValue, oldValue) {
+            this.firstAccordionItems[2].isChecked = newValue;
+        },
         bsModalReturnValue: function (newValue, oldValue) {
-            if (newValue == null) return;
+            if (newValue == null || this.awaitingResponse.length == 0) return;
             if (this.awaitingResponse.includes("repaint_canvas_nodes_chosen_unselecting", 0)) {
                 this.awaitingResponse = this.awaitingResponse.filter(function (e) {
                     e != "repaint_canvas_nodes_chosen_unselecting"
@@ -128,6 +133,32 @@ export default {
                     this.$emit("component-key-change", true);
                 } else {
                     this.chosenSwitchValue = false;
+                }
+            }
+            if (this.awaitingResponse.includes("repaint_canvas_nodes_fixed_unselecting", 0)) {
+                this.awaitingResponse = this.awaitingResponse.filter(function (e) {
+                    e != "repaint_canvas_nodes_fixed_unselecting"
+                });
+                if (newValue) {
+                    this.fixedSwitchValue = !newValue;
+                    this.encapsulateOptions.nodes.fixed = this.fixedSwitchValue;
+                    this.$emit("options-has-changed", this.encapsulateOptions);
+                    this.$emit("component-key-change", true);
+                } else {
+                    this.fixedSwitchValue = true;
+                }
+            }
+            if (this.awaitingResponse.includes("repaint_canvas_nodes_fixed_selecting", 0)) {
+                this.awaitingResponse = this.awaitingResponse.filter(function (e) {
+                    e != "repaint_canvas_nodes_fixed_selecting"
+                });
+                if (newValue) {
+                    this.fixedSwitchValue = newValue;
+                    this.encapsulateOptions.nodes.fixed = this.fixedSwitchValue;
+                    this.$emit("options-has-changed", this.encapsulateOptions);
+                    this.$emit("component-key-change", true);
+                } else {
+                    this.fixedSwitchValue = false;
                 }
             }
         }
@@ -190,8 +221,8 @@ export default {
                 item: 'fixed',
                 title: 'Fixado',
                 switch: true,
-                isChecked: false,
-                isCheckedEnabled: this.fixedSwitchEnabled,
+                isChecked: this.fixedSwitchValue,
+                isCheckedEnabled: true,
                 hasTooltip: true,
                 tooltip: 'Options.Nodes.Fixed - Quando verdadeiro, os vértices não se moverão mas AINDA farão parte da simulação física. ' +
                     'Quando definidio com um objeto, movimento em ambas as direções X ou Y podem ser desabilitados.'
@@ -274,6 +305,7 @@ export default {
             this.$emit("options-has-changed", this.encapsulateOptions);
         },
         toggleSwitchEvent: function (switchId, value) {
+            console.log("Valor chegou: " + value + " FixedSwichValue: " + this.fixedSwitchValue);
             switch (switchId) {
                 case "chosen": {
                     if (!value && this.chosenSwitchValue) {
@@ -288,7 +320,15 @@ export default {
                     break;
                 }
                 case "fixed": {
-                    this.encapsulateOptions.nodes.fixed = value;
+                    if (!value && this.fixedSwitchValue) {
+                        this.awaitingResponse.push("repaint_canvas_nodes_fixed_unselecting");
+                        this.$emit("open-bs-modal", "Repintar o canvas?", "RepaintCanvas");
+                        this.fixedSwitchValue = value;
+                    } else if (value && !this.fixedSwitchValue) {
+                        this.awaitingResponse.push("repaint_canvas_nodes_fixed_selecting");
+                        this.$emit("open-bs-modal", "Repintar o canvas?", "RepaintCanvas");
+                        this.fixedSwitchValue = value;
+                    }
                     break;
                 }
                 case "font": {
@@ -422,8 +462,9 @@ export default {
                     };
                     break;
                 }
-                case 'enable-fixed-node-object-sending': {
-                    this.fixedSwitchEnabled = false;
+                case 'options-nodes-fixed-object-sending' : {
+                    if (value) this.encapsulateOptions.nodes.fixed = { x: this.fixedSwitchValue, y: this.fixedSwitchValue };
+                    else this.encapsulateOptions.nodes.fixed = this.fixedSwitchValue;
                     break;
                 }
                 case 'fix-nodes-x-coordinate': {
