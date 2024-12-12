@@ -6,7 +6,8 @@
         <ToastContainer :newToast="newToast"></ToastContainer>
         <top-navbar @toggle-off-canvas="toggleOffCanvas" @offcanvas-for-vis-configure="offCanvasForVisConfigure"
             @offcanvas-for-vis-physics="offCanvasForVisPhysics" @offcanvas-for-vis-nodes="offCanvasForVisNodes"
-            @offcanvas-for-vis-edges="offCanvasForVisEdges" @offcanvas-for-vis-interactions="offcanvasForVisInteractions">
+            @offcanvas-for-vis-edges="offCanvasForVisEdges" @offcanvas-for-vis-interactions="offcanvasForVisInteractions"
+            @offcanvas-for-vis-layout="offCanvasForVisLayout">
         </top-navbar>
         <graph :nodes="nodes" :edges="edges" :options="options" @canvas-start="canvasStart" v-if="canvasEnabled"
             :key="Hash">
@@ -67,6 +68,7 @@ export default {
             bsModalBody: "",
             bsModalReturnValue: null,
             bsModalShowClose: false,
+            seed: "",
         }
     },
     components: {
@@ -110,6 +112,13 @@ export default {
 
             this.offCanvas.title = "<i class='fa-solid fa-computer-mouse'></i> Vis Js. Interações";
             this.offCanvas.type = "visjs-interactions";
+
+        },
+
+        offCanvasForVisLayout() {
+
+            this.offCanvas.title = "<i class='fa-solid fa-file-signature'></i> Vis Js. Projeto";
+            this.offCanvas.type = "visjs-layout";
 
         },
 

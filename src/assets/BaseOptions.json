@@ -63,6 +63,6 @@
         "adaptiveTimestep": true,
         "wind": { "x": 0, "y": 0 }
     },
-    "interaction": {
-    }
+    "interaction": {},
+    "layout":{}
 }

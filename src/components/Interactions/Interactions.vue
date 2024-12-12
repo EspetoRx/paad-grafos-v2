@@ -118,7 +118,7 @@
         :max="1000"
         :step="1"
         :initialValue="tooltipDelay"
-        :labelValue="'Atrado do tooltip'"
+        :labelValue="'Atraso do tooltip'"
         :tooltip="'Options.Interaction.TooltipDelay - Quando vértices ou arestas têm um campo de \'title\' definido, isso pode ser mostrado como uma dica de ferramenta pop-up. A dica de ferramenta em si é um elemento HTML que pode ser totalmente estilizado usando CSS. O atraso é a quantidade de tempo em milissegundos que leva antes que a dica de ferramenta seja mostrada.'"
         :disabled="false"
         @update-value-from-range-input="changeTooltipDelay"
