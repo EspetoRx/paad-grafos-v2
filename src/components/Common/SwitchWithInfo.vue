@@ -1,5 +1,5 @@
 <template>
-    <div class="d-flex justify-content-between">
+    <div :class="'d-flex justify-content-between ' + ((divClasses)?divClasses:'')">
         <switch-button :switchId="this.switchId" :switchDisabled="this.switchDisabled"
             :switchInitialValue="this.switchInitialValue" :switchTooltipEnabled="this.switchTooltipEnabled"
             :switchTooltip="this.switchTooltip" :switchLabelEnabled="this.switchLabelEnabled"
@@ -25,6 +25,7 @@ export default {
         'switchTooltip',
         'switchLabelEnabled',
         'switchLabelValue',
+        'divClasses'
     ],
     components: {
         'switch-button': SwitchButton

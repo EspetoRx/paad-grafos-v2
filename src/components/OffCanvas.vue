@@ -21,18 +21,26 @@
         :style="{ visibility: offCanvasEnabled ? 'visible' : 'hidden' }" id="offcanvasBodyEnclosure">
         <div class="offcanvas-header p-2">
             <h5 class="offcanvas-title" id="" v-html="title"></h5>
-            <button type="button" class="btn-close text-reset" @click.prevent="checkOptions(); $emit('toggle-off-canvas')"></button>
+            <button type="button" class="btn-close text-reset"
+                @click.prevent="checkOptions(); $emit('toggle-off-canvas')"></button>
         </div>
         <div class="offcanvas-body">
             <physics v-if="this.type == 'visjs-physics'" :localNetwork="this.encapsulateLocalNetwork"
                 :options="this.encapsulateOptions" @options-has-changed="optionsHasChanged"></physics>
             <nodes v-if="this.type == 'visjs-nodes'" :network="this.encapsulateLocalNetwork"
                 :options="this.encapsulateOptions" @options-has-changed="optionsHasChanged"
-                @nodes-has-changed="nodeshasChanged" :nodes="encapsulateNodes" @component-key-change="onComponentKeyChange"
-                @send-toast="sendToast" @open-bs-modal="enableBsModal" :bsModalReturnValue="bsModalReturnValue"></nodes>
+                @nodes-has-changed="nodeshasChanged" :nodes="encapsulateNodes"
+                @component-key-change="onComponentKeyChange" @send-toast="sendToast" @open-bs-modal="enableBsModal"
+                :bsModalReturnValue="bsModalReturnValue"></nodes>
             <edges v-if="this.type == 'visjs-edges'" :network="encapsulateLocalNetwork" :options="encapsulateOptions"
-                @options-has-changed="optionsHasChanged" @send-toast="sendToast" @canvas-key-change="onComponentKeyChange"
-                @open-bs-modal="enableBsModal" :bsModalReturnValue="bsModalReturnValue" @edges-has-changed="edgesHasChanged" :edges="encapsulateEdges"></edges>
+                @options-has-changed="optionsHasChanged" @send-toast="sendToast"
+                @canvas-key-change="onComponentKeyChange" @open-bs-modal="enableBsModal"
+                :bsModalReturnValue="bsModalReturnValue" @edges-has-changed="edgesHasChanged" :edges="encapsulateEdges">
+            </edges>
+            <Interactions v-if="this.type == 'visjs-interactions'"
+                :options="encapsulateOptions"
+                @options-has-changed='optionsHasChanged'
+            ></Interactions>
             <div id="offcanvasBody"></div>
         </div>
     </div>
@@ -41,14 +49,16 @@
 
 import Physics from './Physics/Physics.vue';
 import Nodes from './Nodes/Nodes.vue';
-import Edges from './Edges/Edges.vue'
+import Edges from './Edges/Edges.vue';
+import Interactions from './Interactions/Interactions.vue';
 
 export default {
     name: 'Off Canvas',
     components: {
         'physics': Physics,
         'nodes': Nodes,
-        'edges': Edges
+        'edges': Edges,
+        Interactions
     },
     props: [
         'offCanvasEnabled',
@@ -77,7 +87,7 @@ export default {
                     this.encapsulateOptions = this.options;
                     this.$emit('options-has-changed', this.encapsulateOptions);
                 }
-                if (this.type == 'visjs-configure' || this.type == "visjs-nodes") {
+                if (this.type == "visjs-nodes" || this.type == "visjs-interactions") {
                     this.encapsulateLocalNetwork = this.localNetwork;
                     this.encapsulateOptions = this.options;
                 }
@@ -101,14 +111,14 @@ export default {
                     this.encapsulateOptions.edges = {};
                     this.$emit('options-has-changed', this.encapsulateOptions);
                 }
-            } 
+            }
 
         },
     },
     mounted() {
         console.log("OffCanvas Component Mounted");
         this.encapsulateNodes = this.realNodes;
-        this.encapsulateEdges = this.realEdges
+        this.encapsulateEdges = this.realEdges;
     },
     methods: {
         optionsHasChanged(recievedOptions) {
@@ -119,7 +129,7 @@ export default {
             this.encapsulateNodes = recievedNodes;
             this.$emit('nodes-has-changed', this.encapsulateNodes);
         },
-        onComponentKeyChange: function(recievedFlag) {
+        onComponentKeyChange: function (recievedFlag) {
             if (recievedFlag) {
                 this.$emit('canvas-key-change')
             }
@@ -128,10 +138,10 @@ export default {
             this.encapsulateEdges = recievedEdges;
             this.$emit('edges-has-changed', this.encapsulateEdges);
         },
-        sendToast: function(value) {
+        sendToast: function (value) {
             this.$emit('send-toast', value);
         },
-        checkOptions: function() {
+        checkOptions: function () {
             // Fazer Lógica melhor para não dar PAU...
             /*if (this.type == 'visjs-configure') {
                 var optionsFromConfigurator = Vue.toRaw(this.encapsulateLocalNetwork).getOptionsFromConfigurator();
@@ -148,7 +158,7 @@ export default {
                 this.$emit('options-has-changed', this.encapsulateOptions);
             }
         },
-        enableBsModal: function(title, body) {
+        enableBsModal: function (title, body) {
             this.$emit("open-bs-modal", title, body);
         }
     },

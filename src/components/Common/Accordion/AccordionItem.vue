@@ -4,10 +4,10 @@
             <SwitchButton :switchId="'options-edges-arrows-' + accordionItem" :switchDisabled="false"
                 :switchInitialValue="checkboxItemComponent" :switchTooltipEnabled="true" :switchTooltip="tooltip"
                 :switchLabelEnabled="false" @checkbox-status-changed="chekckboxValueChange"></SwitchButton>
-            <button class="accordion-button collapsed p-1" type="button" data-bs-toggle="collapse"
+            <button class="accordion-button collapsed p-0 pt-1" type="button" data-bs-toggle="collapse"
                 :data-bs-target="'#' + itemId" aria-expanded="false" :aria-controls="itemId">
                 <div class="d-flex w-100 justify-content-between">
-                    <div class="ms-2" v-html="accordionTitle"></div>
+                    <div class="" v-html="accordionTitle"></div>
                     <div class="flex-shrink-1 badge bg-info m-1" data-bs-toggle="tooltip" :title="tooltip"
                         data-bs-html="true">
                         <i class="fa-solid fa-info text-right"></i>
@@ -17,7 +17,7 @@
         </div>
         <div :id="itemId" class="accordion-collapse collapse" :aria-labelledby="'flush-' + Hash"
             :data-bs-parent="'#' + accordionId">
-            <div class="accordion-body p-1">
+            <div class="accordion-body m-1 p-1">
                 <component :is="accordionComponent" :arrowType="accordionItem" :checkboxValue="checkboxItemComponent"
                     @message="message" @open-bs-modal="openBsModal" :bsModalReturnValue="bsModalReturnValue">
                 </component>
@@ -31,6 +31,7 @@ import SwitchButton from '../SwitchButton.vue';
 import ArrowsEdgeBaseComponent from '../../Edges/ArrowsEdgeBaseComponent.vue';
 import FontEdgeBaseComponent from '../../Edges/FontEdgeBaseComponent.vue';
 import ScalingLabelEdgeBaseComponent from '../../Edges/ScalingLabelEdgeBaseComponent.vue';
+import InteractionsKeyboard from '../../Interactions/InteractionsKeyboard.vue';
 export default {
     name: "Accordion Item Component",
     props: [
@@ -60,7 +61,8 @@ export default {
         SwitchButton,
         ArrowsEdgeBaseComponent,
         FontEdgeBaseComponent,
-        ScalingLabelEdgeBaseComponent
+        ScalingLabelEdgeBaseComponent,
+        InteractionsKeyboard
     },
     methods: {
         chekckboxValueChange(value) {

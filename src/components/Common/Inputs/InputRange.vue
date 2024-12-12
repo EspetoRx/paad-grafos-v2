@@ -32,7 +32,7 @@ export default {
         'labelSwitchId',
         'labelSwitchDisabled',
         'labelSwitchInitialValue',
-        'labelSwitchTooltipEnabled'
+        'labelSwitchTooltipEnabled',
     ]
     ,
     data() {
