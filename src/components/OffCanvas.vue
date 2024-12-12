@@ -37,10 +37,10 @@
                 @canvas-key-change="onComponentKeyChange" @open-bs-modal="enableBsModal"
                 :bsModalReturnValue="bsModalReturnValue" @edges-has-changed="edgesHasChanged" :edges="encapsulateEdges">
             </edges>
-            <Interactions v-if="this.type == 'visjs-interactions'"
-                :options="encapsulateOptions"
-                @options-has-changed='optionsHasChanged'
-            ></Interactions>
+            <Interactions v-if="this.type == 'visjs-interactions'" :options="encapsulateOptions"
+                @options-has-changed='optionsHasChanged'></Interactions>
+            <Layout v-if="type == 'visjs-layout'" :encapsulateOptions :encapsulateLocalNetwork
+                @options-has-changed="optionsHasChanged" @canvas-key-change="onComponentKeyChange"></Layout>
             <div id="offcanvasBody"></div>
         </div>
     </div>
@@ -51,6 +51,7 @@ import Physics from './Physics/Physics.vue';
 import Nodes from './Nodes/Nodes.vue';
 import Edges from './Edges/Edges.vue';
 import Interactions from './Interactions/Interactions.vue';
+import Layout from './Layout/Layout.vue';
 
 export default {
     name: 'Off Canvas',
@@ -58,7 +59,8 @@ export default {
         'physics': Physics,
         'nodes': Nodes,
         'edges': Edges,
-        Interactions
+        Interactions,
+        Layout
     },
     props: [
         'offCanvasEnabled',
@@ -87,7 +89,7 @@ export default {
                     this.encapsulateOptions = this.options;
                     this.$emit('options-has-changed', this.encapsulateOptions);
                 }
-                if (this.type == "visjs-nodes" || this.type == "visjs-interactions") {
+                if (this.type == "visjs-nodes" || this.type == "visjs-interactions" || this.type == "visjs-layout") {
                     this.encapsulateLocalNetwork = this.localNetwork;
                     this.encapsulateOptions = this.options;
                 }

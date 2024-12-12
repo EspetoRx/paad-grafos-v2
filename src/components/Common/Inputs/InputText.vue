@@ -13,7 +13,7 @@
         :switchLabelValue="this.switchLabelValue"
         @checkbox-status-changed="checkboxStatusChanged"
     ></LabelWithTooltip>
-    <input type="text" class="form-control" :enabled="this.inputEnabled" :id="this.inputId" v-model="this.inputValue" />
+    <input type="text" class="form-control" :disabled="!this.inputEnabled" :id="this.inputId" v-model="this.inputValue" />
 </template>
 <script>
 
