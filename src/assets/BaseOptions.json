@@ -64,5 +64,5 @@
         "wind": { "x": 0, "y": 0 }
     },
     "interaction": {},
-    "layout":{}
+    "layout":{ "hierarchical": { "enabled": false }}
 }

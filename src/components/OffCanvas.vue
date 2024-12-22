@@ -39,8 +39,8 @@
             </edges>
             <Interactions v-if="this.type == 'visjs-interactions'" :options="encapsulateOptions"
                 @options-has-changed='optionsHasChanged'></Interactions>
-            <Layout v-if="type == 'visjs-layout'" :encapsulateOptions :encapsulateLocalNetwork
-                @options-has-changed="optionsHasChanged" @canvas-key-change="onComponentKeyChange"></Layout>
+            <Layout v-if="type == 'visjs-layout'" :encapsulateOptions :encapsulateLocalNetwork="localNetwork"
+                @options-has-changed="optionsHasChanged" @canvas-key-change="onComponentKeyChange" :bsModalReturnValue="bsModalReturnValue"></Layout>
             <div id="offcanvasBody"></div>
         </div>
     </div>
