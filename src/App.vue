@@ -7,7 +7,7 @@
         <top-navbar @toggle-off-canvas="toggleOffCanvas" @offcanvas-for-vis-configure="offCanvasForVisConfigure"
             @offcanvas-for-vis-physics="offCanvasForVisPhysics" @offcanvas-for-vis-nodes="offCanvasForVisNodes"
             @offcanvas-for-vis-edges="offCanvasForVisEdges" @offcanvas-for-vis-interactions="offcanvasForVisInteractions"
-            @offcanvas-for-vis-layout="offCanvasForVisLayout">
+            @offcanvas-for-vis-layout="offCanvasForVisLayout" @offcanvas-for-vis-manipulation="offcanvasForVisManipulation">
         </top-navbar>
         <graph :nodes="nodes" :edges="edges" :options="options" @canvas-start="canvasStart" v-if="canvasEnabled"
             :key="Hash">
@@ -129,6 +129,13 @@ export default {
 
         },
 
+        offcanvasForVisManipulation() {
+
+            this.offCanvas.title = "<i class='fa-solid fa-gamepad'></i> Vis Js. Manipulação";
+            this.offCanvas.type = "visjs-manipulation";
+
+        },
+
         canvasStart(container, graph_data, options) {
 
             let localNetwork = new Network(
@@ -156,6 +163,21 @@ export default {
 
         onCanvasKeyChange: function () {
             console.log("Repintando o canvas.");
+            if (this.options.manipulation.enabled) {
+                setTimeout(function () {
+                    var element = document.getElementsByClassName('vis-manipulation');
+                    var element3 = document.getElementsByClassName('vis-edit-mode');
+                    var element4 = document.getElementsByClassName('vis-close');
+                    element = element[0];
+                    element3 = element3[0];
+                    element4 = element4[0];
+                    var element2 = document.getElementById('vis-manipulation-area');
+                    element2.innerHTML = '';
+                    element2.insertAdjacentElement('afterbegin', element);
+                    element2.insertAdjacentElement('beforeend', element3);
+                    element2.insertAdjacentElement('beforeend', element4);
+                }, 3);
+            }
             this.Hash = hash();
         },
 

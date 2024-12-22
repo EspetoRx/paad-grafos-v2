@@ -1,7 +1,10 @@
+<style lang="css" scoped>
+
+</style>
 <template>
     <nav id="bottomNavbar" class="navbar fixed-bottom navbar-light bg-light bottom-navbar-style">
         <div class="container-fluid">
-            <p></p>
+            <div id="vis-manipulation-area" class="d-flex flex-row w-100 justify-content-between"></div>
         </div>
     </nav>
 </template>

@@ -1,4 +1,23 @@
 {
+    "locales": {
+        "pt": {
+            "edit": "Editar",
+            "del": "Deletar Selecionado",
+            "back": "Voltar",
+            "addNode": "Adicionar vértice",
+            "addEdge": "Adicionar aresta",
+            "editNode": "Editar vértice",
+            "editEdge": "Editar aresta",
+            "addDescription": "Clique em um espaço em branco para cirar novo vértice.",
+            "edgeDescription": "Clique e arraste de um vérice a outro para criar nova aresta.",
+            "editEdgeDescription": "Clique sobre os pontos de controle e arraste até um vértice para conectá-los",
+            "createEdgeError": "Não é possível associar arestas à clusters.",
+            "deleteClusterError": "Clusters não podem ser deletados.",
+            "editClusterError": "Clusters não podem ser editados.",
+            "close": "Fechar"
+        }
+    },
+    "locale": "pt",
     "manipulation": {
         "enabled": false,
         "initiallyActive": true
@@ -6,7 +25,7 @@
     "nodes": {
         "borderWidth": 1,
         "borderWidthSelected": 2,
-        "image" : "",
+        "image": "",
         "brokenImage": "",
         "chosen": {
             "node": true,
@@ -61,8 +80,15 @@
         },
         "timestep": 0.5,
         "adaptiveTimestep": true,
-        "wind": { "x": 0, "y": 0 }
+        "wind": {
+            "x": 0,
+            "y": 0
+        }
     },
     "interaction": {},
-    "layout":{ "hierarchical": { "enabled": false }}
+    "layout": {
+        "hierarchical": {
+            "enabled": false
+        }
+    }
 }

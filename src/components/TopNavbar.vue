@@ -24,23 +24,26 @@
                                 href="#" id="offcanvasConfigureButton"
                                 @click.prevent="offcanvasForVisConfigure(); toggleOffCanvas()">
                                 <i class="fa-solid fa-screwdriver-wrench"></i> Vis.JS Configure</a></li>
-                        <li data-toggle="tooltip" title="Vis.Js Interaction"><a class="dropdown-item" href="#"
-                                id="offCanvasInteractionButton"
-                                @click.prevent="offCanvasForVisInteraction(); toggleOffCanvas()">
-                                <i class="fa-solid fa-computer-mouse"></i> Vis.JS Interação</a></li>
-                        <li data-toggle="tooltip" title="Vis.Js Nodes"><a class="dropdown-item" href="#"
-                                id="offCanvasNodesButton" @click.prevent="offcanvasForVisNodes(); toggleOffCanvas()">
-                                <i class="fa-solid fa-circle"></i> Vis.JS Vértices</a></li>
-                        <li data-toggle="tooltip" title="Vis.Js Nodes"><a class="dropdown-item" href="#"
-                                id="offCanvasLayoutButton" @click.prevent="offCanvasForVisLayout(); toggleOffCanvas()">
-                                <i class="fa-solid fa-file-signature"></i> Vis.JS Projeto</a></li>
                         <li data-toggle="tooltip" title="Vis.Js Physics"><a class="dropdown-item" href="#"
                                 id="offcanvasPhysicsButton"
                                 @click.prevent="offcanvasForVisPhysics(); toggleOffCanvas()">
                                 <i class="fa-solid fa-earth-americas"></i> Vis.JS
                                 Física
                             </a></li>
-
+                        <li data-toggle="tooltip" title="Vis.Js Interaction"><a class="dropdown-item" href="#"
+                                id="offCanvasInteractionButton"
+                                @click.prevent="offCanvasForVisInteraction(); toggleOffCanvas()">
+                                <i class="fa-solid fa-computer-mouse"></i> Vis.JS Interação</a></li>
+                            <li data-toggle="tooltip" title="Vis.Js Manipulation"><a class="dropdown-item" href="#"
+                                id="offCanvasManipulationButton"
+                                @click.prevent="offcanvasForVisManipulation(); toggleOffCanvas()">
+                                <i class="fa-solid fa-gamepad"></i> Vis.JS Manipulação</a></li>
+                        <li data-toggle="tooltip" title="Vis.Js Nodes"><a class="dropdown-item" href="#"
+                                id="offCanvasLayoutButton" @click.prevent="offCanvasForVisLayout(); toggleOffCanvas()">
+                                <i class="fa-solid fa-file-signature"></i> Vis.JS Projeto</a></li>
+                        <li data-toggle="tooltip" title="Vis.Js Nodes"><a class="dropdown-item" href="#"
+                                id="offCanvasNodesButton" @click.prevent="offcanvasForVisNodes(); toggleOffCanvas()">
+                                <i class="fa-solid fa-circle"></i> Vis.JS Vértices</a></li>
                     </ul>
                 </div>
             </div>
@@ -113,6 +116,9 @@ export default {
         },
         offCanvasForVisLayout() {
             this.$emit("offcanvas-for-vis-layout");
+        },
+        offcanvasForVisManipulation() {
+            this.$emit("offcanvas-for-vis-manipulation");
         }
     },
     emits: [
@@ -122,7 +128,8 @@ export default {
         'offcanvas-for-vis-nodes',
         'offcanvas-for-vis-edges',
         'offcanvas-for-vis-interactions',
-        'offcanvas-for-vis-layout'
+        'offcanvas-for-vis-layout',
+        'offcanvas-for-vis-manipulation'
     ],
 }
 </script>
