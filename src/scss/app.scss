@@ -12,3 +12,67 @@ $fa-font-path: "@fortawesome/fontawesome-free/webfonts/";
 @import "../../node_modules/ionicons/css/ionicons.min.css";
 
 @import "../../node_modules/vis-network/styles/vis-network.min.css";
+
+.vis-button.vis-add{
+    @extend .btn, .btn-sm, .btn-outline-primary, .me-2, .mt-1, .d-flex, .align-items-center !optional;
+}
+
+.vis-button.vis-add:before{
+    @extend .fa-solid, .fa-circle-plus, .me-1 !optional;
+}
+
+.vis-button.vis-connect{
+    @extend .btn, .btn-sm, .btn-outline-primary, .me-2, .mt-1, .d-flex, .align-items-center !optional;
+}
+
+.vis-button.vis-connect:before{
+    @extend .fa-solid, .fa-circle-nodes, .me-1 !optional;
+}
+
+.vis-button.vis-back{
+    @extend .btn, .btn-sm, .btn-outline-secondary, .me-2, .mt-1, .d-flex, .align-items-center !optional;
+}
+
+.vis-button.vis-back:before{
+    @extend .fa-solid, .fa-delete-left, .me-1 !optional;
+}
+
+.vis-none{
+    @extend .align-self-center !optional;
+}
+
+.vis-button.vis-edit.vis-edit-mode {
+    @extend .btn, .btn-sm, .btn-secondary, .d-flex, .align-items-center !optional;
+}
+
+.vis-button.vis-edit.vis-edit-mode:before {
+    @extend .fa-regular, .fa-pen-to-square, .me-1 !optional;
+}
+
+.vis-close {
+    @extend .ml-auto, .btn, .btn-sm, .btn-close, .align-self-center !optional;
+}
+
+.vis-manipulation {
+    @extend .d-flex, .flex-row, .flex-nowrap !optional;
+}
+
+.vis-button.vis-edit {
+    @extend .btn, .btn-sm, .btn-outline-primary, .me-2, .mt-1, .d-flex, .align-items-center !optional;
+}
+
+.vis-button.vis-edit:before {
+    @extend .fa-regular, .fa-pen-to-square, .me-1 !optional;
+}
+
+.vis-button.vis-delete {
+    @extend .btn, .btn-sm, .btn-outline-danger, .me-2, .mt-1, .d-flex, .align-items-center !optional;
+}
+
+.vis-button.vis-delete:before {
+    @extend .fa-solid, .fa-xmark, .me-1 !optional;
+}
+
+.vis-label {
+    @extend .d-none, .d-sm-block  !optional;
+}

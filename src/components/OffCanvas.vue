@@ -41,6 +41,7 @@
                 @options-has-changed='optionsHasChanged'></Interactions>
             <Layout v-if="type == 'visjs-layout'" :encapsulateOptions :encapsulateLocalNetwork="localNetwork"
                 @options-has-changed="optionsHasChanged" @canvas-key-change="onComponentKeyChange" :bsModalReturnValue="bsModalReturnValue"></Layout>
+            <Manipulation v-if="type == 'visjs-manipulation'" :encapsulateOptions @options-has-changed="optionsHasChanged"></Manipulation>
             <div id="offcanvasBody"></div>
         </div>
     </div>
@@ -52,6 +53,7 @@ import Nodes from './Nodes/Nodes.vue';
 import Edges from './Edges/Edges.vue';
 import Interactions from './Interactions/Interactions.vue';
 import Layout from './Layout/Layout.vue';
+import Manipulation from './Manipulation/Manipulation.vue';
 
 export default {
     name: 'Off Canvas',
@@ -60,7 +62,8 @@ export default {
         'nodes': Nodes,
         'edges': Edges,
         Interactions,
-        Layout
+        Layout,
+        Manipulation
     },
     props: [
         'offCanvasEnabled',
@@ -89,7 +92,7 @@ export default {
                     this.encapsulateOptions = this.options;
                     this.$emit('options-has-changed', this.encapsulateOptions);
                 }
-                if (this.type == "visjs-nodes" || this.type == "visjs-interactions" || this.type == "visjs-layout") {
+                if (this.type == "visjs-nodes" || this.type == "visjs-interactions" || this.type == "visjs-layout" || this.type == "visjs-manipulation") {
                     this.encapsulateLocalNetwork = this.localNetwork;
                     this.encapsulateOptions = this.options;
                 }
