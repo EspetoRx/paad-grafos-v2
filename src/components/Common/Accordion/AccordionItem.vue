@@ -32,6 +32,7 @@ import ArrowsEdgeBaseComponent from '../../Edges/ArrowsEdgeBaseComponent.vue';
 import FontEdgeBaseComponent from '../../Edges/FontEdgeBaseComponent.vue';
 import ScalingLabelEdgeBaseComponent from '../../Edges/ScalingLabelEdgeBaseComponent.vue';
 import InteractionsKeyboard from '../../Interactions/InteractionsKeyboard.vue';
+import HierarchicalLayoutBaseComponent from '../../Layout/HierarchicalLayoutBaseComponent.vue';
 export default {
     name: "Accordion Item Component",
     props: [
@@ -62,7 +63,8 @@ export default {
         ArrowsEdgeBaseComponent,
         FontEdgeBaseComponent,
         ScalingLabelEdgeBaseComponent,
-        InteractionsKeyboard
+        InteractionsKeyboard,
+        HierarchicalLayoutBaseComponent
     },
     methods: {
         chekckboxValueChange(value) {
