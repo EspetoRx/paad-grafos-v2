@@ -11,6 +11,8 @@
             @message="message"
             @open-bs-modal="openBsModal"
             :bsModalReturnValue="bsModalReturnValue"
+            :checkboxValue="item.checkboxValue"
+            :options="options"
         ></AccordionItem>
     </div>
 </template>
@@ -21,7 +23,11 @@ export default {
     name: "Accordion Base Component",
     props: {
         accordionData: Array,
-        bsModalReturnValue: {}
+        bsModalReturnValue: {},
+        options: {
+            required: false,
+            default: null
+        }
     },
     data() {
         return {

@@ -19,8 +19,10 @@
     },
     "locale": "pt",
     "manipulation": {
-        "enabled": false,
-        "initiallyActive": true
+        "enabled": true,
+        "initiallyActive": false,
+        "addNode": true,
+        "addEdge": true
     },
     "nodes": {
         "borderWidth": 1,

@@ -41,6 +41,7 @@ export default {
     ],
     data() {
         return {
+            justMounted: false,
             options: null,
 
             initialRandomSeed: "",
@@ -82,7 +83,8 @@ export default {
             this.randomSeed = value;
             if (value == "undefined") {
                 this.options.layout.randomSeed = undefined;
-                this.$emit('options-has-changed', this.opitons);
+                if (!this.justMounted)
+                    this.$emit('options-has-changed', this.opitons);
             } else {
                 this.options.layout.randomSeed = value;
                 this.$emit('options-has-changed', this.opitons);
@@ -170,8 +172,12 @@ export default {
         }
     },
     mounted() {
+        this.justMounted = true;
         this.options = this.encapsulateOptions;
         this.updateRandomSeed();
+        setTimeout(function(){
+            this.justMounted = false;
+        }.bind(this), 5);
     },
     components: {
         InputText, SwitchButton, InputRange, "Accordion": AccordionBase

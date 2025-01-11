@@ -18,8 +18,8 @@
         <div :id="itemId" class="accordion-collapse collapse" :aria-labelledby="'flush-' + Hash"
             :data-bs-parent="'#' + accordionId">
             <div class="accordion-body m-1 p-1">
-                <component :is="accordionComponent" :arrowType="accordionItem" :checkboxValue="checkboxItemComponent"
-                    @message="message" @open-bs-modal="openBsModal" :bsModalReturnValue="bsModalReturnValue">
+                <component :is="accordionComponent" :accordionType="accordionItem" :checkboxValue="checkboxItemComponent"
+                    @message="message" @open-bs-modal="openBsModal" :bsModalReturnValue="bsModalReturnValue" :options="options">
                 </component>
             </div>
         </div>
@@ -33,6 +33,8 @@ import FontEdgeBaseComponent from '../../Edges/FontEdgeBaseComponent.vue';
 import ScalingLabelEdgeBaseComponent from '../../Edges/ScalingLabelEdgeBaseComponent.vue';
 import InteractionsKeyboard from '../../Interactions/InteractionsKeyboard.vue';
 import HierarchicalLayoutBaseComponent from '../../Layout/HierarchicalLayoutBaseComponent.vue';
+import AddNodeBaseComponent from '../../Manipulation/AddNodeBaseComponent.vue';
+import AddEdgeBaseComponent from '../../Manipulation/AddEdgeBaseComponent.vue';
 export default {
     name: "Accordion Item Component",
     props: [
@@ -41,13 +43,23 @@ export default {
         'accordionBody',
         'accordionItem',
         'tooltip',
-        'bsModalReturnValue'
+        'bsModalReturnValue',
+        'checkboxValue',
+        'options'
     ],
     data() {
         return {
+            justStarted: false,
             Hash: hash(),
             itemId: 'flush-collapse-' + hash(),
             checkboxItemComponent: false
+        }
+    },
+    watch: {
+        'checkboxValue': function(newValue, oldValue) {
+            if (newValue != this.checkboxItemComponent) {
+                this.checkboxItemComponent = newValue;
+            }
         }
     },
     computed: {
@@ -56,7 +68,12 @@ export default {
         }
     },
     mounted() {
+        this.justStarted = true;
         console.log("Accordion Item Component Mounted");
+        if (this.checkboxValue != null) {
+            this.checkboxItemComponent = this.checkboxValue;    
+        }
+        this.justStarted = false;
     },
     components: {
         SwitchButton,
@@ -64,12 +81,16 @@ export default {
         FontEdgeBaseComponent,
         ScalingLabelEdgeBaseComponent,
         InteractionsKeyboard,
-        HierarchicalLayoutBaseComponent
+        HierarchicalLayoutBaseComponent,
+        AddNodeBaseComponent,
+        AddEdgeBaseComponent
     },
     methods: {
         chekckboxValueChange(value) {
-            this.checkboxItemComponent = value;
-            this.$emit("message", "update-checkbox-accordion", this.accordionItem, value);
+            if (!this.justStarted) {
+                this.checkboxItemComponent = value;
+                this.$emit("message", "update-checkbox-accordion", this.accordionItem, value);    
+            }
         },
         message: function (message, arrowType, value) {
             this.$emit("message", message, arrowType, value);

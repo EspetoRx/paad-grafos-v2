@@ -38,10 +38,10 @@
         @checkbox-status-changed="changeParentCentralization"></LabelWithTooltip>
     <LabelWithTooltip v-if="sendingObject" :labelValue="'Direção'"
         :tooltip="'Options.Layout.Hierarchical.Direction - A direção do layout hierárquico. As opções disponíveis são: UD, DU, LR, RL. Para simplificar: cima-baixo, baixo-cima, esquerda-direita, direita-esquerda.'"
-        :forId="'input-select-' + arrowType + '-direction'" :hasSwitch="false"></LabelWithTooltip>
+        :forId="'input-select-' + accordionType + '-direction'" :hasSwitch="false"></LabelWithTooltip>
     <InputSelect
         v-if="sendingObject"
-        :selectId="'input-select-' + arrowType + '-direction'" :options="[
+        :selectId="'input-select-' + accordionType + '-direction'" :options="[
         { value: 'UD', label: 'Cima para baixo', selected: true },
         { value: 'DU', label: 'Baixo para cima', selected: false },
         { value: 'LR', label: 'Esquerda para direita', selected: false },
@@ -50,20 +50,20 @@
     ></InputSelect>
     <LabelWithTooltip v-if="sendingObject" :labelValue="'Método de Ordenação'"
         :tooltip="'Options.Layout.Hierarchical.sortMethod - O algoritmo usado para determinar os níveis dos nós com base nos dados. As opções possíveis são: hubsize, directed. Hubsize pega os nós com mais arestas e os coloca no topo. A partir disso, o resto da hierarquia é avaliado. Directed adere aos dados de e para das arestas. A --> B, então B é um nível mais baixo que A.'"
-        :forId="'input-select-' + arrowType + '-sortMethod'" :hasSwitch="false"></LabelWithTooltip>
+        :forId="'input-select-' + accordionType + '-sortMethod'" :hasSwitch="false"></LabelWithTooltip>
     <InputSelect
         v-if="sendingObject"
-        :selectId="'input-select-' + arrowType + '-sortMethod'" :options="[
+        :selectId="'input-select-' + accordionType + '-sortMethod'" :options="[
         { value: 'hubsize', label: 'Hubsize', selected: true },
         { value: 'directed', label: 'Directed', selected: false },
     ]" @update-selection="changeSortMethod"
     ></InputSelect>
     <LabelWithTooltip v-if="sendingObject && this.sortMethod == 'directed'" :labelValue="'Agitar na direção'"
         :tooltip="'Options.Layout.Hierarchical.shakeTowards - Controla se no layout direcionado todas as raízes devem ser alinhadas na parte superior e seus nós filhos o mais próximo possível de suas raízes (raízes) ou todas as folhas devem ser alinhadas na parte inferior e seus pais o mais próximo possível de seus filhos (folhas, padrão).'"
-        :forId="'input-select-' + arrowType + '-shakeTowards'" :hasSwitch="false"></LabelWithTooltip>
+        :forId="'input-select-' + accordionType + '-shakeTowards'" :hasSwitch="false"></LabelWithTooltip>
     <InputSelect
         v-if="sendingObject && this.sortMethod == 'directed'"
-        :selectId="'input-select-' + arrowType + '-shakeTowards'" :options="[
+        :selectId="'input-select-' + accordionType + '-shakeTowards'" :options="[
         { value: 'leaves', label: 'Folhas', selected: true },
         { value: 'roots', label: 'Raízes', selected: false },
     ]" @update-selection="changeShakeTowards"
@@ -80,7 +80,8 @@ export default {
         'checkboxValue',
         'openBsModal',
         'bsModalReturnValue',
-        'arrowType'
+        'accordionType',
+        'options'
     ],
     data() {
         return {
@@ -99,43 +100,43 @@ export default {
     methods: {
         changeSendingObject: function (value) {
             this.sendingObject = value;
-            this.$emit("message", "sending-object-to-hierarchical", this.arrowType, value);
+            this.$emit("message", "sending-object-to-hierarchical", this.accordionType, value);
         },
         changeLevelSeparation: function (value) {
             this.levelSeparation = parseInt(value);
-            this.$emit("message", "change-level-separation", this.arrowType, value);
+            this.$emit("message", "change-level-separation", this.accordionType, value);
         },
         changeNodeSpacing: function (value) {
             this.nodeSpacing = parseInt(value);
-            this.$emit("message", "change-node-spacing", this.arrowType, value);
+            this.$emit("message", "change-node-spacing", this.accordionType, value);
         },
         changeTreeSpacing: function (value) {
             this.treeSpacing = parseInt(value);
-            this.$emit("message", "change-tree-spacing", this.arrowType, value);
+            this.$emit("message", "change-tree-spacing", this.accordionType, value);
         },
         changeBlockShifting: function (value) {
             this.blockShifting = value;
-            this.$emit("message", "change-block-shifting", this.arrowType, value);
+            this.$emit("message", "change-block-shifting", this.accordionType, value);
         },
         changeEdgeMinimization: function (value) {
             this.edgeMinimization = value;
-            this.$emit("message", "change-edge-minimization", this.arrowType, value);
+            this.$emit("message", "change-edge-minimization", this.accordionType, value);
         },
         changeParentCentralization: function (value) {
             this.parentCentralization = value;
-            this.$emit("message", "change-parent-centralization", this.arrowType, value);
+            this.$emit("message", "change-parent-centralization", this.accordionType, value);
         },
         changeDirection: function(value) {
             this.direction = value;
-            this.$emit("message", "change-direction", this.arrowType, value);
+            this.$emit("message", "change-direction", this.accordionType, value);
         },
         changeSortMethod: function (value) {
             this.sortMethod = value;
-            this.$emit("message", "change-sort-method", this.arrowType, value);
+            this.$emit("message", "change-sort-method", this.accordionType, value);
         },
         changeShakeTowards: function(value) {
             this.shakeTowards = value;
-            this.$emit("message", "change-shake-towards", this.arrowType, value);
+            this.$emit("message", "change-shake-towards", this.accordionType, value);
         }
     },
     mounted() {

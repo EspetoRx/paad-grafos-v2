@@ -6,7 +6,7 @@
             :switchLabelValue="this.switchLabelValue" @checkbox-status-changed="checkboxStatusChanged"></switch-button>
         <div class="d-flex justify-content-between flex-fill">
             <div class="d-flex w-100 justify-content-between">
-                <div data-bs-toggle="tooltip" :title="this.tooltip">
+                <div>
                     <label :for="forId" class="form-label h-100 mb-0 pt-1 align-middle">{{ this.labelValue }}</label>
                 </div>
                 <div class="flex-shrink-1 badge bg-info m-1" data-bs-toggle="tooltip" :title="this.tooltip">
