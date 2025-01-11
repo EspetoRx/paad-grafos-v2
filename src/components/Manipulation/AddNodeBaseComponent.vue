@@ -70,7 +70,7 @@ export default {
       } else if (this.addNodeFunctionText != "") {
         this.addNodeFunction = eval(this.addNodeFunctionText);
       } else {
-        import("./scripts/AddNodeHelpScript.js?raw")
+        import("./Scripts/AddNodeHelpScript.js?raw")
           .then((res) => res.default)
           .then((t) => {
             this.sendUpdateNodeFunction(t);
