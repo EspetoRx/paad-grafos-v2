@@ -70,7 +70,7 @@ export default {
       } else if (this.addEdgeFunctionText != "") {
         this.addEdgeFunction = eval(this.addEdgeFunctionText);
       } else {
-        import("./scripts/AddEdgeHelpScript.js?raw")
+        import("./Scripts/AddEdgeHelpScript.js?raw")
           .then((res) => res.default)
           .then((t) => {
             this.sendUpdateEdgeFunction(t);
