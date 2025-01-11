@@ -119,7 +119,8 @@ export default{
         'checkboxValue',
         'openBsModal',
         'bsModalReturnValue',
-        'arrowType'
+        'accordionType',
+        'options'
     ],
     data() {
         return {
@@ -136,27 +137,27 @@ export default{
     methods: {
         changeEnableObject: function(value) {
             this.enableObject = value;
-            this.$emit("message", "options.interaction.keyboard.enabled", this.arrowType, value);
+            this.$emit("message", "options.interaction.keyboard.enabled", this.accordionType, value);
         },
         changeSpeedX: function(value) {
             this.speed.x = value;
-            this.$emit("message", "options.interaction.keyboard.speed.x", this.arrowType, value);
+            this.$emit("message", "options.interaction.keyboard.speed.x", this.accordionType, value);
         },
         changeSpeedY: function(value) {
             this.speed.y = value;
-            this.$emit("message", "options.interaction.keyboard.speed.y", this.arrowType, value);
+            this.$emit("message", "options.interaction.keyboard.speed.y", this.accordionType, value);
         },
         changeSpeedZoom: function(value) {
             this.speed.zoom = value;
-            this.$emit("message", "options.interaction.keyboard.speed.zoom", this.arrowType, value);
+            this.$emit("message", "options.interaction.keyboard.speed.zoom", this.accordionType, value);
         },
         changeBindToWindow: function(value) {
             this.bindToWindow = value;
-            this.$emit("message", "options.interaction.keyboard.bindToWindow", this.arrowType, value);
+            this.$emit("message", "options.interaction.keyboard.bindToWindow", this.accordionType, value);
         },
         changeAutoFocus: function(value) {
             this.autoFocus = value;
-            this.$emit("message", "options.interaction.keyboard.autoFocus", this.arrowType, value);
+            this.$emit("message", "options.interaction.keyboard.autoFocus", this.accordionType, value);
         }
     },
     components: {

@@ -9,42 +9,42 @@ div.vis-network div.vis-navigation div.vis-button:active {
 }
 
 div.vis-network div.vis-navigation div.vis-button.vis-up {
-    bottom: 13.1vh;
+    bottom: 17.1vh;
     left: 30px;
     background-image: url('/images/manipulation_buttons/chevron-up-solid.svg');
 }
 
 div.vis-network div.vis-navigation div.vis-button.vis-down {
-    bottom: 6.1vh;
+    bottom: 10.1vh;
     left: 30px;
     background-image: url('/images/manipulation_buttons/chevron-down-solid.svg');
 }
 
 div.vis-network div.vis-navigation div.vis-button.vis-left {
-    bottom: 9.6vh;
+    bottom: 13.6vh;
     left: 15px;
     background-image: url('/images/manipulation_buttons/chevron-left-solid.svg');
 }
 
 div.vis-network div.vis-navigation div.vis-button.vis-right {
-    bottom: 9.6vh;
+    bottom: 13.6vh;
     left: 57.5px;
     background-image: url('/images/manipulation_buttons/chevron-right-solid.svg');
 }
 
 div.vis-network div.vis-navigation div.vis-button.vis-zoomIn {
-    bottom: 6.5vh;
+    bottom: 11.5vh;
     right: 20px;
     background-image: url('/images/manipulation_buttons/magnifying-glass-plus-solid.svg');
 }
 
 div.vis-network div.vis-navigation div.vis-button.vis-zoomOut {
-    bottom: 13vh;
+    bottom: 18vh;
     right: 20px;
     background-image: url('/images/manipulation_buttons/magnifying-glass-minus-solid.svg');
 }
 div.vis-network div.vis-navigation div.vis-button.vis-zoomExtends {
-    bottom: 20vh;
+    bottom: 25vh;
     right: 20px;
     background-image: url('/images/manipulation_buttons/expand-solid.svg');
 }

@@ -63,7 +63,8 @@ export default {
         'checkboxValue',
         'openBsModal',
         'bsModalReturnValue',
-        'arrowType'
+        'accordionType',
+        'options'
     ],
     data(){
         return{
@@ -76,23 +77,23 @@ export default {
     methods:{
         changeObjectSending: function(value) {
             this.objectEnabled = value;
-            this.$emit("message", "options-edges-scaling-object-sending", this.arrowType, value);
-            this.$emit("message", "repaint-component", this.arrowType, value);
+            this.$emit("message", "options-edges-scaling-object-sending", this.accordionType, value);
+            this.$emit("message", "repaint-component", this.accordionType, value);
         },
         updateMin: function(value) {
             this.min = value;
-            this.$emit("message", "options-edges-scaling-object-min", this.arrowType, value);
-            this.$emit("message", "repaint-component", this.arrowType, value);
+            this.$emit("message", "options-edges-scaling-object-min", this.accordionType, value);
+            this.$emit("message", "repaint-component", this.accordionType, value);
         },
         updateMax: function(value) {
             this.max = value;
-            this.$emit("message", "options-edges-scaling-object-max", this.arrowType, value);
-            this.$emit("message", "repaint-component", this.arrowType, value);
+            this.$emit("message", "options-edges-scaling-object-max", this.accordionType, value);
+            this.$emit("message", "repaint-component", this.accordionType, value);
         },
         updateMaxVisible: function(value) {
             this.maxVisible = value;
-            this.$emit("message", "options-edges-scaling-object-maxVisible", this.arrowType, value);
-            this.$emit("message", "repaint-component", this.arrowType, value);
+            this.$emit("message", "options-edges-scaling-object-maxVisible", this.accordionType, value);
+            this.$emit("message", "repaint-component", this.accordionType, value);
         }
     },
     components: {

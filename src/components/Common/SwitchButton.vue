@@ -1,8 +1,6 @@
 <template>
     <div 
         class="form-check form-switch mt-1" 
-        :data-bs-toggle="this.switchTooltipEnabled?'tooltip':''"
-        :title="this.switchTooltip"
     >
         <input 
             class="form-check-input" 
@@ -33,15 +31,21 @@ export default {
     ],
     data() {
         return {
+            justStarted: false,
             checkboxValue: false,
         }
     },
     mounted() {
+        this.justStarted = true;
         this.checkboxValue = this.switchInitialValue;
+        setTimeout(function(){
+            this.justStarted = false;
+        }.bind(this), 5);
     },
     watch: {
         checkboxValue: function(newCheckBoxValue, oldCheckBoxValue) {
-            this.$emit('checkbox-status-changed', newCheckBoxValue);
+            if (!this.justStarted)
+                this.$emit('checkbox-status-changed', newCheckBoxValue);
         },
         switchInitialValue: function(newValue, oldValue) {
             this.checkboxValue = newValue;

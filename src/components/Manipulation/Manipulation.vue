@@ -13,35 +13,24 @@
         :switchTooltip="'Options.Manipulation.initiallyActive - Alterne se a barra de ferramentas fica visível inicialmente ou se somente o botão de edição fica visível inicialmente.'"
         :switchDisabled="false" :switchInitialValue="initiallyActive" :switchLabelEnabled="false"
         @checkbox-status-changed="changeInitiallyActive"></LabelWithTooltip>
-    <LabelWithTooltip :labelValue="'Adicionar Vértice: ' + ((!addNode)?'enviando verdadeiro':'enviando função')"
-        :tooltip="'Options.Manipulation.AddNode - Você pode usar essas opções para ligar ou desligar certas funcionalidades ou anexar uma função de manipulador a elas. Essas funções são chamadas antes da ação ser executada. Se um vértice for adicionado por meio do sistema de manipulação, a função addNode será chamada primeiro. Com isso, você pode fornecer uma GUI para seus usuários, abortar o processo ou qualquer outra coisa que queira fazer. Para todos, exceto a funcionalidade editNode, essas funções de manipulador são opcionais.'"
-        :forId="'options.manipulation.enabled.addNode.switch'" :hasSwitch="true"
-        :switchId="'options.manipulation.enabled.addNode.switch'"
-        :switchTooltip="'Options.Manipulation.AddNode - Você pode usar essas opções para ligar ou desligar certas funcionalidades ou anexar uma função de manipulador a elas. Essas funções são chamadas antes da ação ser executada. Se um vértice for adicionado por meio do sistema de manipulação, a função addNode será chamada primeiro. Com isso, você pode fornecer uma GUI para seus usuários, abortar o processo ou qualquer outra coisa que queira fazer. Para todos, exceto a funcionalidade editNode, essas funções de manipulador são opcionais.'"
-        :switchDisabled="false" :switchInitialValue="addNode" :switchLabelEnabled="false"
-        @checkbox-status-changed="changeAddNode"></LabelWithTooltip>
-    <InputTextArea
-        v-if="addNode"
-        :inputId="'options.manipulation.addNodeFunction'"
-        :inputEnabled="false"
-        :inputInitialValue="addNodeTextFunction"
-        :inputPlaceholder="'//JS para adicionar vértices'"
-        :inputRows="7"
-        :isLabelEnabled="true"
-        :labelValue="'Função de envio para addNodes'"
-        :tooltip="'Options.Manipulation.addNode Function Sending - Ao fornecer um booleano, você apenas alterna o botão \'adicionar vértice\' na GUI do sistema de manipulação. A falta de função de manipulação pode afetar a API ao usar os métodos. Quando uma função é fornecida, ela será chamada quando o usuário clicar na tela no modo \'addNode\'. Esta função receberá duas variáveis: as propriedades do vértice que podem ser criadas e uma função de retorno de chamada. Se você chamar a função de retorno de chamada com as propriedades do novo vértice, o vértice será adicionado.'"
-        :hasSwitch="false"
-        @input-value-change="changeAddNodeFunction"
-    ></InputTextArea>
+    <AccordionBase
+        :accordionData
+        :bsModalReturnValue
+        @open-bs-modal="openBsModal"
+        @message="message"
+        :options
+    ></AccordionBase>
 </template>
 <script>
 import InputTextArea from '../Common/Inputs/InputTextArea.vue';
 import LabelWithTooltip from '../Common/LabelWithTooltip.vue';
+import AccordionBase from '../Common/Accordion/AccordionBase.vue';
 
 export default {
     name: "Manipulation Component",
     props: [
-        'encapsulateOptions'
+        'encapsulateOptions',
+        'bsModalReturnValue',
     ],
     data() {
         return {
@@ -49,8 +38,25 @@ export default {
             enabled: false,
             initiallyActive: true,
             addNode: false,
-            addNodeTextFunction: "",
             addNodeFunction: null,
+            addEdge: false,
+            addEdgeFunction: null,
+            accordionData: [
+                {
+                    title: "Adicionar Vértice",
+                    body: "AddNodeBaseComponent",
+                    tooltip: "Você pode usar essas opções para ativar ou desativar determinadas funcionalidades ou anexar uma função de manipulador a elas. Essas funções são chamadas antes que a ação seja executada. Se um vértice for adicionado por meio do sistema de manipulação, a função addNode será chamada primeiro. Com isso, você pode fornecer uma gui para seus usuários, abortar o processo ou qualquer outra coisa que queira fazer. Para todas, exceto a funcionalidade editNode, essas funções do manipulador são opcionais.",
+                    id: "addNode",
+                    checkboxValue: this.addNode
+                },
+                {
+                    title: "Adicionar Aresta",
+                    body: "AddEdgeBaseComponent",
+                    tooltip: "Você pode usar essas opções para ativar ou desativar determinadas funcionalidades ou anexar uma função de manipulador a elas. Essas funções são chamadas antes que a ação seja executada. Se uma aresta for adicionado por meio do sistema de manipulação, a função addEdge será chamada primeiro. Com isso, você pode fornecer uma gui para seus usuários, abortar o processo ou qualquer outra coisa que queira fazer. Para todas, exceto a funcionalidade editEdge, essas funções do manipulador são opcionais.",
+                    id: "addEdge",
+                    checkboxValue: this.addEdge
+                }
+            ],
         }
     },
     watch: {
@@ -64,9 +70,34 @@ export default {
     mounted() {
         console.log("Manipulation Component Mounted");
         this.options = this.encapsulateOptions;
+
+        if (typeof this.options.manipulation == "booelan") {
+            this.enabled = true;
+        } else if (typeof this.options.manipulation == "object"){
+            if (typeof this.options.manipulation.enabled == "boolean") {
+                this.enabled = this.options.manipulation.enabled;
+            }
+            if (typeof this.options.manipulation.initiallyActive == "boolean") {
+                this.initiallyActive = this.options.manipulation.initiallyActive;
+            }
+            if (typeof this.options.manipulation.addNode == "boolean"
+                && this.options.manipulation.addNode == true) {
+                this.addNode = this.options.manipulation.addNode;
+                this.accordionData[0].checkboxValue = this.addNode;
+            } else if (typeof this.options.manipulation.addNode == "function") {
+                this.addNode = true;
+            }
+            if (typeof this.options.manipulation.addEdge == "boolean"
+                && this.options.manipulation.addEdge == true) {
+                    this.addEdge = this.options.manipulation.addNode;
+                    this.accordionData[1].checkboxValue = this.addEdge;
+            } else if (typeof this.options.manipulation.addEdge == "function") {
+                this.addEdge = true;
+            }
+        }
     },
     components: {
-        LabelWithTooltip, InputTextArea
+        LabelWithTooltip, InputTextArea, AccordionBase
     },
     methods: {
         changeEnabled: function (value) {
@@ -105,13 +136,32 @@ export default {
             this.options.manipulation.initiallyActive = value;
         },
         changeAddNode: function(value) {
-            this.addNode = value;
-            this.options.manipulation.addNode = true;
+            if (typeof value == "boolean") this.addNode = value;
+            else this.addNodeFunction = value;
+            this.options.manipulation.addNode = value;
         },
-        changeAddNodeFunction: function(value) {
-            this.addNodeTextFunction = value;
-        }
+        changeAddEdge: function(value) {
+            if (typeof value == "boolean") this.addEdge = value;
+            else this.addEdgeFunction = value;
+            this.options.manipulation.addEdge = value;
+        },
+        message: function(message, accordionItem, value) {
+            if (accordionItem == "addNode") {
+                if (message == "update-checkbox-accordion") this.changeAddNode(value);
+                if (message == "options-manipulation-addNode-booelan") this.changeAddNode(value);
+                if (message == "options-manipulation-addNode-function") this.changeAddNode(value);
+            } else if (accordionItem == "addEdge") {
+                if (message == "update-checkbox-accordion") this.changeAddEdge(value);
+                if (message == "options-manipulation-addEdge-booelan") this.changeAddEdge(value);
+                if (message == "options-manipulation-addEdge-function") this.changeAddEdge(value);
+            } else if (message == "send-toast") {
+                this.$emit("send-toast", accordionItem);
+            }
+        },
+        openBsModal: function (title, body) {
+            this.$emit("open-bs-modal", title, body);
+        },
     },
-    emits: ['options-has-changed']
+    emits: ['options-has-changed', 'open-bs-modal', 'send-toast']
 }
 </script>

@@ -145,6 +145,7 @@ export default {
             );
             this.encapsulateNetwork = localNetwork;
             this.optionsHasChanged(options);
+            this.checkManipulatioEnabled();
 
         },
 
@@ -163,6 +164,11 @@ export default {
 
         onCanvasKeyChange: function () {
             console.log("Repintando o canvas.");
+            this.checkManipulatioEnabled();
+            this.Hash = hash();
+        },
+
+        checkManipulatioEnabled: function () {
             if (this.options.manipulation.enabled) {
                 setTimeout(function () {
                     var element = document.getElementsByClassName('vis-manipulation');
@@ -178,7 +184,6 @@ export default {
                     element2.insertAdjacentElement('beforeend', element4);
                 }, 3);
             }
-            this.Hash = hash();
         },
 
         emitNewToast: function (value) {
