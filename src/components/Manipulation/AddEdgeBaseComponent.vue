@@ -92,26 +92,41 @@ export default {
         });
       }
     },
-	sendUpdateEdgeFunction: function(t) {
-		if (t != undefined && typeof t == "string") {
-			this.addEdgeFunctionText = t;
-			this.addEdgeFunction = eval(t);
-		} else {
-			this.addEdgeFunction = eval(this.addEdgeFunctionText);
-		}
-		if (this.addEdgeFunction != null) {
-			this.$emit(
-			"message",
-			"options-manipulation-addEdge-function",
-			this.accordionType,
-			this.addEdgeFunction
-			);
-		}
-		this.addEdgeFunctionEditingEnabled = false;
-	}
+    sendUpdateEdgeFunction: function(t) {
+      if (t != undefined && typeof t == "string") {
+        this.addEdgeFunctionText = t;
+        this.addEdgeFunction = eval(t);
+      } else {
+        this.addEdgeFunction = eval(this.addEdgeFunctionText);
+      }
+      if (this.addEdgeFunction != null) {
+        this.$emit(
+        "message",
+        "options-manipulation-addEdge-function",
+        this.accordionType,
+        this.addEdgeFunction
+        );
+      }
+      this.addEdgeFunctionEditingEnabled = false;
+    }
   },
   mounted() {
     console.log("Add Edge Base Component Mounted");
+  },
+  watch: {
+    "options": function(newValue, oldValue) {
+      if (newValue != null) {
+        if (
+          newValue.manipulation != null &&
+          newValue.manipulation.addEdge != null &&
+          typeof newValue.manipulation.addEdge == "function"
+        ) {
+          this.addEdgeFunction = this.options.manipulation.addEdge;
+          this.addEdgeFunctionText = this.options.manipulation.addEdge;
+          this.sendingFunction = true;
+        }
+      }
+    }
   },
   components: {
     LabelWithTooltip,

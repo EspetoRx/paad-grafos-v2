@@ -20,9 +20,12 @@
     "locale": "pt",
     "manipulation": {
         "enabled": true,
-        "initiallyActive": false,
+        "initiallyActive": true,
         "addNode": true,
-        "addEdge": true
+        "addEdge": true,
+        "editEdge": true,
+        "deleteNode": true,
+        "deleteEdge": true
     },
     "nodes": {
         "borderWidth": 1,
