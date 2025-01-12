@@ -85,7 +85,7 @@
         </div>
     </Transition>
 
-    <AccordionBase :accordionData :bsModalReturnValue @message="message" @open-bs-modal="openBsModal"></AccordionBase>
+    <AccordionBase :accordionData :bsModalReturnValue @message="message" @open-bs-modal="openBsModal" :options="this.localOptions"></AccordionBase>
 
     <SwitchWithInfo :switchId="'options.interaction.multiselect'" :switchDisabled="false"
         :switchInitialValue="multiselect" :switchTooltipEnabled="true"
@@ -158,17 +158,6 @@ export default {
         return {
 
             localOptions: null,
-
-            accordionData: [
-                {
-                    id: 'keyboard',
-                    title: 'Teclado',
-                    body: 'InteractionsKeyboard',
-                    tooltip: "Options.Interactions.Keyboard - Quando verdadeiro, os atalhos de teclado são " +
-                        "habilitados com as configurações padrão. Para maior personalização, você pode fornecer um objeto."
-                },
-            ],
-
             dragNodes: true,
             dragView: true,
             hideEdgesOnDrag: false,
@@ -191,6 +180,16 @@ export default {
             tooltipDelay: 300,
             zoomSpeed: 1,
             zoomView: true,
+            accordionData: [
+                {
+                    id: 'keyboard',
+                    title: 'Teclado',
+                    body: 'InteractionsKeyboard',
+                    tooltip: "Options.Interactions.Keyboard - Quando verdadeiro, os atalhos de teclado são " +
+                        "habilitados com as configurações padrão. Para maior personalização, você pode fornecer um objeto.",
+                    checkboxValue: this.keyboard
+                },
+            ],
         }
     },
     methods: {
@@ -303,6 +302,56 @@ export default {
     },
     mounted() {
         this.localOptions = this.options;
+
+        if (typeof this.options.interaction.dragNodes == "boolean") {
+            this.dragNodes = this.options.interaction.dragNodes;
+        }
+        if (typeof this.options.interaction.dragView == "boolean") {
+            this.dragView = this.options.interaction.dragView;
+        }
+        if (typeof this.options.interaction.hideEdgesOnDrag == "boolean") {
+            this.hideEdgesOnDrag = this.options.interaction.hideEdgesOnDrag;
+        }
+        if (typeof this.options.interaction.hideEdgesOnZoom == "boolean") {
+            this.hideEdgesOnZoom = this.options.interaction.hideEdgesOnZoom;
+        }
+        if (typeof this.options.interaction.hideNodesOnDrag == "boolean") {
+            this.hideNodesOnDrag = this.options.interaction.hideNodesOnDrag;
+        }
+        if (typeof this.options.interaction.hover == "boolean") {
+            this.hover = this.options.interaction.hover;
+        }
+        if (typeof this.options.interaction.hoverConnectedEdges == "boolean") {
+            this.hoverConnectedEdges = this.options.interaction.hoverConnectedEdges;
+        }
+        if (typeof this.options.interaction.keyboard == "boolean") {
+            this.keyboard = this.options.interaction.keyboard;
+            this.accordionData[0].checkboxValue = this.keyboard;
+        } else if (typeof this.options.interaction.keyboard == "object") {
+            if (typeof this.options.interaction.keyboard.enabled == "boolean") {
+                this.keyboard = this.options.interaction.keyboard.enabled;
+                this.accordionData[0].checkboxValue = this.keyboard;
+            }
+        }
+        //TODO Keyboard
+        if (typeof this.options.interaction.multiselect == "boolean") {
+            this.multiselect = this.options.interaction.multiselect;
+        }
+        if (typeof this.options.interaction.selectable == "boolean") {
+            this.selectable = this.options.interaction.selectable;
+        }
+        if (typeof this.options.interaction.selectConnectedEdges == "boolean") {
+            this.selectConnectedEdges = this.options.interaction.selectConnectedEdges;
+        }
+        if (typeof this.options.interaction.tooltipDelay == "number") {
+            this.tooltipDelay = this.options.interaction.tooltipDelay;
+        }
+        if (typeof this.options.interaction.zoomSpeed == "number") {
+            this.zoomSpeed = this.options.interaction.zoomSpeed;
+        }
+        if (typeof this.options.interaction.zoomView == "boolean") {
+            this.zoomView = this.options.interaction.zoomView;
+        }
     },
     components: {
         SwitchWithInfo, AccordionBase, InputRange

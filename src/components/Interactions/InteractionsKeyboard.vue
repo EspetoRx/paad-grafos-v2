@@ -134,6 +134,34 @@ export default{
             autoFocus: true
         }
     },
+    watch: {
+        "options": {
+            handler: function(newValue, oldValue) {
+                if (typeof newValue.interaction.keyboard == "boolean") {
+                    this.enableObject = false;
+                } else if (typeof newValue.interaction.keyboard == "object") {
+                    this.enableObject = true;
+                    if (typeof newValue.interaction.keyboard.speed == "object") {
+                        if (typeof newValue.interaction.keyboard.speed.x == "number") {
+                            this.speed.x = newValue.interaction.keyboard.speed.x;
+                        }
+                        if (typeof newValue.interaction.keyboard.speed.y == "number") {
+                            this.speed.y = newValue.interaction.keyboard.speed.y;
+                        }
+                        if (typeof newValue.interaction.keyboard.speed.zoom == "number") {
+                            this.speed.zoom = newValue.interaction.keyboard.speed.zoom;
+                        }
+                    }
+                    if (typeof newValue.interaction.keyboard.bindToWindow == "boolean") {
+                        this.bindToWindow = newValue.interaction.keyboard.bindToWindow;
+                    }
+                    if (typeof newValue.interaction.keyboard.autoFocus == "boolean") {
+                        this.autoFocus = newValue.interaction.keyboard.autoFocus;
+                    }
+                }
+            }
+        }
+    },
     methods: {
         changeEnableObject: function(value) {
             this.enableObject = value;
