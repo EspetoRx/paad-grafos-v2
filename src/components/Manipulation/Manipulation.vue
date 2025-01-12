@@ -30,11 +30,34 @@
     @message="message"
     :options
   ></AccordionBase>
+  <InputTextArea
+    :inputId="'options.manipulation.controlNodeStyle'"
+    :inputEnabled="true"
+    :inputInitialValue="controlNodeStyleText"
+    :inputPlaceholder="'//JSON para o controle de estilo na '"
+    :inputRows="7"
+    :isLabelEnabled="true"
+    :labelValue="'Controle de estilo do vértice ligante na aresta'"
+    :tooltip="`Você pode fornecer qualquer informação de estilo que desejar aqui. Todos os campos descritos no módulo nodes são permitidos, exceto, obviamente, para id, x, y e fixed.`"
+    :hasSwitch="true"
+    :switchId="'options.manipulation.controlNodeStyleSwitch'"
+    :switchTooltip="false"
+    :switchDisabled="false"
+    :switchInitialValue="controlNodeStyleEnabled"
+    :switchLabelEnabled="false"
+    @checkbox-value-change="changeControlNodeStyleEnabled"
+    @input-value-change="changeControlNodeStyleText"
+  ></InputTextArea>
+  <button type="button" class="btn btn-sm btn-primary form-control" @click="changeControlNodeStyle" v-if="controlNodeStyleEnabled">
+    <i class="fa-solid fa-right-to-bracket"></i> Enviar objeto
+  </button>
+  <p class="text-danger text-sm" v-if="controlNodeStyleEnabled">* Desligar controle de estilo do vértice ligante à Repinta Canvas.</p>
 </template>
 <script>
 import InputTextArea from "../Common/Inputs/InputTextArea.vue";
 import LabelWithTooltip from "../Common/LabelWithTooltip.vue";
 import AccordionBase from "../Common/Accordion/AccordionBase.vue";
+import defaultControlNodeStyle from "./JSONs/ManipulationDefaultControlNodeStyle.json";
 
 export default {
   name: "Manipulation Component",
@@ -56,6 +79,10 @@ export default {
       deleteNodeFunction: null,
       deleteEdge: false,
       deleteEdgeFunction: null,
+      defaultControlNodeStyle: defaultControlNodeStyle,
+      controlNodeStyleText: "",
+      controlNodeStyle: null,
+      controlNodeStyleEnabled: false,
       accordionData: [
         {
           title: "Adicionar Vértice",
@@ -89,14 +116,14 @@ export default {
           checkboxValue: this.editEdge,
         },
         {
-          title: "Delete Node",
+          title: "Deletar Vértice",
           body: "DeleteNodeBaseComponent",
           tooltip: `Se booleano, alterna a exclusão de nós na GUI. Se função, será chamado quando um nó for selecionado e o botão 'Excluir selecionado' for pressionado. Ao usar uma função, ele receberá um retorno de chamada e um objeto com uma matriz de nodeIds selecionados e uma matriz de edge Ids selecionados. Esses são os itens que serão excluídos se o retorno de chamada for executado.`,
           id: "deleteNode",
           checkboxValue: this.deleteNode,
         },
         {
-          title: "Delete Edge",
+          title: "Deletar Aresta",
           body: "DeleteEdgeBaseComponent",
           tooltip: `Se booleano, alterna a exclusão de arestas na GUI. Se função, será chamado quando uma aresta for selecionada e o botão 'Excluir selecionado' for pressionado. Ao usar uma função, ele receberá um retorno de chamada e um objeto com uma matriz de nodeIds selecionados (vazios) e uma matriz de Ids de arestas selecionadas. Esses são os itens que serão excluídos se o retorno de chamada for executado.`,
           id: "deleteEdge",
@@ -185,6 +212,11 @@ export default {
         this.deleteEdge = true;
         this.accordionData[5].checkboxValue = this.deleteEdge;
         this.deleteEdgeFunction = this.options.manipulation.deleteEdge;
+      }
+      if ( typeof this.options.manipulation.controlNodeStyle != "undefined") {
+        this.controlNodeStyle = this.options.manipulation.controlNodeStyle;
+        this.controlNodeStyleEnabled = true;
+        this.controlNodeStyleText = JSON.stringify(this.options.manipulation.controlNodeStyle);
       }
     }
   },
@@ -309,6 +341,37 @@ export default {
     openBsModal: function (title, body) {
       this.$emit("open-bs-modal", title, body);
     },
+    changeControlNodeStyleEnabled: function (value) {
+      this.controlNodeStyleEnabled = value;
+      if (value) {
+        if (this.controlNodeStyleText == "") {
+          this.controlNodeStyle = this.defaultControlNodeStyle;
+          this.controlNodeStyleText = JSON.stringify(this.defaultControlNodeStyle);
+        } else {
+          this.controlNodeStyle = JSON.parse(this.controlNodeStyleText);
+        }
+        this.options.manipulation.controlNodeStyle = this.controlNodeStyle
+      } else {
+        if (typeof this.options.manipulation.controlNodeStyle != "undefined") {
+          this.controlNodeStyle = null;
+          this.controlNodeStyleText = "";
+          this.controlNodeStyleSwitch = false;
+          delete this.options.manipulation.controlNodeStyle;
+          this.$emit("canvas-key-change", true);
+        }
+      }
+    },
+    changeControlNodeStyleText: function (value) {
+      this.controlNodeStyleText = value;
+    },
+    changeControlNodeStyle: function (value) {
+      try {
+        this.controlNodeStyle = JSON.parse(this.controlNodeStyleText);
+        this.options.manipulation.controlNodeStyle = this.controlNodeStyle;
+      } catch (e) {
+        alert('Impossível converter objeto JSON');
+      }
+    }
   },
   emits: ["options-has-changed", "open-bs-modal", "send-toast", "canvas-key-change"],
 };
