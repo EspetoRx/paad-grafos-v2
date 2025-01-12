@@ -42,7 +42,7 @@
             <Layout v-if="type == 'visjs-layout'" :encapsulateOptions :encapsulateLocalNetwork="localNetwork"
                 @options-has-changed="optionsHasChanged" @canvas-key-change="onComponentKeyChange" :bsModalReturnValue="bsModalReturnValue"></Layout>
             <Manipulation v-if="type == 'visjs-manipulation'" :encapsulateOptions @options-has-changed="optionsHasChanged"
-                :bsModalReturnValue @open-bs-modal="enableBsModal" @send-toast="sendToast"></Manipulation>
+                :bsModalReturnValue @open-bs-modal="enableBsModal" @send-toast="sendToast" @canvas-key-change="onComponentKeyChange"></Manipulation>
             <div id="offcanvasBody"></div>
         </div>
     </div>

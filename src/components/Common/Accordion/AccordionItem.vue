@@ -35,6 +35,10 @@ import InteractionsKeyboard from '../../Interactions/InteractionsKeyboard.vue';
 import HierarchicalLayoutBaseComponent from '../../Layout/HierarchicalLayoutBaseComponent.vue';
 import AddNodeBaseComponent from '../../Manipulation/AddNodeBaseComponent.vue';
 import AddEdgeBaseComponent from '../../Manipulation/AddEdgeBaseComponent.vue';
+import EditNodeBaseComponent from '../../Manipulation/EditNodeBaseComponent.vue';
+import EditEdgeBaseComponent from '../../Manipulation/EditEdgeBaseComponent.vue';
+import DeleteNodeBaseComponent from '../../Manipulation/DeleteNodeBaseComponent.vue';
+import DeleteEdgeBaseComponent from '../../Manipulation/DeleteEdgeBaseComponent.vue';
 export default {
     name: "Accordion Item Component",
     props: [
@@ -83,7 +87,11 @@ export default {
         InteractionsKeyboard,
         HierarchicalLayoutBaseComponent,
         AddNodeBaseComponent,
-        AddEdgeBaseComponent
+        AddEdgeBaseComponent,
+        EditNodeBaseComponent,
+        EditEdgeBaseComponent,
+        DeleteNodeBaseComponent,
+        DeleteEdgeBaseComponent,
     },
     methods: {
         chekckboxValueChange(value) {

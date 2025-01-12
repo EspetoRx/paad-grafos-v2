@@ -92,26 +92,41 @@ export default {
         });
       }
     },
-	sendUpdateNodeFunction: function(t) {
-		if (t != undefined && typeof t == "string") {
-			this.addNodeFunctionText = t;
-			this.addNodeFunction = eval(t);
-		} else {
-			this.addNodeFunction = eval(this.addNodeFunctionText);
-		}
-		if (this.addNodeFunction != null) {
-			this.$emit(
-			"message",
-			"options-manipulation-addNode-function",
-			this.accordionType,
-			this.addNodeFunction
-			);
-		}
-		this.addNodeFunctionEditingEnabled = false;
-	}
+    sendUpdateNodeFunction: function(t) {
+      if (t != undefined && typeof t == "string") {
+        this.addNodeFunctionText = t;
+        this.addNodeFunction = eval(t);
+      } else {
+        this.addNodeFunction = eval(this.addNodeFunctionText);
+      }
+      if (this.addNodeFunction != null) {
+        this.$emit(
+        "message",
+        "options-manipulation-addNode-function",
+        this.accordionType,
+        this.addNodeFunction
+        );
+      }
+      this.addNodeFunctionEditingEnabled = false;
+    }
   },
   mounted() {
     console.log("Add Node Base Component Mounted");
+  },
+  watch: {
+    "options": function(newValue, oldValue) {
+      if (newValue != null) {
+        if (
+          newValue.manipulation != null &&
+          newValue.manipulation.addNode != null &&
+          typeof newValue.manipulation.addNode == "function"
+        ) {
+          this.addNodeFunction = this.options.manipulation.addNode;
+          this.addNodeFunctionText = this.options.manipulation.addNode;
+          this.sendingFunction = true;
+        }
+      }
+    }
   },
   components: {
     LabelWithTooltip,
