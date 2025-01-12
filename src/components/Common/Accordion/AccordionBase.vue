@@ -24,10 +24,7 @@ export default {
     props: {
         accordionData: Array,
         bsModalReturnValue: {},
-        options: {
-            required: false,
-            default: null
-        }
+        options: Object,
     },
     data() {
         return {

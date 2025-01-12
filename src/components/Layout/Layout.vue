@@ -22,7 +22,7 @@
         :tooltip="'Options.Layout.ClusterThreshold - Limite de cluster ao qual o layout aprimorado se aplica.'"
         :disabled="false" :labelHasSwitch="false" @update-value-from-range-input="changeClusterThreshold"></InputRange>
     <Accordion :accordionData="accordionData" @message="message" @open-bs-modal="openBsModal"
-        :bsModalReturnValue="bsModalReturnValue" class="mt-1"></Accordion>
+        :bsModalReturnValue="bsModalReturnValue" :options="options" class="mt-1"></Accordion>
 </template>
 
 <script>
