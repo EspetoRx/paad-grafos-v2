@@ -71,7 +71,7 @@ import ArrowsEdgeBaseComponent from "../../Edges/ArrowsEdgeBaseComponent.vue";
 import FontEdgeBaseComponent from "../../Edges/FontEdgeBaseComponent.vue";
 import ScalingLabelEdgeBaseComponent from "../../Edges/ScalingLabelEdgeBaseComponent.vue";
 import ArrowEdgeAccordion from "../../Edges/ArrowEdgeAccordion.vue";
-import EndpointOffsetAccordion from '../../Edges/EndpointOffsetAccordion.vue';
+import EndPointOffsetAccordion from '../../Edges/EndPointOffsetAccordion.vue';
 import ChosenEdgeAccordion from '../../Edges/ChosenEdgeAccordion.vue';
 import ColorEdgeAccordion from '../../Edges/ColorEdgeAccordion.vue';
 import FontEdgeAccordion from '../../Edges/FontEdgeAccordion.vue';
@@ -135,7 +135,7 @@ export default {
     DeleteNodeBaseComponent,
     DeleteEdgeBaseComponent,
     ArrowEdgeAccordion,
-    EndpointOffsetAccordion,
+    EndPointOffsetAccordion,
     ChosenEdgeAccordion,
     ColorEdgeAccordion,
     FontEdgeAccordion,
