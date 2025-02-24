@@ -85,7 +85,7 @@
         </div>
     </Transition>
 
-    <AccordionBase :accordionData :bsModalReturnValue @message="message" @open-bs-modal="openBsModal" :options="this.localOptions"></AccordionBase>
+    <Accordion :accordionData :bsModalReturnValue @message="message" @open-bs-modal="openBsModal" :options="this.localOptions"></Accordion>
 
     <SwitchWithInfo :switchId="'options.interaction.multiselect'" :switchDisabled="false"
         :switchInitialValue="multiselect" :switchTooltipEnabled="true"
@@ -144,7 +144,6 @@
     </SwitchWithInfo>
 </template>
 <script>
-import AccordionBase from '../Common/Accordion/AccordionBase.vue';
 import SwitchWithInfo from '../Common/SwitchWithInfo.vue';
 import InputRange from '../Common/Inputs/InputRange.vue';
 
@@ -354,7 +353,7 @@ export default {
         }
     },
     components: {
-        SwitchWithInfo, AccordionBase, InputRange
+        SwitchWithInfo, InputRange
     },
     emits: ['options-has-changed', 'open-bs-modal']
 }

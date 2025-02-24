@@ -17,8 +17,11 @@
                              <li><a class="dropdown-item" href="#" id="consoleLogNetwork">Another action</a></li>
                             <li><a class="dropdown-item" href="#" data-bs-toggle="modal"
                                     data-bs-target="#exampleModal">Something else here</a></li> -->
-                        <li data-toggle="tooltip" title="Vis.Js Edges"><a class="dropdown-item" href="#"
+                        <!-- <li data-toggle="tooltip" title="Vis.Js Edges"><a class="dropdown-item" href="#"
                                 id="offcanvasEdgesButton" @click.prevent="offcanvasForVisEdges(); toggleOffCanvas()">
+                                <i class="fa-solid fa-code-branch"></i> Vis.JS Arestas</a></li> -->
+                        <li data-toggle="tooltip" title="Vis.Js Edges"><a class="dropdown-item" href="#"
+                                id="offcanvasEdgesButton" @click.prevent="offcanvasForVisEdges2(); toggleOffCanvas()">
                                 <i class="fa-solid fa-code-branch"></i> Vis.JS Arestas</a></li>
                         <li data-toggle="tooltip" title="Vis.Js Native Configure HTML DOM."><a class="dropdown-item"
                                 href="#" id="offcanvasConfigureButton"
@@ -108,6 +111,9 @@ export default {
         offcanvasForVisEdges: function () {
             this.$emit("offcanvas-for-vis-edges");
         },
+        offcanvasForVisEdges2: function () {
+            this.$emit("offcanvas-for-vis-edges2");
+        },
         offcanvasForVisPhysics() {
             this.$emit("offcanvas-for-vis-physics");
         },
@@ -127,6 +133,7 @@ export default {
         'offcanvas-for-vis-physics',
         'offcanvas-for-vis-nodes',
         'offcanvas-for-vis-edges',
+        'offcanvas-for-vis-edges2',
         'offcanvas-for-vis-interactions',
         'offcanvas-for-vis-layout',
         'offcanvas-for-vis-manipulation'

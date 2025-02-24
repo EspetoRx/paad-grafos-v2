@@ -13,6 +13,7 @@
             :bsModalReturnValue="bsModalReturnValue"
             :checkboxValue="item.checkboxValue"
             :options="options"
+            :hasSwitchButton="hasSwitch(item.hasSwitchButton)"
         ></AccordionItem>
     </div>
 </template>
@@ -45,6 +46,10 @@ export default {
         },
         openBsModal: function(title, body) {
             this.$emit("open-bs-modal", title, body);
+        },
+        hasSwitch: function(switchValue) {
+            if (typeof switchValue == "undefined") return true;
+            else return switchValue;
         }
     },
     emits: ['message', "open-bs-modal"]

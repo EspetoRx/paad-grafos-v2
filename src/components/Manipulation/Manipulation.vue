@@ -23,13 +23,13 @@
     :switchLabelEnabled="false"
     @checkbox-status-changed="changeInitiallyActive"
   ></LabelWithTooltip>
-  <AccordionBase
+  <Accordion
     :accordionData
     :bsModalReturnValue
     @open-bs-modal="openBsModal"
     @message="message"
     :options
-  ></AccordionBase>
+  ></Accordion>
   <InputTextArea
     :inputId="'options.manipulation.controlNodeStyle'"
     :inputEnabled="true"
@@ -56,7 +56,6 @@
 <script>
 import InputTextArea from "../Common/Inputs/InputTextArea.vue";
 import LabelWithTooltip from "../Common/LabelWithTooltip.vue";
-import AccordionBase from "../Common/Accordion/AccordionBase.vue";
 import defaultControlNodeStyle from "./JSONs/ManipulationDefaultControlNodeStyle.json";
 
 export default {
@@ -222,8 +221,7 @@ export default {
   },
   components: {
     LabelWithTooltip,
-    InputTextArea,
-    AccordionBase,
+    InputTextArea
   },
   methods: {
     changeEnabled: function (value) {
@@ -304,7 +302,6 @@ export default {
         if (message == "options-manipulation-addEdge-booelan") this.changeAddEdge(value);
         if (message == "options-manipulation-addEdge-function") this.changeAddEdge(value);
       } else if (accordionItem == "editNode") {
-        console.log(message, accordionItem, value);
         if (message == "update-checkbox-accordion") {
           if (!value) {
             if (typeof this.options.manipulation.editNode != "undefined") {
