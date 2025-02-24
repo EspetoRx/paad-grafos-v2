@@ -331,7 +331,7 @@ export default {
           tooltip:
             "Options.Edges.EndPointOffset - Ajuste os pontos finais. Pode ser útil se você quiser que os pontos finais sejam" +
             " colocados nas bordas dos nós. Este recurso só é possível quando o arrowStrikethrough for verdadeiro.",
-          body: "EndpointOffsetAccordion",
+          body: "EndPointOffsetAccordion",
           checkboxValue: this.endPointOffsetEnabled,
         },
       ],
