@@ -861,7 +861,6 @@ export default {
                     this.localEdges.forEach(function(element){
                         element.value = undefined;
                     });
-                    console.log(this.localEdges);
                     this.$emit('edges-has-changed', this.localEdges)
                     this.localOptions.edges.scaling = {};
                     this.$emit('canvas-key-change', true);

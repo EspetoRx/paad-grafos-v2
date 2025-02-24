@@ -38,6 +38,12 @@
         },
         "shapeProperties": {}
     },
+    "edges": {
+        "chosen": true,
+        "labelHighlightBold": true,
+        "physics": true,
+        "smooth": true
+    },
     "physics": {
         "enabled": true,
         "barnesHut": {
@@ -90,7 +96,9 @@
             "y": 0
         }
     },
-    "interaction": {},
+    "interaction": {
+        "hover": true
+    },
     "layout": {
         "hierarchical": {
             "enabled": false

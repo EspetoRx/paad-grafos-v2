@@ -30,7 +30,6 @@
 import InputText from '../Common/Inputs/InputText.vue';
 import SwitchButton from '../Common/SwitchButton.vue';
 import InputRange from '../Common/Inputs/InputRange.vue';
-import AccordionBase from '../Common/Accordion/AccordionBase.vue';
 
 export default {
     name: "Layout Component",
@@ -180,7 +179,7 @@ export default {
         }.bind(this), 5);
     },
     components: {
-        InputText, SwitchButton, InputRange, "Accordion": AccordionBase
+        InputText, SwitchButton, InputRange
     },
     emits: ['options-has-changed', 'canvas-key-change'],
 }

@@ -15,6 +15,7 @@ export default {
         return {
             selected: null,
             optionsGroups: [],
+            justStarted: false,
         }
     },
     props: [
@@ -23,6 +24,8 @@ export default {
         'disabled'
     ],
     mounted() {
+        this.justStarted = true;
+        console.log("Input Select Component Mounted");
         this.selected = this.options.find((element) => element.selected == true).value;
         if (Object.hasOwn(this.options[0], "group")) {
             this.optionsGroups = Object.entries(
@@ -35,10 +38,15 @@ export default {
                 }, {})
             ).map(([label, options]) => ({ label, options}))
         }
+        setTimeout(function(){
+            this.justStarted = false;
+        }.bind(this), 5);
+        
     },
     watch: {
         selected: function(newValue, oldValue) {
-            this.$emit('update-selection', newValue);
+            if (!this.justStarted)
+                this.$emit('update-selection', newValue);
         }
     },
     emits: ['update-selection']

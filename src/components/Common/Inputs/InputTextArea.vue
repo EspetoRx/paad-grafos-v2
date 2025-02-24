@@ -60,12 +60,12 @@ export default {
             this.inputValue = newValue;
         },
         switchInitialValue: function(newValue, oldValue) {
-            console.log("Entrei no switch initial value change");
             this.checkboxValue = newValue;
         }
     },
     mounted() {
         this.inputValue = this.inputInitialValue;
+        this.checkboxValue = this.switchInitialValue;
     },
     emits: ['checkbox-value-change', 'input-value-change']
 }

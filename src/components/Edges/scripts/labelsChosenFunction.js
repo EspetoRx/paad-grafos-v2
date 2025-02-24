@@ -1,5 +1,5 @@
 ((values, id, selected, hovering) => {
-    if (hovering) {
+    if (selected) {
         values.color = "red";
         values.size = 18;
     }
